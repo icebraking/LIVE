@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Icebraking | F1 Standings</title>
+  <style>
+    :root {
+      --background: #181a20;
+      --foreground: #fff;
+      --accent: #e10600;
+      --gray-dark: #23262f;
+      --gray: #2e313d;
+      --tab-active: var(--accent);
+      --tab-inactive: #444;
+      --row-even: #23262f;
+      --row-odd: #181a20;
+      --spinner: var(--accent);
+      --border: #333;
+      --table-scroll-bg: #181a20;
+    }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 2.5rem 1rem 1rem 1rem;
+    }
+    header h1 {
+      font-size: 2.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin: 0 0 0.3rem 0;
+      color: var(--accent);
+    }
+    header h2 {
+      font-size: 1.25rem;
+      font-weight: 300;
+      margin: 0;
+      color: #bbb;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: var(--gray-dark);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .tab {
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      border-radius: 999px 999px 0 0;
+      cursor: pointer;
+      color: var(--foreground);
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      outline: none;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active {
+      background: var(--background);
+      color: var(--tab-active);
+      border-bottom: 3px solid var(--tab-active);
+    }
+    .tab:not(.active):hover {
+      color: var(--accent);
+      background: var(--gray);
+    }
+    main {
+      margin-top: 72px; /* nav + some space */
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 1rem 2rem 1rem;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--table-scroll-bg);
+      border-radius: 10px;
+      box-shadow: 0 2px 12px #0002;
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 380px;
+      font-size: 1rem;
+    }
+    thead {
+      background: var(--gray-dark);
+    }
+    th, td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    th {
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      font-size: 1.05rem;
+      background: var(--gray-dark);
+    }
+    tbody tr:nth-child(even) {
+      background: var(--row-even);
+    }
+    tbody tr:nth-child(odd) {
+      background: var(--row-odd);
+    }
+    .spinner,
+    .loading-message,
+    .error-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2.5rem auto;
+      min-height: 120px;
+      font-size: 1.25rem;
+      color: var(--foreground);
+      font-weight: 400;
+      text-align: center;
+    }
+    .spinner::after {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 4px solid var(--spinner);
+      border-radius: 50%;
+      border-top: 4px solid transparent;
+      animation: spin 1s linear infinite;
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg);}
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 2rem; }
+      nav { height: 48px; }
+      main { margin-top: 64px; }
+      th, td { padding: 0.55rem 0.5rem; font-size: 0.95rem;}
+    }
+    @media (max-width: 430px) {
+      .table-container { padding: 0; }
+      th, td { font-size: 0.86rem;}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="tabs">
+      <button class="tab active" id="tab-drivers" type="button">Drivers</button>
+      <button class="tab" id="tab-constructors" type="button">Constructors</button>
+    </div>
+  </nav>
+  <header>
+    <h1>Icebraking</h1>
+    <h2>F1 Standings</h2>
+  </header>
+  <main>
+    <div id="content">
+      <div class="spinner" id="loading">Loading standings...</div>
+    </div>
+  </main>
+  <script>
+    // --- CONFIG ---
+    const API = {
+      drivers: 'http://api.jolpi.ca/ergast/f1/current/driverStandings.json',
+      constructors: 'http://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
+    };
+    const CACHE_TTL = 300; // seconds (5 min)
+
+    // --- DOM ---
+    const tabs = {
+      drivers: document.getElementById('tab-drivers'),
+      constructors: document.getElementById('tab-constructors')
+    };
+    const content = document.getElementById('content');
+    let activeTab = 'drivers';
+
+    // --- Caching helpers ---
+    function cacheKey(type) { return `f1_${type}_standings`; }
+    function getCache(type) {
+      try {
+        const item = localStorage.getItem(cacheKey(type));
+        if (!item) return null;
+        const { data, ts } = JSON.parse(item);
+        if (Date.now()/1000 - ts > CACHE_TTL) return null;
+        return data;
+      } catch { return null; }
+    }
+    function setCache(type, data) {
+      try {
+        localStorage.setItem(cacheKey(type), JSON.stringify({ data, ts: Math.floor(Date.now()/1000) }));
+      } catch {}
+    }
+
+    // --- Render ---
+    function showLoading(msg='Loading standings...') {
+      content.innerHTML = `<div class="spinner">${msg}</div>`;
+    }
+    function showError(msg='Unable to load standings') {
+      content.innerHTML = `<div class="error-message">${msg}</div>`;
+    }
+
+    function renderTable(type, items) {
+      let html = '';
+      if (type === 'drivers') {
+        html += `<div class="table-container"><table><thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Points</th>
+          </tr></thead><tbody>`;
+        for (const item of items) {
+          html += `<tr>
+            <td>${item.position}</td>
+            <td>${item.name}</td>
+            <td>${item.team}</td>
+            <td>${item.points}</td>
+          </tr>`;
+        }
+        html += `</tbody></table></div>`;
+      } else if (type === 'constructors') {
+        html += `<div class="table-container"><table><thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Points</th>
+          </tr></thead><tbody>`;
+        for (const item of items) {
+          html += `<tr>
+            <td>${item.position}</td>
+            <td>${item.name}</td>
+            <td>${item.points}</td>
+          </tr>`;
+        }
+        html += `</tbody></table></div>`;
+      }
+      content.innerHTML = html;
+    }
+
+    // --- Data parsing ---
+    function parseDrivers(json) {
+      try {
+        const lists = json?.MRData?.StandingsTable?.StandingsLists;
+        if (!lists || !lists.length) return [];
+        const drivers = lists[0]?.DriverStandings || [];
+        return drivers.map(d => ({
+          position: d.positionText || d.position || '-',
+          name: `${d.Driver.givenName} ${d.Driver.familyName}`,
+          team: d.Constructors[0]?.name || '', // first constructor (usually only one)
+          points: d.points
+        }));
+      } catch { return []; }
+    }
+    function parseConstructors(json) {
+      try {
+        const lists = json?.MRData?.StandingsTable?.StandingsLists;
+        if (!lists || !lists.length) return [];
+        const constructors = lists[0]?.ConstructorStandings || [];
+        return constructors.map(c => ({
+          position: c.positionText || c.position || '-',
+          name: c.Constructor?.name || '-',
+          points: c.points
+        }));
+      } catch { return []; }
+    }
+
+    // --- Fetch ---
+    async function fetchStandings(type) {
+      let cached = getCache(type);
+      if (cached) return cached;
+      showLoading();
+      try {
+        const url = API[type];
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('Network error');
+        const json = await resp.json();
+        let items = [];
+        if (type === 'drivers') items = parseDrivers(json);
+        else items = parseConstructors(json);
+        if (!items.length) throw new Error('No data');
+        setCache(type, items);
+        return items;
+      } catch {
+        showError();
+        return null;
+      }
+    }
+
+    // --- Tab logic ---
+    async function switchTab(type) {
+      if (activeTab === type) return;
+      activeTab = type;
+      tabs.drivers.classList.toggle('active', type === 'drivers');
+      tabs.constructors.classList.toggle('active', type === 'constructors');
+      showLoading();
+      let items = getCache(type);
+      if (!items) items = await fetchStandings(type);
+      if (!items || !items.length) {
+        showError();
+        return;
+      }
+      renderTable(type, items);
+    }
+
+    function initialLoad() {
+      tabs.drivers.classList.add('active');
+      tabs.constructors.classList.remove('active');
+      activeTab = 'drivers';
+      showLoading();
+      fetchStandings('drivers').then(items => {
+        if (!items || !items.length) {
+          showError();
+          return;
+        }
+        renderTable('drivers', items);
+      });
+    }
+
+    // --- Event listeners ---
+    tabs.drivers.addEventListener('click', () => {
+      if (activeTab !== 'drivers') switchTab('drivers');
+    });
+    tabs.constructors.addEventListener('click', () => {
+      if (activeTab !== 'constructors') switchTab('constructors');
+    });
+
+    // --- Start ---
+    window.addEventListener('DOMContentLoaded', initialLoad);
+  </script>
+</body>
+</html>
