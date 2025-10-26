@@ -15,14 +15,16 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     .container {
       max-width: 800px;
       margin: 100px auto 0 auto;
-      padding: 2rem;
+      padding: 2rem 2rem 6rem 2rem; /* extra bottom padding for button space */
       background: rgba(255,255,255,0.06);
       border-radius: 18px;
       box-shadow: 0 2px 24px #B3007366;
+      position: relative;
     }
     h1 {
       font-family: Cambria, 'Times New Roman', Times, serif;
@@ -42,13 +44,37 @@
       line-height: 1.7;
       text-align: justify;
     }
+    .back-btn-static {
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      background: linear-gradient(90deg, #FF89C4 0%, #DE5C9A 100%);
+      color: #fff;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-size: 1.07rem;
+      font-weight: bold;
+      padding: 0.68em 1.6em;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 0 16px #DE5C9A99;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.22s;
+      z-index: 99;
+      letter-spacing: 0.06em;
+    }
+    .back-btn-static:hover {
+      background: linear-gradient(90deg, #DE5C9A 0%, #FF89C4 100%);
+      color: #fff;
+      box-shadow: 0 0 22px #FF89C4;
+    }
     @media (max-width: 600px) {
       .container {
         margin-top: 40px;
-        padding: 1rem;
+        padding: 1rem 1rem 4rem 1rem;
       }
       h1 { font-size: 1.4rem; }
       p { font-size: 0.98rem; }
+      .back-btn-static { right: 1rem; bottom: 1rem; font-size: 0.96rem; padding: 0.54em 1.1em; }
     }
   </style>
 </head>
@@ -58,6 +84,7 @@
     <p>
       Nestled within the Renault Group's expansive engineering dominion, Alpine F1 Team emerged as a distinct entity in 2021, yet its provenance is a rich tapestry woven from the audacious threads of Renault's 1977 foray into Formula 1 with the trailblazing turbocharged RS01, a mechanical maverick that shattered conventions by clinching the inaugural turbo-era victory in 1979 and catalyzing a Drivers' title in 1981. This pioneering spirit propelled Renault through cycles of conquest and convalescence, securing Constructors' Championships in 1992 and 1993 under the Benetton banner before strategic sabbaticals and resurgences, including the 2002 reacquisition of that very outfit, culminating in a resplendent double Constructors' diadem in 2005 and 2006 that reaffirmed the marque's mastery of the art of racing and chassis choreography. The Enstone facility, a bastion of bespoke bodywork and aerodynamic acuity since its Lotus genesis in 1981, underwent a poignant rebranding to Alpine in 2021, paying homage to Jean Rédélé's eponymous 1955 sports car venture that epitomized French flair and fortitude. Drawing from its turbo trailblazing patrimony and the unyielding ethos of Enstone's wind-tunnel wizardry, Alpine endures as a beacon of Gallic ingenuity, where every upgrade echoes the relentless rhythm of reinvention, poised to transmute transitional trials into triumphant tomorrows on the grand prix stage. Though owned majorly by Renault, the team is set to field Mercedes power from 2026. The one word that describes Alpine would be 'Slackness'!!
     </p>
+    <button class="back-btn-static" onclick="window.location.href='index.html'">Back to standings</button>
   </div>
 </body>
 </html>
