@@ -22,6 +22,9 @@
       --title-shadow: 0 0 10px #C7007F, 0 2px 6px #B30073;
       --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF89C4 60%, #DE5C9A 90%);
       --futuristic-shadow: 0 0 18px #C7007F66, 0 0 36px #B3007333, 0 0 54px #DE5C9A66;
+      --team-link-bg: #B30073;
+      --team-link-hover-bg: #C7007F;
+      --team-link-font: #FFD1DC;
     }
     body {
       margin: 0;
@@ -104,6 +107,15 @@
       background: var(--tab-hover-bg);
       color: var(--accent);
       box-shadow: 0 0 8px #B30073;
+    }
+    .team-link-table {
+      color: #FFD1DC;
+      text-decoration: underline;
+      font-weight: 700;
+      transition: color 0.18s;
+    }
+    .team-link-table:hover {
+      color: #fff;
     }
     main {
       margin-top: 26px;
@@ -223,6 +235,7 @@
       th, td { padding: 0.6rem 0.5rem; font-size: 0.95rem;}
       .tab { font-size: 1rem; padding: 0.45rem 1rem;}
       .ice-scatter { font-size: 1.6rem; padding: 0.12rem 0.4rem;}
+      .team-link { font-size: 0.96rem; padding: 0.5rem 1rem;}
     }
     @media (max-width: 430px) {
       .table-container { padding: 0; }
@@ -230,6 +243,7 @@
       .tab { padding: 0.35rem 0.7rem; font-size: 0.93rem;}
       header { padding-top: 70px; }
       .ice-scatter { font-size: 1.2rem; padding: 0.08rem 0.2rem;}
+      .team-link { font-size: 0.89rem; padding: 0.45rem 0.7rem;}
     }
   </style>
 </head>
@@ -274,10 +288,22 @@
       constructors: document.getElementById('tab-constructors')
     };
     const content = document.getElementById('content');
-    const siteTitle = document.getElementById('site-title');
     let activeTab = 'drivers';
 
-    // --- Caching helpers ---
+    // Mapping of constructor display names to hyperlink URLs
+    const constructorTeamLinks = {
+      "McLaren": "LIVE/McLaren/mclaren.html",
+      "Mercedes": "LIVE/Mercedes/mercedes.html",
+      "Ferrari": "LIVE/Ferrari/ferrari.html",
+      "Red Bull Racing": "LIVE/RedBullRacing/redbullracing.html",
+      "Williams": "LIVE/Williams/williams.html",
+      "Racing Bulls": "LIVE/RacingBulls/racingbulls.html",
+      "Aston Martin": "LIVE/AstonMartin/astonmartin.html",
+      "Kick Sauber": "LIVE/KickSauber/kicksauber.html",
+      "Haas F1 Team": "LIVE/HaasF1Team/haasf1team.html",
+      "Alpine": "LIVE/Alpine/alpine.html"
+    };
+
     function cacheKey(type) { return `f1_${type}_standings`; }
     function getCache(type) {
       try {
@@ -294,7 +320,6 @@
       } catch {}
     }
 
-    // --- Team renaming logic ---
     function renameTeam(name) {
       if (name === 'Red Bull') return 'Red Bull Racing';
       if (name === 'RB F1 Team') return 'Racing Bulls';
@@ -303,7 +328,6 @@
       return name;
     }
 
-    // --- Render ---
     function showLoading(msg='Loading standings...') {
       content.innerHTML = `<div class="spinner">${msg}</div>`;
     }
@@ -322,7 +346,6 @@
             <th>Points</th>
           </tr></thead><tbody>`;
         for (const item of items) {
-          // Custom team logic for Yuki Tsunoda and Liam Lawson
           let teamName;
           if (item.name === "Yuki Tsunoda") {
             teamName = "Red Bull Racing";
@@ -347,9 +370,15 @@
             <th>Points</th>
           </tr></thead><tbody>`;
         for (const item of items) {
+          const displayName = renameTeam(item.name);
+          const link = constructorTeamLinks[displayName];
           html += `<tr>
             <td>${item.position}</td>
-            <td>${renameTeam(item.name)}</td>
+            <td>${
+              link
+                ? `<a class="team-link-table" href="${link}" target="_blank" rel="noopener">${displayName}</a>`
+                : displayName
+            }</td>
             <td>${item.points}</td>
           </tr>`;
         }
@@ -358,7 +387,6 @@
       content.innerHTML = html;
     }
 
-    // --- Data parsing ---
     function parseDrivers(json) {
       try {
         const lists = json?.MRData?.StandingsTable?.StandingsLists;
@@ -385,7 +413,6 @@
       } catch { return []; }
     }
 
-    // --- Fetch ---
     async function fetchStandings(type) {
       let cached = getCache(type);
       if (cached) return cached;
@@ -407,7 +434,6 @@
       }
     }
 
-    // --- Tab logic ---
     function setTabInURL(type) {
       history.replaceState(null, '', '#' + type);
     }
