@@ -7,17 +7,17 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
-      --background: #FF89C4; /* Soft Fuchsia Pink */
+      --background: #FF89C4;
       --tab-selected-font: #FFFFFF;
       --tab-unselected-font: #FFFFFF;
       --tab-bg: rgba(255,255,255,0.17);
-      --tab-selected-bg: #C7007F; /* darker pink for active */
+      --tab-selected-bg: #C7007F;
       --tab-hover-bg: #B30073;
       --card-bg: rgba(255,255,255,0.07);
-      --table-bg: #DE5C9A;   /* darker shade for table */
-      --row-even: #DE5C9A;   /* darker shade for table rows */
-      --row-odd: #B30073;    /* even darker for odd rows */
-      --row-accent: #C7007F; /* accent for hover */
+      --table-bg: #DE5C9A;
+      --row-even: #DE5C9A;
+      --row-odd: #B30073;
+      --row-accent: #C7007F;
       --accent: #FFFFFF;
       --title-shadow: 0 0 10px #C7007F, 0 2px 6px #B30073;
       --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF89C4 60%, #DE5C9A 90%);
@@ -294,6 +294,15 @@
       } catch {}
     }
 
+    // --- Team renaming logic ---
+    function renameTeam(name) {
+      if (name === 'Red Bull') return 'Red Bull Racing';
+      if (name === 'RB F1 Team') return 'Racing Bulls';
+      if (name === 'Sauber') return 'Kick Sauber';
+      if (name === 'Alpine F1 Team') return 'Alpine';
+      return name;
+    }
+
     // --- Render ---
     function showLoading(msg='Loading standings...') {
       content.innerHTML = `<div class="spinner">${msg}</div>`;
@@ -313,10 +322,19 @@
             <th>Points</th>
           </tr></thead><tbody>`;
         for (const item of items) {
+          // Custom team logic for Yuki Tsunoda and Liam Lawson
+          let teamName;
+          if (item.name === "Yuki Tsunoda") {
+            teamName = "Red Bull Racing";
+          } else if (item.name === "Liam Lawson") {
+            teamName = "Racing Bulls";
+          } else {
+            teamName = renameTeam(item.team);
+          }
           html += `<tr>
             <td>${item.position}</td>
             <td>${item.name}</td>
-            <td>${item.team}</td>
+            <td>${teamName}</td>
             <td>${item.points}</td>
           </tr>`;
         }
@@ -331,7 +349,7 @@
         for (const item of items) {
           html += `<tr>
             <td>${item.position}</td>
-            <td>${item.name}</td>
+            <td>${renameTeam(item.name)}</td>
             <td>${item.points}</td>
           </tr>`;
         }
@@ -391,7 +409,6 @@
 
     // --- Tab logic ---
     function setTabInURL(type) {
-      // Set tab info in URL hash (e.g., #drivers or #constructors)
       history.replaceState(null, '', '#' + type);
     }
 
@@ -412,7 +429,6 @@
     }
 
     function initialLoad() {
-      // Determine tab from location.hash
       let tabType = 'drivers';
       if (location.hash === '#constructors') tabType = 'constructors';
       activeTab = tabType;
@@ -429,7 +445,6 @@
       });
     }
 
-    // --- Event listeners ---
     tabs.drivers.addEventListener('click', () => {
       if (activeTab !== 'drivers') switchTab('drivers');
     });
@@ -437,7 +452,6 @@
       if (activeTab !== 'constructors') switchTab('constructors');
     });
 
-    // --- Start ---
     window.addEventListener('DOMContentLoaded', initialLoad);
   </script>
 </body>
