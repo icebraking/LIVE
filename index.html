@@ -390,11 +390,17 @@
     }
 
     // --- Tab logic ---
+    function setTabInURL(type) {
+      // Set tab info in URL hash (e.g., #drivers or #constructors)
+      history.replaceState(null, '', '#' + type);
+    }
+
     async function switchTab(type) {
       if (activeTab === type) return;
       activeTab = type;
       tabs.drivers.classList.toggle('active', type === 'drivers');
       tabs.constructors.classList.toggle('active', type === 'constructors');
+      setTabInURL(type);
       showLoading();
       let items = getCache(type);
       if (!items) items = await fetchStandings(type);
@@ -406,16 +412,20 @@
     }
 
     function initialLoad() {
-      tabs.drivers.classList.add('active');
-      tabs.constructors.classList.remove('active');
-      activeTab = 'drivers';
+      // Determine tab from location.hash
+      let tabType = 'drivers';
+      if (location.hash === '#constructors') tabType = 'constructors';
+      activeTab = tabType;
+      tabs.drivers.classList.toggle('active', tabType === 'drivers');
+      tabs.constructors.classList.toggle('active', tabType === 'constructors');
+      setTabInURL(tabType);
       showLoading();
-      fetchStandings('drivers').then(items => {
+      fetchStandings(tabType).then(items => {
         if (!items || !items.length) {
           showError();
           return;
         }
-        renderTable('drivers', items);
+        renderTable(tabType, items);
       });
     }
 
