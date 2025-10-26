@@ -2,143 +2,372 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>F1 Standings</title>
-  <link rel="icon" type="image/png" href="favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ICE Braking | F1 Standings</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f8f8f8;
-      color: #222;
+    :root {
+      --background: #000000;
+      --foreground: #a259ff; /* purple for general text */
+      --accent-gold: linear-gradient(90deg, #FFD700 0%, #FFC300 40%, #FFFACD 100%);
+      --gold: #FFD700;
+      --purple: #a259ff;
+      --gray-dark: #111;
+      --gray: #222;
+      --tab-active: var(--gold);
+      --tab-inactive: var(--purple);
+      --row-even: #111;
+      --row-odd: #000;
+      --spinner: #a259ff;
+      --border: #222;
+      --table-scroll-bg: #000;
     }
-
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 5.5rem 1rem 1.5rem 1rem; /* moved lower */
+    }
+    /* Metallic gold effect for title */
+    header h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin: 0 0 0.3rem 0;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      background: var(--accent-gold);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 1px 8px #FFD70077,
+        0 0px 2px #FFFACD,
+        0 2px 2px #FFC30077;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: var(--gray-dark);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+    }
     .tabs {
       display: flex;
-      justify-content: center;
-      margin-top: 30px;
-      margin-bottom: 30px;
+      gap: 0.5rem;
     }
-    .tab-btn {
-      padding: 15px 30px;
-      border: none;
+    .tab {
+      padding: 0.5rem 1.2rem;
+      font-size: 1rem;
       background: none;
+      border: none;
+      border-radius: 999px 999px 0 0;
       cursor: pointer;
-      font-size: 1.2em;
-      font-style: italic; /* Make all tabs italic */
-      color: fuchsia; /* Default: inactive tab color */
-      transition: color 0.2s;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-weight: 700;
       outline: none;
+      border-bottom: 3px solid transparent;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 1px;
     }
-    .tab-btn.active {
-      color: #222; /* Active tab: normal color */
-      font-style: italic; /* Still italic for Drivers/Constructors */
-      font-weight: bold;
-      border-bottom: 2px solid #222;
+    .tab.active {
+      color: var(--gold);
+      background: var(--background);
+      border-bottom: 3px solid var(--gold);
     }
-    /* Optional: Hover effect for tabs */
-    .tab-btn:not(.active):hover {
-      color: #a020f0;
+    .tab:not(.active) {
+      color: var(--purple);
+      background: var(--gray);
     }
-
-    .tab-content {
+    .tab:not(.active):hover {
+      color: var(--gold);
+      background: #222;
+    }
+    main {
+      margin-top: 72px; /* nav + some space */
       max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      min-height: 200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 1rem 2rem 1rem;
+      color: var(--foreground);
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--table-scroll-bg);
+      border-radius: 10px;
+      box-shadow: 0 2px 12px #0002;
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 380px;
+      font-size: 1rem;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      color: var(--foreground);
+    }
+    thead {
+      background: var(--gray-dark);
+    }
+    th, td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      color: var(--foreground) !important;
+    }
+    th {
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 1.05rem;
+      background: var(--gray-dark);
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      color: var(--foreground) !important;
+    }
+    tbody tr:nth-child(even) {
+      background: var(--row-even);
+    }
+    tbody tr:nth-child(odd) {
+      background: var(--row-odd);
+    }
+    .spinner,
+    .loading-message,
+    .error-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2.5rem auto;
+      min-height: 120px;
+      font-size: 1.25rem;
+      color: var(--foreground);
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-weight: 400;
+      text-align: center;
+    }
+    .spinner::after {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 4px solid var(--spinner);
+      border-radius: 50%;
+      border-top: 4px solid transparent;
+      animation: spin 1s linear infinite;
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg);}
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 2.1rem; }
+      nav { height: 48px; }
+      main { margin-top: 64px; }
+      th, td { padding: 0.55rem 0.5rem; font-size: 0.95rem;}
+    }
+    @media (max-width: 430px) {
+      .table-container { padding: 0; }
+      th, td { font-size: 0.86rem;}
     }
   </style>
 </head>
 <body>
-  <div class="tabs">
-    <button id="driversTab" class="tab-btn active">Drivers</button>
-    <button id="constructorsTab" class="tab-btn">Constructors</button>
-  </div>
-  <div id="driversContent" class="tab-content">
-    <!-- Driver standings will appear here -->
-    <p>Loading driver standings...</p>
-  </div>
-  <div id="constructorsContent" class="tab-content" style="display:none">
-    <!-- Constructor standings will appear here -->
-    <p>Loading constructor standings...</p>
-  </div>
-
+  <nav>
+    <div class="tabs">
+      <button class="tab active" id="tab-drivers" type="button">Drivers</button>
+      <button class="tab" id="tab-constructors" type="button">Constructors</button>
+    </div>
+  </nav>
+  <header>
+    <h1>ICE Braking</h1>
+  </header>
+  <main>
+    <div id="content">
+      <div class="spinner" id="loading">Loading standings...</div>
+    </div>
+  </main>
   <script>
-    // Simple tab logic
-    const driversTab = document.getElementById('driversTab');
-    const constructorsTab = document.getElementById('constructorsTab');
-    const driversContent = document.getElementById('driversContent');
-    const constructorsContent = document.getElementById('constructorsContent');
-
-    driversTab.onclick = () => {
-      driversTab.classList.add('active');
-      constructorsTab.classList.remove('active');
-      driversContent.style.display = '';
-      constructorsContent.style.display = 'none';
+    // --- CONFIG ---
+    const API = {
+      drivers: 'https://api.jolpi.ca/ergast/f1/current/driverStandings.json',
+      constructors: 'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
     };
-    constructorsTab.onclick = () => {
-      constructorsTab.classList.add('active');
-      driversTab.classList.remove('active');
-      constructorsContent.style.display = '';
-      driversContent.style.display = 'none';
+    const CACHE_TTL = 300; // seconds (5 min)
+
+    // --- DOM ---
+    const tabs = {
+      drivers: document.getElementById('tab-drivers'),
+      constructors: document.getElementById('tab-constructors')
     };
+    const content = document.getElementById('content');
+    let activeTab = 'drivers';
 
-    // Fetch and display standings (example, update with your exact API/logic)
-    fetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json')
-      .then(res => res.json())
-      .then(data => {
-        const table = document.createElement('table');
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.innerHTML = `<tr>
-          <th>Pos</th>
-          <th>Driver</th>
-          <th>Points</th>
-          <th>Wins</th>
-          <th>Constructor</th>
-        </tr>`;
-        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-        standings.forEach(item => {
-          const driver = item.Driver;
-          table.innerHTML += `<tr>
-            <td>${item.position}</td>
-            <td>${driver.givenName} ${driver.familyName}</td>
-            <td>${item.points}</td>
-            <td>${item.wins}</td>
-            <td>${item.Constructors[0].name}</td>
-          </tr>`;
-        });
-        driversContent.innerHTML = '';
-        driversContent.appendChild(table);
-      });
+    // --- Caching helpers ---
+    function cacheKey(type) { return `f1_${type}_standings`; }
+    function getCache(type) {
+      try {
+        const item = localStorage.getItem(cacheKey(type));
+        if (!item) return null;
+        const { data, ts } = JSON.parse(item);
+        if (Date.now()/1000 - ts > CACHE_TTL) return null;
+        return data;
+      } catch { return null; }
+    }
+    function setCache(type, data) {
+      try {
+        localStorage.setItem(cacheKey(type), JSON.stringify({ data, ts: Math.floor(Date.now()/1000) }));
+      } catch {}
+    }
 
-    fetch('https://api.jolpi.ca/ergast/f1/current/constructorStandings.json')
-      .then(res => res.json())
-      .then(data => {
-        const table = document.createElement('table');
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        table.innerHTML = `<tr>
-          <th>Pos</th>
-          <th>Constructor</th>
-          <th>Points</th>
-          <th>Wins</th>
-        </tr>`;
-        const standings = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
-        standings.forEach(item => {
-          table.innerHTML += `<tr>
+    // --- Render ---
+    function showLoading(msg='Loading standings...') {
+      content.innerHTML = `<div class="spinner">${msg}</div>`;
+    }
+    function showError(msg='Unable to load standings') {
+      content.innerHTML = `<div class="error-message">${msg}</div>`;
+    }
+
+    function renderTable(type, items) {
+      let html = '';
+      if (type === 'drivers') {
+        html += `<div class="table-container"><table><thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Points</th>
+          </tr></thead><tbody>`;
+        for (const item of items) {
+          html += `<tr>
             <td>${item.position}</td>
-            <td>${item.Constructor.name}</td>
+            <td>${item.name}</td>
+            <td>${item.team}</td>
             <td>${item.points}</td>
-            <td>${item.wins}</td>
           </tr>`;
-        });
-        constructorsContent.innerHTML = '';
-        constructorsContent.appendChild(table);
+        }
+        html += `</tbody></table></div>`;
+      } else if (type === 'constructors') {
+        html += `<div class="table-container"><table><thead>
+          <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Points</th>
+          </tr></thead><tbody>`;
+        for (const item of items) {
+          html += `<tr>
+            <td>${item.position}</td>
+            <td>${item.name}</td>
+            <td>${item.points}</td>
+          </tr>`;
+        }
+        html += `</tbody></table></div>`;
+      }
+      content.innerHTML = html;
+    }
+
+    // --- Data parsing ---
+    function parseDrivers(json) {
+      try {
+        const lists = json?.MRData?.StandingsTable?.StandingsLists;
+        if (!lists || !lists.length) return [];
+        const drivers = lists[0]?.DriverStandings || [];
+        return drivers.map(d => ({
+          position: d.positionText || d.position || '-',
+          name: `${d.Driver.givenName} ${d.Driver.familyName}`,
+          team: d.Constructors[0]?.name || '', // first constructor (usually only one)
+          points: d.points
+        }));
+      } catch { return []; }
+    }
+    function parseConstructors(json) {
+      try {
+        const lists = json?.MRData?.StandingsTable?.StandingsLists;
+        if (!lists || !lists.length) return [];
+        const constructors = lists[0]?.ConstructorStandings || [];
+        return constructors.map(c => ({
+          position: c.positionText || c.position || '-',
+          name: c.Constructor?.name || '-',
+          points: c.points
+        }));
+      } catch { return []; }
+    }
+
+    // --- Fetch ---
+    async function fetchStandings(type) {
+      let cached = getCache(type);
+      if (cached) return cached;
+      showLoading();
+      try {
+        const url = API[type];
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('Network error');
+        const json = await resp.json();
+        let items = [];
+        if (type === 'drivers') items = parseDrivers(json);
+        else items = parseConstructors(json);
+        if (!items.length) throw new Error('No data');
+        setCache(type, items);
+        return items;
+      } catch {
+        showError();
+        return null;
+      }
+    }
+
+    // --- Tab logic ---
+    async function switchTab(type) {
+      if (activeTab === type) return;
+      activeTab = type;
+      tabs.drivers.classList.toggle('active', type === 'drivers');
+      tabs.constructors.classList.toggle('active', type === 'constructors');
+      showLoading();
+      let items = getCache(type);
+      if (!items) items = await fetchStandings(type);
+      if (!items || !items.length) {
+        showError();
+        return;
+      }
+      renderTable(type, items);
+    }
+
+    function initialLoad() {
+      tabs.drivers.classList.add('active');
+      tabs.constructors.classList.remove('active');
+      activeTab = 'drivers';
+      showLoading();
+      fetchStandings('drivers').then(items => {
+        if (!items || !items.length) {
+          showError();
+          return;
+        }
+        renderTable('drivers', items);
       });
+    }
+
+    // --- Event listeners ---
+    tabs.drivers.addEventListener('click', () => {
+      if (activeTab !== 'drivers') switchTab('drivers');
+    });
+    tabs.constructors.addEventListener('click', () => {
+      if (activeTab !== 'constructors') switchTab('constructors');
+    });
+
+    // --- Start ---
+    window.addEventListener('DOMContentLoaded', initialLoad);
   </script>
 </body>
 </html>
