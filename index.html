@@ -7,64 +7,83 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
-      --background: #FF00FF; /* Fuchsia */
-      --tab-selected-font: #FFFFFF; /* White for selected tab and header */
+      --background: #FF89C4; /* Soft Fuchsia Pink */
+      --tab-selected-font: #FFFFFF;
       --tab-unselected-font: #FFFFFF;
-      --tab-bg: rgba(255,255,255,0.13);
-      --tab-selected-bg: rgba(255,255,255,0.28);
-      --card-bg: rgba(255,255,255,0.09);
-      --table-bg: #FF00FF;
-      --row-even: #FF00FF;
-      --row-odd: #E100E1;
-      --row-accent: #C800C8;
+      --tab-bg: rgba(255,255,255,0.17);
+      --tab-selected-bg: #C7007F; /* darker pink for active */
+      --tab-hover-bg: #B30073;
+      --card-bg: rgba(255,255,255,0.07);
+      --table-bg: #DE5C9A;   /* darker shade for table */
+      --row-even: #DE5C9A;   /* darker shade for table rows */
+      --row-odd: #B30073;    /* even darker for odd rows */
+      --row-accent: #C7007F; /* accent for hover */
       --accent: #FFFFFF;
-      --header-fuchsia: #FF00FF;
-      --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF00FF 60%, #E100E1 90%);
-      --futuristic-shadow: 0 0 18px #FFFFFF66, 0 0 36px #FF00FF33, 0 0 54px #E100E166;
+      --title-shadow: 0 0 10px #C7007F, 0 2px 6px #B30073;
+      --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF89C4 60%, #DE5C9A 90%);
+      --futuristic-shadow: 0 0 18px #C7007F66, 0 0 36px #B3007333, 0 0 54px #DE5C9A66;
     }
     body {
       margin: 0;
       background: var(--background);
       color: #fff;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       min-height: 100vh;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
       transition: background 0.3s;
     }
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 70px;
-      padding-top: 10px;
-      border-bottom: none;
-      backdrop-filter: blur(6px);
+    header {
+      text-align: center;
+      padding: 90px 1rem 0.5rem 1rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: 0.07em;
+      margin: 0 0 0.3rem 0;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
+      color: var(--tab-selected-font);
+      text-shadow: var(--title-shadow);
+      background: var(--futuristic-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: var(--tab-selected-font);
+      filter: drop-shadow(0 0 8px #DE5C9A77);
+      transition: color 0.3s;
+      border-radius: 14px;
+      padding: 0.25rem 1.2rem;
+      display: inline-block;
+      box-shadow: var(--futuristic-shadow);
+      font-stretch: condensed;
+    }
+    .tabs-section {
+      text-align: center;
+      margin-top: 14px;
+      margin-bottom: 0;
     }
     .tabs {
-      display: flex;
+      display: inline-flex;
       gap: 1.2rem;
+      margin-bottom: 0;
     }
     .tab {
-      padding: 0.7rem 2.2rem;
-      font-size: 1.2rem;
+      padding: 0.5rem 1.7rem;
+      font-size: 1.15rem;
       background: var(--tab-bg);
       border: none;
-      border-radius: 35px;
+      border-radius: 30px;
       cursor: pointer;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       font-weight: 700;
       font-style: italic;
       outline: none;
       margin-bottom: 0.5rem;
       color: var(--tab-unselected-font);
-      box-shadow: 0 0 10px #E100E188;
-      letter-spacing: 0.08em;
+      box-shadow: 0 0 6px #DE5C9A88;
+      letter-spacing: 0.07em;
       transition: background 0.15s, color 0.15s, box-shadow 0.3s;
       position: relative;
       overflow: hidden;
@@ -73,58 +92,33 @@
     .tab.active {
       color: var(--tab-selected-font);
       background: var(--tab-selected-bg);
-      box-shadow: 0 0 16px #FFF, 0 0 8px #FF00FF;
-      text-shadow: 0 0 7px #FFF, 0 0 10px #FF00FF;
+      box-shadow: 0 0 12px #C7007F, 0 0 6px #DE5C9A;
+      text-shadow: 0 0 3px #fff, 0 0 6px #DE5C9A;
     }
     .tab:not(.active):hover {
-      background: var(--tab-selected-bg);
+      background: var(--tab-hover-bg);
       color: var(--accent);
-      box-shadow: 0 0 12px #E100E1;
-    }
-    header {
-      text-align: center;
-      padding: 120px 1rem 1.5rem 1rem;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-    header h1 {
-      font-size: 3.8rem;
-      font-weight: 900;
-      letter-spacing: 0.15em;
-      margin: 0 0 0.3rem 0;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
-      color: var(--tab-selected-font);
-      text-shadow: 0 0 28px #FFF, 0 0 16px #FF00FF, 0 0 6px #E100E1;
-      background: var(--futuristic-gradient);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: var(--tab-selected-font);
-      filter: drop-shadow(0 0 16px #FF00FF77);
-      transition: color 0.3s;
-      border-radius: 20px;
-      padding: 0.5rem 2rem;
-      display: inline-block;
-      box-shadow: var(--futuristic-shadow);
+      box-shadow: 0 0 8px #B30073;
     }
     main {
-      margin-top: 60px;
-      max-width: 980px;
+      margin-top: 26px;
+      max-width: 900px;
       margin-left: auto;
       margin-right: auto;
       padding: 0 1rem 2rem 1rem;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       color: #fff;
-      border-radius: 18px;
+      border-radius: 12px;
       background: transparent;
-      box-shadow: 0 0 32px #FF00FF44;
+      box-shadow: 0 0 24px #DE5C9A44;
       backdrop-filter: blur(2px);
     }
     .table-container {
       width: 100%;
       overflow-x: auto;
       background: var(--table-bg);
-      border-radius: 18px;
-      box-shadow: 0 2px 18px #E100E166;
+      border-radius: 14px;
+      box-shadow: 0 2px 18px #B3007366;
       margin-top: 2.5rem;
       border: none;
     }
@@ -133,12 +127,12 @@
       border-spacing: 0;
       width: 100%;
       min-width: 380px;
-      font-size: 1.13rem;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-size: 1.08rem;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       color: #fff;
       background: transparent;
-      box-shadow: 0 0 10px #FF00FF44;
-      border-radius: 18px;
+      box-shadow: 0 0 10px #DE5C9A44;
+      border-radius: 14px;
       overflow: hidden;
     }
     thead {
@@ -147,20 +141,20 @@
       top: 0;
     }
     th, td {
-      padding: 1rem 1.1rem;
+      padding: 0.9rem 1rem;
       text-align: left;
       white-space: nowrap;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       color: #fff !important;
       letter-spacing: 0.07em;
       border: none;
     }
     th {
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1.08rem;
       background: var(--table-bg);
-      color: #FFF !important;
-      text-shadow: 0 0 8px #FFF, 0 0 4px #FF00FF;
+      color: #FFD1DC !important;
+      text-shadow: 0 0 8px #DE5C9A, 0 0 4px #C7007F;
       border: none;
     }
     tbody tr:nth-child(even) {
@@ -176,7 +170,7 @@
     tbody tr:hover {
       background: var(--row-accent);
       color: #fff;
-      box-shadow: 0 0 8px #FF00FF;
+      box-shadow: 0 0 8px #DE5C9A;
       transition: background 0.2s, color 0.2s;
       border: none;
     }
@@ -188,16 +182,16 @@
       justify-content: center;
       margin: 2.5rem auto;
       min-height: 120px;
-      font-size: 1.35rem;
-      color: #fff;
-      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-size: 1.24rem;
+      color: #FFD1DC;
+      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
       font-weight: 600;
       text-align: center;
-      text-shadow: 0 0 8px #FFF, 0 0 4px #FF00FF;
+      text-shadow: 0 0 8px #DE5C9A, 0 0 4px #B30073;
       letter-spacing: 0.1em;
       background: var(--table-bg);
       border-radius: 12px;
-      box-shadow: 0 0 12px #FF00FF44;
+      box-shadow: 0 0 12px #B3007344;
       border: none;
     }
     .spinner::after {
@@ -205,41 +199,42 @@
       display: inline-block;
       width: 32px;
       height: 32px;
-      border: 4px solid #FFF;
+      border: 4px solid #DE5C9A;
       border-radius: 50%;
       border-top: 4px solid transparent;
       animation: spin 1s linear infinite;
       margin-left: 12px;
       vertical-align: middle;
-      box-shadow: 0 0 16px #E100E1;
+      box-shadow: 0 0 16px #B30073;
       border: none;
     }
     @keyframes spin {
       100% { transform: rotate(360deg);}
     }
     @media (max-width: 700px) {
-      header h1 { font-size: 2.2rem; }
+      header h1 { font-size: 2rem; }
       nav { height: 52px; }
       main { margin-top: 40px; }
-      th, td { padding: 0.6rem 0.5rem; font-size: 1rem;}
+      th, td { padding: 0.6rem 0.5rem; font-size: 0.95rem;}
+      .tab { font-size: 1rem; padding: 0.45rem 1rem;}
     }
     @media (max-width: 430px) {
       .table-container { padding: 0; }
-      th, td { font-size: 0.93rem;}
-      .tab { padding: 0.35rem 0.7rem; font-size: 0.96rem;}
-      header { padding-top: 90px; }
+      th, td { font-size: 0.9rem;}
+      .tab { padding: 0.35rem 0.7rem; font-size: 0.93rem;}
+      header { padding-top: 70px; }
     }
   </style>
 </head>
 <body>
-  <nav>
-    <div class="tabs">
-      <button class="tab active" id="tab-drivers" type="button">Drivers</button>
-      <button class="tab" id="tab-constructors" type="button">Constructors</button>
-    </div>
-  </nav>
   <header>
     <h1 id="site-title">ICE Braking</h1>
+    <div class="tabs-section">
+      <div class="tabs">
+        <button class="tab active" id="tab-drivers" type="button">D</button>
+        <button class="tab" id="tab-constructors" type="button">C</button>
+      </div>
+    </div>
   </header>
   <main>
     <div id="content">
@@ -378,11 +373,13 @@
     // --- Tab logic ---
     function updateSiteTitleColor() {
       siteTitle.style.color = getComputedStyle(document.querySelector('.tab.active')).color;
-      siteTitle.style.textShadow = '0 0 28px #FFF, 0 0 16px #FF00FF, 0 0 6px #E100E1';
+      siteTitle.style.textShadow = '0 0 10px #C7007F, 0 2px 6px #B30073';
       siteTitle.style.background = 'none';
       siteTitle.style.webkitBackgroundClip = '';
       siteTitle.style.backgroundClip = '';
       siteTitle.style.webkitTextFillColor = '';
+      siteTitle.style.fontStyle = 'italic';
+      siteTitle.style.fontStretch = 'condensed';
     }
 
     async function switchTab(type) {
