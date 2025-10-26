@@ -7,142 +7,178 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root {
-      --background: #000000;
-      --foreground: #a259ff; /* purple for general text */
-      --accent-gold: linear-gradient(90deg, #FFD700 0%, #FFC300 40%, #FFFACD 100%);
-      --gold: #FFD700;
-      --purple: #a259ff;
-      --gray-dark: #111;
-      --gray: #222;
-      --tab-active: var(--gold);
-      --tab-inactive: var(--purple);
-      --row-even: #111;
-      --row-odd: #000;
-      --spinner: #a259ff;
-      --border: #222;
-      --table-scroll-bg: #000;
+      --background: #FF00FF; /* Fuchsia */
+      --tab-selected-font: #FFFFFF; /* White for selected tab and header */
+      --tab-unselected-font: #FFFFFF;
+      --tab-bg: rgba(255,255,255,0.13);
+      --tab-selected-bg: rgba(255,255,255,0.28);
+      --card-bg: rgba(255,255,255,0.09);
+      --table-bg: #FF00FF;
+      --row-even: #FF00FF;
+      --row-odd: #E100E1;
+      --row-accent: #C800C8;
+      --accent: #FFFFFF;
+      --header-fuchsia: #FF00FF;
+      --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF00FF 60%, #E100E1 90%);
+      --futuristic-shadow: 0 0 18px #FFFFFF66, 0 0 36px #FF00FF33, 0 0 54px #E100E166;
     }
     body {
       margin: 0;
       background: var(--background);
-      color: var(--foreground);
-      font-family: Cambria, 'Times New Roman', Times, serif;
+      color: #fff;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
       min-height: 100vh;
-    }
-    header {
-      text-align: center;
-      padding: 5.5rem 1rem 1.5rem 1rem; /* moved lower */
-    }
-    /* Metallic gold effect for title */
-    header h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      margin: 0 0 0.3rem 0;
-      font-family: Cambria, 'Times New Roman', Times, serif;
-      background: var(--accent-gold);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      text-shadow:
-        0 1px 8px #FFD70077,
-        0 0px 2px #FFFACD,
-        0 2px 2px #FFC30077;
+      letter-spacing: 0.05em;
+      transition: background 0.3s;
     }
     nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 99;
-      background: var(--gray-dark);
-      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 56px;
-      font-family: Cambria, 'Times New Roman', Times, serif;
+      height: 70px;
+      padding-top: 10px;
+      border-bottom: none;
+      backdrop-filter: blur(6px);
     }
     .tabs {
       display: flex;
-      gap: 0.5rem;
+      gap: 1.2rem;
     }
     .tab {
-      padding: 0.5rem 1.2rem;
-      font-size: 1rem;
-      background: none;
+      padding: 0.7rem 2.2rem;
+      font-size: 1.2rem;
+      background: var(--tab-bg);
       border: none;
-      border-radius: 999px 999px 0 0;
+      border-radius: 35px;
       cursor: pointer;
-      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
       font-weight: 700;
+      font-style: italic;
       outline: none;
-      border-bottom: 3px solid transparent;
-      transition: background 0.15s, color 0.15s;
-      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: var(--tab-unselected-font);
+      box-shadow: 0 0 10px #E100E188;
+      letter-spacing: 0.08em;
+      transition: background 0.15s, color 0.15s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+      border: none;
     }
     .tab.active {
-      color: var(--gold);
-      background: var(--background);
-      border-bottom: 3px solid var(--gold);
-    }
-    .tab:not(.active) {
-      color: var(--purple);
-      background: var(--gray);
+      color: var(--tab-selected-font);
+      background: var(--tab-selected-bg);
+      box-shadow: 0 0 16px #FFF, 0 0 8px #FF00FF;
+      text-shadow: 0 0 7px #FFF, 0 0 10px #FF00FF;
     }
     .tab:not(.active):hover {
-      color: var(--gold);
-      background: #222;
+      background: var(--tab-selected-bg);
+      color: var(--accent);
+      box-shadow: 0 0 12px #E100E1;
+    }
+    header {
+      text-align: center;
+      padding: 120px 1rem 1.5rem 1rem;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    header h1 {
+      font-size: 3.8rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      margin: 0 0 0.3rem 0;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      color: var(--tab-selected-font);
+      text-shadow: 0 0 28px #FFF, 0 0 16px #FF00FF, 0 0 6px #E100E1;
+      background: var(--futuristic-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: var(--tab-selected-font);
+      filter: drop-shadow(0 0 16px #FF00FF77);
+      transition: color 0.3s;
+      border-radius: 20px;
+      padding: 0.5rem 2rem;
+      display: inline-block;
+      box-shadow: var(--futuristic-shadow);
     }
     main {
-      margin-top: 72px; /* nav + some space */
-      max-width: 900px;
+      margin-top: 60px;
+      max-width: 980px;
       margin-left: auto;
       margin-right: auto;
       padding: 0 1rem 2rem 1rem;
-      color: var(--foreground);
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      color: #fff;
+      border-radius: 18px;
+      background: transparent;
+      box-shadow: 0 0 32px #FF00FF44;
+      backdrop-filter: blur(2px);
     }
     .table-container {
       width: 100%;
       overflow-x: auto;
-      background: var(--table-scroll-bg);
-      border-radius: 10px;
-      box-shadow: 0 2px 12px #0002;
-      margin-top: 1.5rem;
-      border: 1px solid var(--border);
+      background: var(--table-bg);
+      border-radius: 18px;
+      box-shadow: 0 2px 18px #E100E166;
+      margin-top: 2.5rem;
+      border: none;
     }
     table {
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       width: 100%;
       min-width: 380px;
-      font-size: 1rem;
-      font-family: Cambria, 'Times New Roman', Times, serif;
-      color: var(--foreground);
+      font-size: 1.13rem;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      color: #fff;
+      background: transparent;
+      box-shadow: 0 0 10px #FF00FF44;
+      border-radius: 18px;
+      overflow: hidden;
     }
     thead {
-      background: var(--gray-dark);
+      background: var(--table-bg);
+      position: sticky;
+      top: 0;
     }
     th, td {
-      padding: 0.7rem 1rem;
+      padding: 1rem 1.1rem;
       text-align: left;
-      border-bottom: 1px solid var(--border);
       white-space: nowrap;
-      color: var(--foreground) !important;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      color: #fff !important;
+      letter-spacing: 0.07em;
+      border: none;
     }
     th {
-      font-weight: 700;
-      letter-spacing: 1px;
-      font-size: 1.05rem;
-      background: var(--gray-dark);
-      font-family: Cambria, 'Times New Roman', Times, serif;
-      color: var(--foreground) !important;
+      font-weight: 800;
+      font-size: 1.15rem;
+      background: var(--table-bg);
+      color: #FFF !important;
+      text-shadow: 0 0 8px #FFF, 0 0 4px #FF00FF;
+      border: none;
     }
     tbody tr:nth-child(even) {
       background: var(--row-even);
+      transition: background 0.2s;
+      border: none;
     }
     tbody tr:nth-child(odd) {
       background: var(--row-odd);
+      transition: background 0.2s;
+      border: none;
+    }
+    tbody tr:hover {
+      background: var(--row-accent);
+      color: #fff;
+      box-shadow: 0 0 8px #FF00FF;
+      transition: background 0.2s, color 0.2s;
+      border: none;
     }
     .spinner,
     .loading-message,
@@ -152,36 +188,46 @@
       justify-content: center;
       margin: 2.5rem auto;
       min-height: 120px;
-      font-size: 1.25rem;
-      color: var(--foreground);
-      font-family: Cambria, 'Times New Roman', Times, serif;
-      font-weight: 400;
+      font-size: 1.35rem;
+      color: #fff;
+      font-family: 'Cambria', 'Segoe UI', 'Roboto', Arial, sans-serif;
+      font-weight: 600;
       text-align: center;
+      text-shadow: 0 0 8px #FFF, 0 0 4px #FF00FF;
+      letter-spacing: 0.1em;
+      background: var(--table-bg);
+      border-radius: 12px;
+      box-shadow: 0 0 12px #FF00FF44;
+      border: none;
     }
     .spinner::after {
       content: '';
       display: inline-block;
       width: 32px;
       height: 32px;
-      border: 4px solid var(--spinner);
+      border: 4px solid #FFF;
       border-radius: 50%;
       border-top: 4px solid transparent;
       animation: spin 1s linear infinite;
       margin-left: 12px;
       vertical-align: middle;
+      box-shadow: 0 0 16px #E100E1;
+      border: none;
     }
     @keyframes spin {
       100% { transform: rotate(360deg);}
     }
-    @media (max-width: 600px) {
-      header h1 { font-size: 2.1rem; }
-      nav { height: 48px; }
-      main { margin-top: 64px; }
-      th, td { padding: 0.55rem 0.5rem; font-size: 0.95rem;}
+    @media (max-width: 700px) {
+      header h1 { font-size: 2.2rem; }
+      nav { height: 52px; }
+      main { margin-top: 40px; }
+      th, td { padding: 0.6rem 0.5rem; font-size: 1rem;}
     }
     @media (max-width: 430px) {
       .table-container { padding: 0; }
-      th, td { font-size: 0.86rem;}
+      th, td { font-size: 0.93rem;}
+      .tab { padding: 0.35rem 0.7rem; font-size: 0.96rem;}
+      header { padding-top: 90px; }
     }
   </style>
 </head>
@@ -193,7 +239,7 @@
     </div>
   </nav>
   <header>
-    <h1>ICE Braking</h1>
+    <h1 id="site-title">ICE Braking</h1>
   </header>
   <main>
     <div id="content">
@@ -214,6 +260,7 @@
       constructors: document.getElementById('tab-constructors')
     };
     const content = document.getElementById('content');
+    const siteTitle = document.getElementById('site-title');
     let activeTab = 'drivers';
 
     // --- Caching helpers ---
@@ -288,7 +335,7 @@
         return drivers.map(d => ({
           position: d.positionText || d.position || '-',
           name: `${d.Driver.givenName} ${d.Driver.familyName}`,
-          team: d.Constructors[0]?.name || '', // first constructor (usually only one)
+          team: d.Constructors[0]?.name || '',
           points: d.points
         }));
       } catch { return []; }
@@ -329,11 +376,21 @@
     }
 
     // --- Tab logic ---
+    function updateSiteTitleColor() {
+      siteTitle.style.color = getComputedStyle(document.querySelector('.tab.active')).color;
+      siteTitle.style.textShadow = '0 0 28px #FFF, 0 0 16px #FF00FF, 0 0 6px #E100E1';
+      siteTitle.style.background = 'none';
+      siteTitle.style.webkitBackgroundClip = '';
+      siteTitle.style.backgroundClip = '';
+      siteTitle.style.webkitTextFillColor = '';
+    }
+
     async function switchTab(type) {
       if (activeTab === type) return;
       activeTab = type;
       tabs.drivers.classList.toggle('active', type === 'drivers');
       tabs.constructors.classList.toggle('active', type === 'constructors');
+      updateSiteTitleColor();
       showLoading();
       let items = getCache(type);
       if (!items) items = await fetchStandings(type);
@@ -348,6 +405,7 @@
       tabs.drivers.classList.add('active');
       tabs.constructors.classList.remove('active');
       activeTab = 'drivers';
+      updateSiteTitleColor();
       showLoading();
       fetchStandings('drivers').then(items => {
         if (!items || !items.length) {
