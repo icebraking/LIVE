@@ -38,26 +38,31 @@
       margin-top: 0;
       margin-bottom: 0;
     }
-    header h1 {
-      font-size: 3rem;
+    .ice-scatter {
+      font-size: 2rem;
       font-weight: 900;
       font-style: italic;
-      letter-spacing: 0.07em;
+      letter-spacing: -0.09em;
       margin: 0 0 0.3rem 0;
       font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      color: var(--tab-selected-font);
-      text-shadow: var(--title-shadow);
-      background: var(--futuristic-gradient);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: var(--tab-selected-font);
-      filter: drop-shadow(0 0 8px #DE5C9A77);
-      transition: color 0.3s;
       border-radius: 14px;
-      padding: 0.25rem 1.2rem;
+      padding: 0.12rem 0.4rem;
       display: inline-block;
       box-shadow: var(--futuristic-shadow);
       font-stretch: condensed;
+      color: #C71585;
+      background: none;
+      -webkit-background-clip: initial;
+      -webkit-text-fill-color: #C71585;
+    }
+    .ice-scatter span {
+      display: inline-block;
+      font-style: inherit;
+      font-weight: inherit;
+      font-family: inherit;
+      letter-spacing: inherit;
+      text-shadow: none;
+      color: #C71585;
     }
     .tabs-section {
       text-align: center;
@@ -217,18 +222,32 @@
       main { margin-top: 40px; }
       th, td { padding: 0.6rem 0.5rem; font-size: 0.95rem;}
       .tab { font-size: 1rem; padding: 0.45rem 1rem;}
+      .ice-scatter { font-size: 1.6rem; padding: 0.12rem 0.4rem;}
     }
     @media (max-width: 430px) {
       .table-container { padding: 0; }
       th, td { font-size: 0.9rem;}
       .tab { padding: 0.35rem 0.7rem; font-size: 0.93rem;}
       header { padding-top: 70px; }
+      .ice-scatter { font-size: 1.2rem; padding: 0.08rem 0.2rem;}
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 id="site-title">ICE Braking</h1>
+    <h1 id="site-title" class="ice-scatter">
+      <span style="color:#C71585;">I</span>
+      <span style="color:#C71585;">C</span>
+      <span style="color:#C71585;">E</span>
+      <span style="color:#C71585;"> </span>
+      <span style="color:#C71585;">B</span>
+      <span style="color:#C71585;">r</span>
+      <span style="color:#C71585;">a</span>
+      <span style="color:#C71585;">k</span>
+      <span style="color:#C71585;">i</span>
+      <span style="color:#C71585;">n</span>
+      <span style="color:#C71585;">g</span>
+    </h1>
     <div class="tabs-section">
       <div class="tabs">
         <button class="tab active" id="tab-drivers" type="button">D</button>
@@ -371,23 +390,11 @@
     }
 
     // --- Tab logic ---
-    function updateSiteTitleColor() {
-      siteTitle.style.color = getComputedStyle(document.querySelector('.tab.active')).color;
-      siteTitle.style.textShadow = '0 0 10px #C7007F, 0 2px 6px #B30073';
-      siteTitle.style.background = 'none';
-      siteTitle.style.webkitBackgroundClip = '';
-      siteTitle.style.backgroundClip = '';
-      siteTitle.style.webkitTextFillColor = '';
-      siteTitle.style.fontStyle = 'italic';
-      siteTitle.style.fontStretch = 'condensed';
-    }
-
     async function switchTab(type) {
       if (activeTab === type) return;
       activeTab = type;
       tabs.drivers.classList.toggle('active', type === 'drivers');
       tabs.constructors.classList.toggle('active', type === 'constructors');
-      updateSiteTitleColor();
       showLoading();
       let items = getCache(type);
       if (!items) items = await fetchStandings(type);
@@ -402,7 +409,6 @@
       tabs.drivers.classList.add('active');
       tabs.constructors.classList.remove('active');
       activeTab = 'drivers';
-      updateSiteTitleColor();
       showLoading();
       fetchStandings('drivers').then(items => {
         if (!items || !items.length) {
