@@ -15,6 +15,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     .container {
       max-width: 800px;
@@ -23,6 +24,7 @@
       background: rgba(255,255,255,0.06);
       border-radius: 18px;
       box-shadow: 0 2px 24px #B3007366;
+      position: relative;
     }
     h1 {
       font-family: Cambria, 'Times New Roman', Times, serif;
@@ -42,13 +44,37 @@
       line-height: 1.7;
       text-align: justify;
     }
+    .back-btn-static {
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      background: linear-gradient(90deg, #FF89C4 0%, #DE5C9A 100%);
+      color: #fff;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-size: 1.07rem;
+      font-weight: bold;
+      padding: 0.68em 1.6em;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 0 16px #DE5C9A99;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.22s;
+      z-index: 99;
+      letter-spacing: 0.06em;
+    }
+    .back-btn-static:hover {
+      background: linear-gradient(90deg, #DE5C9A 0%, #FF89C4 100%);
+      color: #fff;
+      box-shadow: 0 0 22px #FF89C4;
+    }
     @media (max-width: 600px) {
       .container {
         margin-top: 40px;
-        padding: 1rem;
+        padding: 1rem 1rem 4rem 1rem;
       }
       h1 { font-size: 1.4rem; }
       p { font-size: 0.98rem; }
+      .back-btn-static { right: 1rem; bottom: 1rem; font-size: 0.96rem; padding: 0.54em 1.1em; }
     }
   </style>
 </head>
@@ -58,6 +84,7 @@
     <p>
       Red Bull Racing, established in 2005 by the Austrian beverage conglomerate Red Bull GmbH, represents a modern exemplar of rapid ascent in Formula 1. The team acquired the Jaguar Racing outfit at the conclusion of the 2004 season, marking Red Bull's entry into the sport following earlier sponsorship roles, including with Sauber in 1995. Under the stewardship of team principal Christian Horner since inception, Red Bull has amassed six Constructors' Championships (2010–2013, 2022–2023) and seven Drivers' titles, propelled by innovative designs and drivers such as Sebastian Vettel and Max Verstappen. Early years focused on disruption through aggressive marketing and engineering, yielding podiums by 2006 and a first win in 2009. The partnership with Honda power units from 2019 onward solidified their dominance. Red Bull is regarded as one of the most efficient teams in F1 both in track and trackside. In 2026, they are set to introduce their own home build engines with assistance from Ford hoping this daredevilry will work them wonders in future. The one word that describes Red Bull Racing would be 'Ruthlessness'!
     </p>
+    <button class="back-btn-static" onclick="window.location.href='index.html'">Back to standings</button>
   </div>
 </body>
 </html>

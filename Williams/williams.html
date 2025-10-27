@@ -15,6 +15,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     .container {
       max-width: 800px;
@@ -23,6 +24,7 @@
       background: rgba(255,255,255,0.06);
       border-radius: 18px;
       box-shadow: 0 2px 24px #B3007366;
+      position: relative;
     }
     h1 {
       font-family: Cambria, 'Times New Roman', Times, serif;
@@ -42,13 +44,37 @@
       line-height: 1.7;
       text-align: justify;
     }
+    .back-btn-static {
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      background: linear-gradient(90deg, #FF89C4 0%, #DE5C9A 100%);
+      color: #fff;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-size: 1.07rem;
+      font-weight: bold;
+      padding: 0.68em 1.6em;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 0 16px #DE5C9A99;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.22s;
+      z-index: 99;
+      letter-spacing: 0.06em;
+    }
+    .back-btn-static:hover {
+      background: linear-gradient(90deg, #DE5C9A 0%, #FF89C4 100%);
+      color: #fff;
+      box-shadow: 0 0 22px #FF89C4;
+    }
     @media (max-width: 600px) {
       .container {
         margin-top: 40px;
-        padding: 1rem;
+        padding: 1rem 1rem 4rem 1rem;
       }
       h1 { font-size: 1.4rem; }
       p { font-size: 0.98rem; }
+      .back-btn-static { right: 1rem; bottom: 1rem; font-size: 0.96rem; padding: 0.54em 1.1em; }
     }
   </style>
 </head>
@@ -58,6 +84,7 @@
     <p>
       Williams Grand Prix Engineering, founded in 1977 by Frank Williams and Patrick Head in Didcot, England, entered Formula 1 that year with the FW04 chassis. After modest beginnings, the team surged in 1980 with Alan Jones' Drivers' title and claimed nine Constructors' Championships (1980, 1981, 1986, 1987, 1992, 1993, 1994, 1996, 1997), alongside eight Drivers' crowns, epitomized by the Williams-Renault dominance of the 1990s. Frank Williams' resilience, including recovery from a 1986 crash, defined its ethos. Williams, in spite of being one of the iconic teams in F1 history has always been a customer which boasts of partnership with legendary engine manufactures like Ford, Honda, Renault, BMW, Toyota and Mercedes. Acquired by Dorilton Capital in 2020 and led by James Vowles since 2023, the outfit is on its way up the table. The one word that describes Williams would be 'Revival'!
     </p>
+    <button class="back-btn-static" onclick="window.location.href='index.html'">Back to standings</button>
   </div>
 </body>
 </html>

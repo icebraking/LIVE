@@ -15,6 +15,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
     .container {
       max-width: 800px;
@@ -23,6 +24,7 @@
       background: rgba(255,255,255,0.06);
       border-radius: 18px;
       box-shadow: 0 2px 24px #B3007366;
+      position: relative;
     }
     h1 {
       font-family: Cambria, 'Times New Roman', Times, serif;
@@ -42,13 +44,37 @@
       line-height: 1.7;
       text-align: justify;
     }
+    .back-btn-static {
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+      background: linear-gradient(90deg, #FF89C4 0%, #DE5C9A 100%);
+      color: #fff;
+      font-family: Cambria, 'Times New Roman', Times, serif;
+      font-size: 1.07rem;
+      font-weight: bold;
+      padding: 0.68em 1.6em;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 0 16px #DE5C9A99;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.22s;
+      z-index: 99;
+      letter-spacing: 0.06em;
+    }
+    .back-btn-static:hover {
+      background: linear-gradient(90deg, #DE5C9A 0%, #FF89C4 100%);
+      color: #fff;
+      box-shadow: 0 0 22px #FF89C4;
+    }
     @media (max-width: 600px) {
       .container {
         margin-top: 40px;
-        padding: 1rem;
+        padding: 1rem 1rem 4rem 1rem;
       }
       h1 { font-size: 1.4rem; }
       p { font-size: 0.98rem; }
+      .back-btn-static { right: 1rem; bottom: 1rem; font-size: 0.96rem; padding: 0.54em 1.1em; }
     }
   </style>
 </head>
@@ -58,6 +84,7 @@
     <p>
       Mercedes-Benz's Formula 1 involvement dates to 1954, when the German manufacturer returned to Grand Prix racing after a 20-year hiatus, dominating the inaugural season with eight victories and Juan Manuel Fangio's second Drivers' title. Withdrawn in 1955 following the Le Mans disaster, Mercedes re-entered as an engine supplier in 1994 with Sauber before acquiring the Brawn GP team in 2010 to form the Mercedes-AMG Petronas Formula One Team. This era yielded unprecedented success: eight consecutive Constructors' Championships (2014–2021) and seven Drivers' titles with Lewis Hamilton and Nico Rosberg. Rooted in pre-war Silver Arrows heritage from the 1930s, the team under Toto Wolff prioritizes hybrid power unit supremacy. However the team has been struggling to maintain form since the introduction of Ground Effects in 2022 but is expected to bounce back to the top in 2026 when the new regulations says Hi. The one word that describes Mercedes would be 'Heritage'!
     </p>
+    <button class="back-btn-static" onclick="window.location.href='index.html'">Back to standings</button>
   </div>
 </body>
 </html>
