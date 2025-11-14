@@ -277,6 +277,8 @@
     /* Smartphone-specific layout (reverted to left/vertical navigation).
        This media query ONLY affects small smartphone screens (narrow devices).
        Desktop and laptop code remains unchanged.
+       NOTE: This block now ensures vertical scrolling works in mobile Chrome by allowing
+       the app/main/table to grow (overflow visible/auto and heights auto).
     */
     @media (max-width: 420px) {
       /* allow vertical scrolling on phones */
@@ -285,17 +287,18 @@
       /* ensure hamburger hidden because nav is shown in-flow as vertical left nav */
       .hamburger { display:none !important; }
 
-      /* Position the app so the sidebar appears directly below the headline (same top as desktop) */
+      /* Position the app so the sidebar appears directly below the headline (same top as desktop)
+         and allow it to expand beyond the viewport so the browser can scroll. */
       .app {
         position: absolute;
         top: var(--header-h);
         left: 0;
         right: 0;
-        bottom: 0;
-        /* two-column layout isn't practical on small phones; render sidebar full width first, then rows */
+        bottom: auto;            /* allow content to grow vertically */
         display: block;
         gap: 12px;
         padding: 10px;
+        overflow: visible;       /* allow children to extend and be visible (so page scroll works) */
       }
 
       /* Make the sidebar appear as a vertical stacked menu (left/vertical style in flow) */
@@ -335,11 +338,19 @@
       /* Ensure scrim is hidden since nav is in-flow */
       .scrim { display:none !important; }
 
-      /* Place the main area (three rows) below the sidebar in normal flow */
+      /* Place the main area (three rows) below the sidebar in normal flow.
+         Ensure main/table can grow so browser scroll works (height:auto and overflow visible). */
       .main {
         margin-top: 10px;
         padding-bottom: 48px;
         display: block;
+        height: auto !important;   /* allow natural height so page can scroll */
+        overflow: visible !important;
+      }
+
+      .table {
+        height: auto !important;   /* allow rows to flow vertically */
+        overflow: visible !important;
       }
 
       /* Slightly reduce row padding for smaller screens */
