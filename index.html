@@ -274,94 +274,76 @@
       .floating-title { font-size: var(--main-label-size); padding: 0 10px; }
     }
 
-    /* Smartphone-specific layout: place left navigation as top navigation 5mm below headline,
-       then place STANDINGS / SCHEDULE / RESULTS below that.
-       This media query ONLY affects small smartphone screens (narrow devices) and intentionally
-       overrides the mobile off-canvas behavior above; desktop/laptop layout is unchanged.
+    /* Smartphone-specific layout (reverted to left/vertical navigation).
+       This media query ONLY affects small smartphone screens (narrow devices).
+       Desktop and laptop code remains unchanged.
     */
     @media (max-width: 420px) {
-      /* ensure page can scroll on phones */
+      /* allow vertical scrolling on phones */
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
 
-      /* hide the hamburger on small phones because nav will be shown as top nav */
+      /* ensure hamburger hidden because nav is shown in-flow as vertical left nav */
       .hamburger { display:none !important; }
 
-      /* Position the entire app slightly lower so the navigation appears 5mm below the headline.
-         We set the app top to header height + 5mm so the sidebar (now top nav) sits exactly 5mm below. */
+      /* Position the app so the sidebar appears directly below the headline (same top as desktop) */
       .app {
         position: absolute;
-        top: calc(var(--header-h) + 5mm);
+        top: var(--header-h);
         left: 0;
         right: 0;
         bottom: 0;
-        grid-template-columns: 1fr; /* single column */
+        /* two-column layout isn't practical on small phones; render sidebar full width first, then rows */
+        display: block;
         gap: 12px;
         padding: 10px;
       }
 
-      /* Make the sidebar act as a horizontal top nav */
+      /* Make the sidebar appear as a vertical stacked menu (left/vertical style in flow) */
       .sidebar {
         position: static !important;
         transform: none !important;
-        width: 100% !important;
+        width: auto !important;
         height: auto !important;
         max-width: none !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between;
-        padding: 8px 12px;
+        display: block !important;
+        padding: 10px 12px;
         border-radius: 10px;
         background: rgba(10,10,10,0.96);
         box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         overflow: visible;
       }
 
-      /* Make the menu items flow horizontally and spread evenly */
+      /* Menu becomes a vertical list (left navigation style) */
       .menu {
-        flex-direction: row !important;
-        width: 100%;
-        justify-content: space-around;
-        gap: 6px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px;
         padding: 0;
         margin: 0;
-        /* enable horizontal scrolling and prevent wrapping on very narrow screens */
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        flex-wrap: nowrap;
-        /* restore scrollbar behavior for this element specifically (overrides global hide) */
-        scrollbar-width: auto; /* Firefox */
-        -ms-overflow-style: auto; /* IE/Edge */
-        scrollbar-gutter: stable; /* reserve space for scrollbar to avoid layout shift */
-        touch-action: pan-x; /* allow horizontal panning on touch devices */
+        width: 100%;
       }
 
-      /* WebKit scrollbar styling for the top nav so Android/Chrome shows a visible thumb */
-      .menu::-webkit-scrollbar {
-        display: block;
-        height: 8px;
-      }
-      .menu::-webkit-scrollbar-track {
-        background: rgba(255,255,255,0.02);
-      }
-      .menu::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,0.20);
-        border-radius: 6px;
+      .menu a {
+        padding: 10px 12px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1rem;
       }
 
-      /* Keep scrim hidden on small phones (we are not using off-canvas behavior here) */
+      /* Ensure scrim is hidden since nav is in-flow */
       .scrim { display:none !important; }
 
-      /* Place the main area (three rows) below the top nav naturally — ensure there's breathing room */
+      /* Place the main area (three rows) below the sidebar in normal flow */
       .main {
-        margin-top: 8px;
+        margin-top: 10px;
         padding-bottom: 48px;
+        display: block;
       }
 
       /* Slightly reduce row padding for smaller screens */
-      .row { padding: 14px 16px; border-radius: 10px; }
+      .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
       .label { font-size: clamp(1rem, 6.5vw, 2.2rem); }
 
       /* small-screen header tweaks */
@@ -372,7 +354,7 @@
     /* small screens */
     @media (max-width: 360px) {
       .label { font-size: clamp(0.95rem, 7.5vw, 1.8rem); }
-      .menu a { padding: 6px 8px; font-size: 0.9rem; }
+      .menu a { padding: 8px 10px; font-size: 0.95rem; }
       .app { padding: 8px; }
     }
   </style>
@@ -390,7 +372,7 @@
   <div id="scrim" class="scrim" aria-hidden="true"></div>
 
   <div class="app" role="application" aria-label="THE F1 HUB FOR THE ICE BRAKERS!">
-    <!-- Permanent sidebar (desktop) / top-nav (smartphones) -->
+    <!-- Sidebar (desktop remains unchanged; on small phones it's now in-flow vertical left-style menu) -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
         <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
@@ -402,7 +384,7 @@
       </ul>
     </nav>
 
-    <!-- Main three rows -->
+    <!-- Main three rows (these will be placed below the sidebar on small phones) -->
     <main class="main" role="main" aria-label="Primary actions">
       <section class="table" role="region" aria-label="Actions table">
         <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
@@ -474,11 +456,12 @@
 
       // Ensure correct initial state on resize / load
       function syncState(){
-        // If we're in the smartphone layout (<=420px) the sidebar is a top nav and should be visible
+        // On very narrow phones we want the sidebar visible in-flow (vertical left-style list).
+        // For other mobile widths keep the off-canvas behavior; desktops/laptops remain unchanged.
         const isPhone = window.matchMedia('(max-width:420px)').matches;
 
         if(!isMobile() || isPhone){
-          // desktop or phone-top-nav: ensure sidebar visible and not transformed
+          // desktop or phone (in-flow sidebar): ensure sidebar visible and not transformed
           sidebar.classList.remove('open');
           sidebar.style.transform = '';
           sidebar.setAttribute('aria-hidden','false');
