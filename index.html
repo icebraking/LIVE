@@ -225,7 +225,7 @@
       border-radius:12px;
     }
 
-    /* Mobile styles */
+    /* Mobile: general mobile rules (keeps off-canvas behavior for tablets/large phones) */
     @media (max-width: var(--mobile-break)) {
       /* allow vertical scrolling on small devices */
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
@@ -274,13 +274,88 @@
       .floating-title { font-size: var(--main-label-size); padding: 0 10px; }
     }
 
-    /* small screens */
+    /* Smartphone-specific layout: place left navigation as top navigation 5mm below headline,
+       then place STANDINGS / SCHEDULE / RESULTS below that.
+       This media query ONLY affects small smartphone screens (narrow devices) and intentionally
+       overrides the mobile off-canvas behavior above; desktop/laptop layout is unchanged.
+    */
     @media (max-width: 420px) {
-      .sidebar { width: 86%; max-width: 280px; }
-      .label { font-size: clamp(1.05rem, 9vw, 1.8rem); }
+      /* ensure page can scroll on phones */
+      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+
+      /* hide the hamburger on small phones because nav will be shown as top nav */
+      .hamburger { display:none !important; }
+
+      /* Position the entire app slightly lower so the navigation appears 5mm below the headline.
+         We set the app top to header height + 5mm so the sidebar (now top nav) sits exactly 5mm below. */
+      .app {
+        position: absolute;
+        top: calc(var(--header-h) + 5mm);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        grid-template-columns: 1fr; /* single column */
+        gap: 12px;
+        padding: 10px;
+      }
+
+      /* Make the sidebar act as a horizontal top nav */
+      .sidebar {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        height: auto !important;
+        max-width: none !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: rgba(10,10,10,0.96);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        overflow: visible;
+      }
+
+      /* Make the menu items flow horizontally and spread evenly */
+      .menu {
+        flex-direction: row !important;
+        width: 100%;
+        justify-content: space-around;
+        gap: 6px;
+        padding: 0;
+        margin: 0;
+      }
+      .menu a {
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 0.98rem;
+        white-space: nowrap;
+      }
+
+      /* Keep scrim hidden on small phones (we are not using off-canvas behavior here) */
+      .scrim { display:none !important; }
+
+      /* Place the main area (three rows) below the top nav naturally — ensure there's breathing room */
+      .main {
+        margin-top: 8px;
+        padding-bottom: 48px;
+      }
+
+      /* Slightly reduce row padding for smaller screens */
+      .row { padding: 14px 16px; border-radius: 10px; }
+      .label { font-size: clamp(1rem, 6.5vw, 2.2rem); }
+
+      /* small-screen header tweaks */
       :root { --header-h: 84px; --headline-top-offset: 6px; }
-      .floating-title { font-size: clamp(14px, 9vw, 20px); white-space: nowrap; }
-      .hamburger { left: 10px; top: calc(var(--headline-top-offset) + 6px); width:36px; height:36px;}
+      .floating-title { font-size: clamp(14px, 8vw, 20px); }
+    }
+
+    /* small screens */
+    @media (max-width: 360px) {
+      .label { font-size: clamp(0.95rem, 7.5vw, 1.8rem); }
+      .menu a { padding: 6px 8px; font-size: 0.9rem; }
+      .app { padding: 8px; }
     }
   </style>
 </head>
@@ -297,7 +372,7 @@
   <div id="scrim" class="scrim" aria-hidden="true"></div>
 
   <div class="app" role="application" aria-label="THE F1 HUB FOR THE ICE BRAKERS!">
-    <!-- Permanent sidebar (desktop) / off-canvas (mobile) -->
+    <!-- Permanent sidebar (desktop) / top-nav (smartphones) -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
         <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
@@ -381,17 +456,20 @@
 
       // Ensure correct initial state on resize / load
       function syncState(){
-        if(!isMobile()){
-          // desktop: ensure sidebar visible and not transformed
+        // If we're in the smartphone layout (<=420px) the sidebar is a top nav and should be visible
+        const isPhone = window.matchMedia('(max-width:420px)').matches;
+
+        if(!isMobile() || isPhone){
+          // desktop or phone-top-nav: ensure sidebar visible and not transformed
           sidebar.classList.remove('open');
           sidebar.style.transform = '';
           sidebar.setAttribute('aria-hidden','false');
           scrim.classList.remove('visible');
           scrim.setAttribute('aria-hidden','true');
           toggle.setAttribute('aria-expanded','false');
-          document.documentElement.style.overflow = 'hidden';
+          document.documentElement.style.overflow = isPhone ? 'auto' : 'hidden';
         } else {
-          // mobile: allow body scrolling and keep sidebar closed
+          // mobile/tablet off-canvas behavior
           sidebar.setAttribute('aria-hidden','true');
           scrim.classList.remove('visible');
           scrim.setAttribute('aria-hidden','true');
