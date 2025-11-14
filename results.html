@@ -198,11 +198,9 @@
       font-weight:800;
     }
 
-    /* Home button anchored to the bottom-left corner of the page content (moves with content) */
+    /* Home button now placed in-flow below content: at least 1cm below the last word */
     .home-inflow {
-      position: absolute;
-      left: 12px;
-      bottom: 12px;
+      position: static; /* in-flow so it moves with page content */
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -212,6 +210,8 @@
       background: rgba(255,255,255,0.03);
       color: #fff;
       text-decoration:none;
+      margin-top: 1cm; /* ensure at least 1 centimeter below last content */
+      margin-left: 12px; /* keep it visually at left corner of content area */
       z-index: 30;
     }
     .home-inflow:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
@@ -297,7 +297,7 @@
       <div id="racesList" aria-live="polite" class="races-wrap-scroll"></div>
     </div>
 
-    <!-- Home button positioned inside .wrap so it is anchored to the page content bottom-left and scrolls with the page -->
+    <!-- Home button placed in-flow after content with margin-top:1cm so it's at least 1cm below last word -->
     <a href="index.html" class="home-inflow" aria-label="Home">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
