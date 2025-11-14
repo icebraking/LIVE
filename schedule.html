@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ICE BRAKERS — 2025 F1 SCHEDULE</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    /* Basic look to match your other pages: pure black, white Copperplate, uppercase */
+    @supports (font-family: "Copperplate Gothic") {
+      :root { --main-font: "Copperplate Gothic","Copperplate","Copperplate Gothic Bold",serif; }
+    }
+    :root {
+      --bg:#000;
+      --fg:#fff;
+      --muted: rgba(255,255,255,0.06);
+      --accent: #FF0000;
+      --card-radius: 12px;
+      --gap:16px;
+
+      /* Title sizing for fixed top title */
+      --title-height: 64px;
+    }
+    html,body {
+      height:100%;
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family: var(--main-font, "Copperplate Gothic", "Copperplate", serif);
+      text-transform: uppercase;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:auto;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Fixed centered page title - pinned to the very top so it never moves when scrolling */
+    .page-title {
+      position: fixed;
+      top: 0; /* pinned to the top of the viewport */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999; /* high so content scrolls beneath it */
+      margin: 0;
+      padding: 14px 16px;
+      height: var(--title-height);
+      line-height: calc(var(--title-height) - 4px);
+      font-size: clamp(18px, 3.6vw, 28px);
+      font-weight: 800;
+      color: var(--fg);
+      pointer-events: none; /* non-interactive */
+      text-align: center;
+      letter-spacing: 0.6px;
+      background: rgba(0,0,0,1); /* solid background so it visually stays in place */
+      white-space: nowrap;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .wrap {
+      max-width:1100px;
+      /* leave room for the fixed title at top so content is not hidden under it */
+      margin: calc(1.2rem + var(--title-height)) auto 64px auto;
+      padding: 18px;
+      box-sizing:border-box;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: var(--card-radius);
+      padding: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+
+    /* Table-like list to allow expandable rows easily */
+    .schedule {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      display:block;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 10px;
+      background: transparent;
+      transition: background .15s, transform .12s;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .row:hover, .row:focus {
+      background: rgba(255,255,255,0.02);
+      transform: translateY(-2px);
+    }
+
+    .left {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .track {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--fg);
+    }
+    .place {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.78);
+      font-weight:700;
+    }
+
+    .right {
+      text-align: right;
+      font-weight:700;
+    }
+    .period {
+      font-size: 0.98rem;
+      color: var(--fg);
+    }
+
+    /* Expanded details row container (hidden by default) */
+    .details {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .28s cubic-bezier(.2,.9,.2,1), padding .18s;
+      background: rgba(255,255,255,0.01);
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    .details.open {
+      padding: 12px;
+    }
+
+    .sessions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .session {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      font-weight:700;
+      font-size: 0.95rem;
+    }
+    .session .name { color: var(--fg); font-size: 0.88rem; }
+
+    .loading, .error {
+      margin: 18px 0;
+      padding: 18px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      color: var(--fg);
+      font-weight:700;
+    }
+
+    /* Accessible focus styles */
+    .row:focus { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 4px; }
+    button.expand-btn { background: transparent; border: none; color: inherit; font: inherit; cursor: pointer; padding:0; margin:0; display:block; width:100%; text-align:inherit; }
+
+    /* Responsive */
+    @media (max-width:720px) {
+      .row { grid-template-columns: 1fr 160px; padding:14px; }
+      .right { text-align: right; }
+    }
+    @media (max-width:420px) {
+      .wrap { margin-top: calc(1rem + var(--title-height)); padding: 12px; }
+      .row { grid-template-columns: 1fr; text-align: left; padding:14px; }
+      .right { text-align: left; margin-top:8px; }
+      .sessions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed centered page title -->
+  <h1 class="page-title">2025 F1 SCHEDULE</h1>
+
+  <div class="wrap">
+    <div id="status" class="loading card">Loading 2025 schedule…</div>
+
+    <div id="list" class="card" aria-live="polite" style="display:none;">
+      <div id="schedule" class="schedule" role="list"></div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Use the Ergast current season endpoint (via jolpi proxy).
+      const API_URL = 'http://api.jolpi.ca/ergast/f1/current.json';
+      const statusEl = document.getElementById('status');
+      const listWrap = document.getElementById('list');
+      const scheduleEl = document.getElementById('schedule');
+
+      // Helpers
+      function fmtDateShort(iso) {
+        try {
+          if (!iso) return 'TBA';
+          const d = new Date(iso);
+          if (Number.isNaN(d.getTime())) return 'TBA';
+          // "NOV 9" style (short month uppercase + day)
+          const month = d.toLocaleString(undefined, { month: 'short' }).toUpperCase();
+          const day = d.getDate();
+          return `${month} ${day}`;
+        } catch (e) { return 'TBA'; }
+      }
+
+      function fmtDateRangeSingle(startISO, endISO) {
+        // If start and end represent the same calendar date -> return single short date "NOV 9"
+        // If range spans multiple days -> return "NOV 9 - NOV 11"
+        try {
+          if (!startISO || !endISO) return 'TBA';
+          const s = new Date(startISO);
+          const e = new Date(endISO);
+          if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) return 'TBA';
+          if (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()) {
+            return fmtDateShort(startISO);
+          }
+          // different days: show "NOV 9 - NOV 11"
+          const sShort = fmtDateShort(startISO);
+          const eShort = fmtDateShort(endISO);
+          return `${sShort} - ${eShort}`;
+        } catch (e) {
+          return 'TBA';
+        }
+      }
+
+      function createRow(meeting, idx) {
+        // meeting normalized from Ergast Race object
+        const trackName = meeting.raceName || 'Unknown Track';
+        const place = (meeting.Circuit && (meeting.Circuit.Location && (meeting.Circuit.Location.locality || meeting.Circuit.Location.country))) || '';
+        const startDate = meeting.date || meeting.raceDate || null;
+        const endDate = startDate; // Ergast current.json gives a single date per race
+        const period = fmtDateRangeSingle(startDate, endDate);
+
+        // container row
+        const container = document.createElement('div');
+        container.className = 'row';
+        container.tabIndex = 0;
+        container.setAttribute('role','button');
+        container.setAttribute('aria-expanded','false');
+        container.dataset.index = idx;
+
+        const left = document.createElement('div');
+        left.className = 'left';
+        const t = document.createElement('div');
+        t.className = 'track';
+        t.textContent = (trackName || '').toUpperCase();
+        const p = document.createElement('div');
+        p.className = 'place';
+        p.textContent = (place || '').toUpperCase();
+        left.appendChild(t);
+        left.appendChild(p);
+
+        const right = document.createElement('div');
+        right.className = 'right';
+        const per = document.createElement('div');
+        per.className = 'period';
+        per.textContent = (period || '').toUpperCase();
+        right.appendChild(per);
+
+        container.appendChild(left);
+        container.appendChild(right);
+
+        // details container (initially collapsed)
+        const details = document.createElement('div');
+        details.className = 'details';
+        details.setAttribute('aria-hidden','true');
+
+        // Build sessions content. Ergast returns race date (no full session times here),
+        // we'll list session names but intentionally do NOT display any times per request.
+        const sessionsNode = document.createElement('div');
+        sessionsNode.className = 'sessions';
+
+        const sessionNames = ['P1','P2','P3','QUALIFYING','RACE'];
+        sessionNames.forEach(name => {
+          const sEl = document.createElement('div');
+          sEl.className = 'session';
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'name';
+          nameDiv.textContent = name;
+          sEl.appendChild(nameDiv);
+          // Intentionally do NOT add a time element — user requested no race/session times shown.
+          sessionsNode.appendChild(sEl);
+        });
+
+        details.appendChild(sessionsNode);
+
+        // Toggle function
+        function toggleOpen() {
+          const open = details.classList.contains('open');
+          if (open) {
+            details.classList.remove('open');
+            details.style.maxHeight = '0px';
+            details.setAttribute('aria-hidden','true');
+            container.setAttribute('aria-expanded','false');
+          } else {
+            details.classList.add('open');
+            details.setAttribute('aria-hidden','false');
+            container.setAttribute('aria-expanded','true');
+            requestAnimationFrame(() => {
+              details.style.maxHeight = details.scrollHeight + 'px';
+            });
+            setTimeout(() => {
+              details.scrollIntoView({ behavior:'smooth', block:'nearest' });
+            }, 50);
+          }
+        }
+
+        // attach click & keyboard handlers
+        container.addEventListener('click', (e) => {
+          if (e.target && (e.target.closest && e.target.closest('a'))) return;
+          toggleOpen();
+        });
+        container.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleOpen();
+          }
+        });
+
+        return { container, details };
+      }
+
+      function renderRaces(races) {
+        scheduleEl.innerHTML = '';
+        if (!Array.isArray(races) || !races.length) {
+          statusEl.className = 'error card';
+          statusEl.textContent = 'No races found in the API response';
+          listWrap.style.display = 'none';
+          return;
+        }
+        statusEl.style.display = 'none';
+        listWrap.style.display = 'block';
+
+        races.forEach((r, idx) => {
+          const { container, details } = createRow(r, idx);
+          scheduleEl.appendChild(container);
+          scheduleEl.appendChild(details);
+        });
+      }
+
+      // caching
+      const CACHE_KEY = 'ergast_current_2025_calendar_v1';
+      const CACHE_TTL = 60 * 5; // 5 minutes
+
+      async function load() {
+        try {
+          const raw = localStorage.getItem(CACHE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < CACHE_TTL)) {
+              renderRaces(parsed.data);
+              return;
+            }
+          }
+
+          statusEl.className = 'loading card';
+          statusEl.textContent = 'Fetching calendar from Ergast (via jolpi proxy)…';
+
+          const resp = await fetch(API_URL, { cache: 'no-store' });
+          if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
+          const json = await resp.json();
+
+          const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
+          // Cache normalized races
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races }));
+          } catch (e) { /* ignore */ }
+
+          renderRaces(races);
+        } catch (err) {
+          console.error(err);
+          statusEl.className = 'error card';
+          statusEl.textContent = 'Failed to load calendar — ' + (err && err.message ? err.message : 'network error');
+          listWrap.style.display = 'none';
+        }
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>
