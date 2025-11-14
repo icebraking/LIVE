@@ -166,6 +166,29 @@
       font-weight:700;
     }
 
+    /* Home button in-flow (not fixed) placed at the bottom-left of the content */
+    .home-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 1cm; /* space below content */
+      padding-left: 4px;
+    }
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: #FFFFFF;
+      text-decoration: none;
+      border: 0;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .home-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.05); }
+    .home-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
     /* Accessible focus styles */
     .row:focus { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 4px; }
     button.expand-btn { background: transparent; border: none; color: inherit; font: inherit; cursor: pointer; padding:0; margin:0; display:block; width:100%; text-align:inherit; }
@@ -193,23 +216,33 @@
     <div id="list" class="card" aria-live="polite" style="display:none;">
       <div id="schedule" class="schedule" role="list"></div>
     </div>
+
+    <!-- Home button in normal flow; it moves with the page (not fixed) and links to index.html -->
+    <div class="home-wrap">
+      <a href="index.html" class="home-btn" aria-label="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+        </svg>
+      </a>
+    </div>
   </div>
 
   <script>
     (function(){
-      // Use the Ergast current season endpoint (via jolpi proxy).
-      const API_URL = 'http://api.jolpi.ca/ergast/f1/current.json';
+      // Primary endpoint (HTTPS) — jolpi proxy for Ergast calendar
+      const PRIMARY_API = 'https://api.jolpi.ca/ergast/f1/current.json';
+      // Fallback: AllOrigins proxy to fetch Ergast raw URL (helps around CORS if the primary is unavailable)
+      const FALLBACK_PROXY = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://ergast.com/api/f1/current.json');
+
       const statusEl = document.getElementById('status');
       const listWrap = document.getElementById('list');
       const scheduleEl = document.getElementById('schedule');
 
-      // Helpers
       function fmtDateShort(iso) {
         try {
           if (!iso) return 'TBA';
           const d = new Date(iso);
           if (Number.isNaN(d.getTime())) return 'TBA';
-          // "NOV 9" style (short month uppercase + day)
           const month = d.toLocaleString(undefined, { month: 'short' }).toUpperCase();
           const day = d.getDate();
           return `${month} ${day}`;
@@ -217,8 +250,6 @@
       }
 
       function fmtDateRangeSingle(startISO, endISO) {
-        // If start and end represent the same calendar date -> return single short date "NOV 9"
-        // If range spans multiple days -> return "NOV 9 - NOV 11"
         try {
           if (!startISO || !endISO) return 'TBA';
           const s = new Date(startISO);
@@ -227,7 +258,6 @@
           if (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()) {
             return fmtDateShort(startISO);
           }
-          // different days: show "NOV 9 - NOV 11"
           const sShort = fmtDateShort(startISO);
           const eShort = fmtDateShort(endISO);
           return `${sShort} - ${eShort}`;
@@ -237,14 +267,12 @@
       }
 
       function createRow(meeting, idx) {
-        // meeting normalized from Ergast Race object
         const trackName = meeting.raceName || 'Unknown Track';
         const place = (meeting.Circuit && (meeting.Circuit.Location && (meeting.Circuit.Location.locality || meeting.Circuit.Location.country))) || '';
         const startDate = meeting.date || meeting.raceDate || null;
-        const endDate = startDate; // Ergast current.json gives a single date per race
+        const endDate = startDate;
         const period = fmtDateRangeSingle(startDate, endDate);
 
-        // container row
         const container = document.createElement('div');
         container.className = 'row';
         container.tabIndex = 0;
@@ -260,8 +288,7 @@
         const p = document.createElement('div');
         p.className = 'place';
         p.textContent = (place || '').toUpperCase();
-        left.appendChild(t);
-        left.appendChild(p);
+        left.appendChild(t); left.appendChild(p);
 
         const right = document.createElement('div');
         right.className = 'right';
@@ -270,16 +297,12 @@
         per.textContent = (period || '').toUpperCase();
         right.appendChild(per);
 
-        container.appendChild(left);
-        container.appendChild(right);
+        container.appendChild(left); container.appendChild(right);
 
-        // details container (initially collapsed)
         const details = document.createElement('div');
         details.className = 'details';
         details.setAttribute('aria-hidden','true');
 
-        // Build sessions content. Ergast returns race date (no full session times here),
-        // we'll list session names but intentionally do NOT display any times per request.
         const sessionsNode = document.createElement('div');
         sessionsNode.className = 'sessions';
 
@@ -291,13 +314,11 @@
           nameDiv.className = 'name';
           nameDiv.textContent = name;
           sEl.appendChild(nameDiv);
-          // Intentionally do NOT add a time element — user requested no race/session times shown.
           sessionsNode.appendChild(sEl);
         });
 
         details.appendChild(sessionsNode);
 
-        // Toggle function
         function toggleOpen() {
           const open = details.classList.contains('open');
           if (open) {
@@ -318,7 +339,6 @@
           }
         }
 
-        // attach click & keyboard handlers
         container.addEventListener('click', (e) => {
           if (e.target && (e.target.closest && e.target.closest('a'))) return;
           toggleOpen();
@@ -343,7 +363,6 @@
         }
         statusEl.style.display = 'none';
         listWrap.style.display = 'block';
-
         races.forEach((r, idx) => {
           const { container, details } = createRow(r, idx);
           scheduleEl.appendChild(container);
@@ -351,12 +370,18 @@
         });
       }
 
-      // caching
       const CACHE_KEY = 'ergast_current_2025_calendar_v1';
       const CACHE_TTL = 60 * 5; // 5 minutes
 
+      async function fetchJson(url, opts = {}) {
+        const res = await fetch(url, Object.assign({ method: 'GET', mode: 'cors' }, opts));
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      }
+
       async function load() {
         try {
+          // try cache first
           const raw = localStorage.getItem(CACHE_KEY);
           if (raw) {
             const parsed = JSON.parse(raw);
@@ -367,22 +392,39 @@
           }
 
           statusEl.className = 'loading card';
-          statusEl.textContent = 'Fetching calendar from Ergast (via jolpi proxy)…';
+          statusEl.textContent = 'Fetching calendar (primary)...';
 
-          const resp = await fetch(API_URL, { cache: 'no-store' });
-          if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
-          const json = await resp.json();
-
-          const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
-          // Cache normalized races
+          // Primary attempt - secure jolpi proxy (HTTPS). This should work in most deployments.
           try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races }));
-          } catch (e) { /* ignore */ }
+            const json = await fetchJson(PRIMARY_API);
+            const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch (e) {}
+            renderRaces(races);
+            return;
+          } catch (primaryErr) {
+            console.warn('Primary fetch failed:', primaryErr);
+            // continue to fallback
+          }
 
-          renderRaces(races);
+          // Fallback attempt - AllOrigins proxy fetch of the official Ergast http URL.
+          statusEl.className = 'loading card';
+          statusEl.textContent = 'Primary failed; attempting fallback proxy...';
+
+          try {
+            const json = await fetchJson(FALLBACK_PROXY);
+            const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
+            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch (e) {}
+            renderRaces(races);
+            return;
+          } catch (fallbackErr) {
+            console.warn('Fallback fetch failed:', fallbackErr);
+            throw new Error('Failed to fetch calendar (primary and fallback failed). Check network or CORS.');
+          }
+
         } catch (err) {
           console.error(err);
           statusEl.className = 'error card';
+          // Show a clearer message advising likely causes (network, CORS, or proxy down).
           statusEl.textContent = 'Failed to load calendar — ' + (err && err.message ? err.message : 'network error');
           listWrap.style.display = 'none';
         }
