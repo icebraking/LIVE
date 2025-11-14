@@ -8,7 +8,6 @@
   <!-- Favicon: primary (relative) and fallback (local file path) -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
-  <!-- Fallback to local absolute file path (works when opening the file locally on your machine) -->
   <link rel="icon" type="image/png" href="file:///C:/Users/anoop/Documents/GitHub/LIVE/favicon.png">
 
   <style>
@@ -17,8 +16,8 @@
       --accent-red: #FF0000;
       --sidebar-w: 220px;
       --gap: 22px;
-      --header-h: 160px;
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
+      --header-h: 160px;
       --headline-top-offset: 12px;
     }
 
@@ -222,12 +221,12 @@
     <!-- Sidebar -->
     <nav class="sidebar" role="navigation" aria-label="Primary sidebar">
       <ul class="menu" role="list" aria-label="Sidebar links">
-        <li><a href="#news" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
-        <li><a href="#blogs" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
-        <li><a href="#experience" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
-        <li><a href="#tracks" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
-        <li><a href="#info" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
-        <li><a href="#news-ol" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
       </ul>
     </nav>
 
@@ -235,7 +234,8 @@
     <main class="main" role="main" aria-label="Primary actions">
       <section class="table" role="region" aria-label="Actions table">
         <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
-          <a class="anchor" href="#standings" aria-label="Open Standings" tabindex="0"></a>
+          <!-- Updated: clicking STANDINGS now navigates to standings.html in same folder -->
+          <a class="anchor" href="standings.html" aria-label="Open Standings" tabindex="0"></a>
           <div class="label" id="lbl-standings"><span class="dot" aria-hidden="true"></span>STANDINGS</div>
         </div>
 
