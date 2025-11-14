@@ -1,484 +1,268 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ICE Braking | F1 Standings</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>THE F1 HUB FOR THE ICE BRAKERS!</title>
+
+  <!-- Favicon: primary (relative) and fallback (local file path) -->
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+  <!-- Fallback to local absolute file path (works when opening the file locally on your machine) -->
+  <link rel="icon" type="image/png" href="file:///C:/Users/anoop/Documents/GitHub/LIVE/favicon.png">
+
   <style>
-    :root {
-      --background: #FF89C4;
-      --tab-selected-font: #FFFFFF;
-      --tab-unselected-font: #FFFFFF;
-      --tab-bg: rgba(255,255,255,0.17);
-      --tab-selected-bg: #C7007F;
-      --tab-hover-bg: #B30073;
-      --card-bg: rgba(255,255,255,0.07);
-      --table-bg: #DE5C9A;
-      --row-even: #DE5C9A;
-      --row-odd: #B30073;
-      --row-accent: #C7007F;
-      --accent: #FFFFFF;
-      --title-shadow: 0 0 10px #C7007F, 0 2px 6px #B30073;
-      --futuristic-gradient: linear-gradient(90deg, #FFFFFF 10%, #FF89C4 60%, #DE5C9A 90%);
-      --futuristic-shadow: 0 0 18px #C7007F66, 0 0 36px #B3007333, 0 0 54px #DE5C9A66;
-      --team-link-bg: #B30073;
-      --team-link-hover-bg: #C7007F;
-      --team-link-font: #FFD1DC;
+    :root{
+      --black: #000000;
+      --accent-red: #FF0000;
+      --sidebar-w: 220px;
+      --gap: 22px;
+      --header-h: 160px;
+      --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
+      --headline-top-offset: 12px;
     }
-    body {
-      margin: 0;
-      background: var(--background);
-      color: #fff;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      min-height: 100vh;
-      letter-spacing: 0.03em;
-      transition: background 0.3s;
+
+    /*
+      UNIVERSAL COPPERPLATE GOTHIC
+      Copperplate/Gothic family is applied first; sensible fallbacks follow.
+      All visible text is transformed to uppercase.
+    */
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background: var(--black);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden; /* no page scrolling */
+      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      text-transform: uppercase; /* make all page words capital */
+      color: #ffffff;
     }
-    header {
-      text-align: center;
-      padding: 90px 1rem 0.5rem 1rem;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-    .ice-scatter {
-      font-size: 2rem;
-      font-weight: 900;
-      font-style: italic;
-      letter-spacing: -0.09em;
-      margin: 0 0 0.3rem 0;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      border-radius: 14px;
-      padding: 0.12rem 0.4rem;
-      display: inline-block;
-      box-shadow: var(--futuristic-shadow);
-      font-stretch: condensed;
-      color: #C71585;
-      background: none;
-      -webkit-background-clip: initial;
-      -webkit-text-fill-color: #C71585;
-    }
-    .ice-scatter span {
-      display: inline-block;
-      font-style: inherit;
-      font-weight: inherit;
-      font-family: inherit;
-      letter-spacing: inherit;
-      text-shadow: none;
-      color: #C71585;
-    }
-    .tabs-section {
-      text-align: center;
-      margin-top: 14px;
-      margin-bottom: 0;
-    }
-    .tabs {
-      display: inline-flex;
-      gap: 1.2rem;
-      margin-bottom: 0;
-    }
-    .tab {
-      padding: 0.5rem 1.7rem;
-      font-size: 1.15rem;
-      background: var(--tab-bg);
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      font-weight: 700;
-      font-style: italic;
-      outline: none;
-      margin-bottom: 0.5rem;
-      color: var(--tab-unselected-font);
-      box-shadow: 0 0 6px #DE5C9A88;
-      letter-spacing: 0.07em;
-      transition: background 0.15s, color 0.15s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-      border: none;
-    }
-    .tab.active {
-      color: var(--tab-selected-font);
-      background: var(--tab-selected-bg);
-      box-shadow: 0 0 12px #C7007F, 0 0 6px #DE5C9A;
-      text-shadow: 0 0 3px #fff, 0 0 6px #DE5C9A;
-    }
-    .tab:not(.active):hover {
-      background: var(--tab-hover-bg);
-      color: var(--accent);
-      box-shadow: 0 0 8px #B30073;
-    }
-    .team-link-table {
-      color: #FFD1DC;
-      text-decoration: underline;
-      font-weight: 700;
-      transition: color 0.18s;
-    }
-    .team-link-table:hover {
-      color: #fff;
-    }
-    main {
-      margin-top: 26px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 1rem 2rem 1rem;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      color: #fff;
-      border-radius: 12px;
-      background: transparent;
-      box-shadow: 0 0 24px #DE5C9A44;
-      backdrop-filter: blur(2px);
-    }
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-      background: var(--table-bg);
-      border-radius: 14px;
-      box-shadow: 0 2px 18px #B3007366;
-      margin-top: 2.5rem;
-      border: none;
-    }
-    table {
-      border-collapse: separate;
-      border-spacing: 0;
-      width: 100%;
-      min-width: 380px;
-      font-size: 1.08rem;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      color: #fff;
-      background: transparent;
-      box-shadow: 0 0 10px #DE5C9A44;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    thead {
-      background: var(--table-bg);
-      position: sticky;
-      top: 0;
-    }
-    th, td {
-      padding: 0.9rem 1rem;
-      text-align: left;
-      white-space: nowrap;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      color: #fff !important;
-      letter-spacing: 0.07em;
-      border: none;
-    }
-    th {
-      font-weight: 800;
-      font-size: 1.08rem;
-      background: var(--table-bg);
-      color: #FFD1DC !important;
-      text-shadow: 0 0 8px #DE5C9A, 0 0 4px #C7007F;
-      border: none;
-    }
-    tbody tr:nth-child(even) {
-      background: var(--row-even);
-      transition: background 0.2s;
-      border: none;
-    }
-    tbody tr:nth-child(odd) {
-      background: var(--row-odd);
-      transition: background 0.2s;
-      border: none;
-    }
-    tbody tr:hover {
-      background: var(--row-accent);
-      color: #fff;
-      box-shadow: 0 0 8px #DE5C9A;
-      transition: background 0.2s, color 0.2s;
-      border: none;
-    }
-    .spinner,
-    .loading-message,
-    .error-message {
+
+    /* Hide scrollbars for extra safety */
+    * { scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    :focus { outline: none; }
+
+    /* Fixed headline: now bold and italic, using the same size as the main labels */
+    .floating-title {
+      position: fixed;
+      top: var(--headline-top-offset); /* lowered slightly from the very top */
+      left: 0;
+      right: 0;
+      height: calc(var(--header-h) - var(--headline-top-offset));
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 2.5rem auto;
-      min-height: 120px;
-      font-size: 1.24rem;
-      color: #FFD1DC;
-      font-family: Cambria, 'Segoe UI', 'Roboto', Arial, sans-serif;
-      font-weight: 600;
+      z-index: 60;
+      pointer-events: none;
+      background: rgba(0,0,0,1); /* pure black across the top */
+      font-style: italic; /* italic as requested */
+      font-weight: 800;   /* bold to match labels */
+      color: rgba(255,255,255,0.98);
+      /* use the shared main label size so it's identical to STANDINGS */
+      font-size: var(--main-label-size);
+      white-space: nowrap; /* keep it one line */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.8px;
+      line-height: 1;
       text-align: center;
-      text-shadow: 0 0 8px #DE5C9A, 0 0 4px #B30073;
-      letter-spacing: 0.1em;
-      background: var(--table-bg);
+    }
+
+    /* App container positioned under the header (no scrollbars) */
+    .app {
+      position: absolute;
+      top: var(--header-h);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: var(--gap);
+      padding: var(--gap);
+      box-sizing: border-box;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* Sidebar: permanent, compact, no scrollbars */
+    .sidebar {
+      background: rgba(10,10,10,1);
       border-radius: 12px;
-      box-shadow: 0 0 12px #B3007344;
-      border: none;
+      padding: 16px;
+      height: 100%;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.03);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .spinner::after {
-      content: '';
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      border: 4px solid #DE5C9A;
-      border-radius: 50%;
-      border-top: 4px solid transparent;
-      animation: spin 1s linear infinite;
-      margin-left: 12px;
-      vertical-align: middle;
-      box-shadow: 0 0 16px #B30073;
-      border: none;
+    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .menu a {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      color:#fff;
+      font-weight:700; /* bold for sidebar links for clarity */
+      font-size:0.98rem;
+      transition: transform .12s ease, background .12s ease, color .12s ease;
     }
-    @keyframes spin {
-      100% { transform: rotate(360deg);}
+    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
+    .menu a:hover, .menu a:focus {
+      background: rgba(255,255,255,0.03);
+      color: var(--accent-red);
+      transform: translateX(6px);
     }
-    @media (max-width: 700px) {
-      header h1 { font-size: 2rem; }
-      nav { height: 52px; }
-      main { margin-top: 40px; }
-      th, td { padding: 0.6rem 0.5rem; font-size: 0.95rem;}
-      .tab { font-size: 1rem; padding: 0.45rem 1rem;}
-      .ice-scatter { font-size: 1.6rem; padding: 0.12rem 0.4rem;}
-      .team-link { font-size: 0.96rem; padding: 0.5rem 1rem;}
+    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
+
+    /* Main content */
+    .main {
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow: hidden;
     }
-    @media (max-width: 430px) {
-      .table-container { padding: 0; }
-      th, td { font-size: 0.9rem;}
-      .tab { padding: 0.35rem 0.7rem; font-size: 0.93rem;}
-      header { padding-top: 70px; }
-      .ice-scatter { font-size: 1.2rem; padding: 0.08rem 0.2rem;}
-      .team-link { font-size: 0.89rem; padding: 0.45rem 0.7rem;}
+
+    /* Three-row table */
+    .table {
+      width:100%;
+      max-width:1100px;
+      height:100%;
+      display:grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .row {
+      position: relative;
+      display:flex;
+      align-items:center;
+      padding: 28px 32px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .12s ease;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+      justify-content: flex-start;
+    }
+    .row:hover, .row:focus-within {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.78);
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
+    }
+
+    /* Main labels: use the shared size and bold weight */
+    .label {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      font-size: var(--main-label-size);
+      letter-spacing: 1px;
+      color:#fff;
+    }
+
+    .dot {
+      width:12px; height:12px; border-radius:50%;
+      background: linear-gradient(135deg, var(--accent-red), #cc0000);
+      box-shadow: 0 6px 14px rgba(255,0,0,0.12);
+      display:inline-block;
+    }
+
+    .row a.anchor {
+      position:absolute;
+      inset:0;
+      text-indent:-9999px;
+      z-index:2;
+      background:transparent;
+      border:0;
+    }
+    .row a.anchor:focus {
+      outline:3px solid rgba(255,0,0,0.18);
+      outline-offset:4px;
+      border-radius:12px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 980px) {
+      :root { --header-h: 120px; }
+      .floating-title { font-size: clamp(1.2rem, 4.5vw, 2.8rem); }
+      .app { grid-template-columns: 180px 1fr; gap:16px; padding:16px; top: var(--header-h); }
+      .sidebar { padding:12px; }
+      .row { padding:20px; }
+      .label { font-size: clamp(1.3rem, 5.5vw, 2.8rem); }
+    }
+    @media (max-width: 560px) {
+      :root { --header-h: 96px; }
+      .floating-title { font-size: clamp(1rem, 6.5vw, 2rem); }
+      .app { grid-template-columns: 140px 1fr; padding:12px; gap:12px; top: var(--header-h); }
+      .row { padding:14px; }
+      .label { font-size: clamp(0.95rem, 7.8vw, 1.8rem); }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 id="site-title" class="ice-scatter">
-      <span style="color:#C71585;">I</span>
-      <span style="color:#C71585;">C</span>
-      <span style="color:#C71585;">E</span>
-      <span style="color:#C71585;"> </span>
-      <span style="color:#C71585;">B</span>
-      <span style="color:#C71585;">r</span>
-      <span style="color:#C71585;">a</span>
-      <span style="color:#C71585;">k</span>
-      <span style="color:#C71585;">i</span>
-      <span style="color:#C71585;">n</span>
-      <span style="color:#C71585;">g</span>
-    </h1>
-    <div class="tabs-section">
-      <div class="tabs">
-        <button class="tab active" id="tab-drivers" type="button">D</button>
-        <button class="tab" id="tab-constructors" type="button">C</button>
-      </div>
-    </div>
-  </header>
-  <main>
-    <div id="content">
-      <div class="spinner" id="loading">Loading standings...</div>
-    </div>
-  </main>
+  <!-- Header text now bold, italic, and same size as main labels -->
+  <div class="floating-title" aria-hidden="true"><em>THE F1 HUB FOR THE ICE BRAKERS!</em></div>
+
+  <div class="app" role="application" aria-label="THE F1 HUB FOR THE ICE BRAKERS!">
+    <!-- Sidebar -->
+    <nav class="sidebar" role="navigation" aria-label="Primary sidebar">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="#news" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
+        <li><a href="#blogs" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="#experience" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
+        <li><a href="#tracks" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
+        <li><a href="#info" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
+        <li><a href="#news-ol" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Main three rows -->
+    <main class="main" role="main" aria-label="Primary actions">
+      <section class="table" role="region" aria-label="Actions table">
+        <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
+          <a class="anchor" href="#standings" aria-label="Open Standings" tabindex="0"></a>
+          <div class="label" id="lbl-standings"><span class="dot" aria-hidden="true"></span>STANDINGS</div>
+        </div>
+
+        <div class="row" role="group" aria-labelledby="lbl-schedule" tabindex="-1">
+          <a class="anchor" href="#schedule" aria-label="Open Schedule" tabindex="0"></a>
+          <div class="label" id="lbl-schedule"><span class="dot" aria-hidden="true"></span>SCHEDULE</div>
+        </div>
+
+        <div class="row" role="group" aria-labelledby="lbl-results" tabindex="-1">
+          <a class="anchor" href="#results" aria-label="Open Results" tabindex="0"></a>
+          <div class="label" id="lbl-results"><span class="dot" aria-hidden="true"></span>RESULTS</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
   <script>
-    // --- CONFIG ---
-    const API = {
-      drivers: 'https://api.jolpi.ca/ergast/f1/current/driverStandings.json',
-      constructors: 'https://api.jolpi.ca/ergast/f1/current/constructorStandings.json'
-    };
-    const CACHE_TTL = 300; // seconds (5 min)
-
-    // --- DOM ---
-    const tabs = {
-      drivers: document.getElementById('tab-drivers'),
-      constructors: document.getElementById('tab-constructors')
-    };
-    const content = document.getElementById('content');
-    let activeTab = 'drivers';
-
-    // Mapping of constructor display names to hyperlink URLs
-    const constructorTeamLinks = {
-      "McLaren": "https://www.icebraking.com/McLaren/mclaren.html",
-      "Mercedes": "https://www.icebraking.com/Mercedes/mercedes.html",
-      "Ferrari": "https://www.icebraking.com/Ferrari/ferrari.html",
-      "Red Bull Racing": "https://www.icebraking.com/RedBullRacing/redbullracing.html",
-      "Williams": "https://www.icebraking.com/Williams/williams.html",
-      "Racing Bulls": "https://www.icebraking.com/RacingBulls/racingbulls.html",
-      "Aston Martin": "https://www.icebraking.com/AstonMartin/astonmartin.html",
-      "Kick Sauber": "https://www.icebraking.com/KickSauber/kicksauber.html",
-      "Haas F1 Team": "https://www.icebraking.com/HaasF1Team/haasf1team.html",
-      "Alpine": "https://www.icebraking.com/Alpine/alpine.html"
-    };
-
-    function cacheKey(type) { return `f1_${type}_standings`; }
-    function getCache(type) {
-      try {
-        const item = localStorage.getItem(cacheKey(type));
-        if (!item) return null;
-        const { data, ts } = JSON.parse(item);
-        if (Date.now()/1000 - ts > CACHE_TTL) return null;
-        return data;
-      } catch { return null; }
-    }
-    function setCache(type, data) {
-      try {
-        localStorage.setItem(cacheKey(type), JSON.stringify({ data, ts: Math.floor(Date.now()/1000) }));
-      } catch {}
-    }
-
-    function renameTeam(name) {
-      if (name === 'Red Bull') return 'Red Bull Racing';
-      if (name === 'RB F1 Team') return 'Racing Bulls';
-      if (name === 'Sauber') return 'Kick Sauber';
-      if (name === 'Alpine F1 Team') return 'Alpine';
-      return name;
-    }
-
-    function showLoading(msg='Loading standings...') {
-      content.innerHTML = `<div class="spinner">${msg}</div>`;
-    }
-    function showError(msg='Unable to load standings') {
-      content.innerHTML = `<div class="error-message">${msg}</div>`;
-    }
-
-    function renderTable(type, items) {
-      let html = '';
-      if (type === 'drivers') {
-        html += `<div class="table-container"><table><thead>
-          <tr>
-            <th>Position</th>
-            <th>Name</th>
-            <th>Team</th>
-            <th>Points</th>
-          </tr></thead><tbody>`;
-        for (const item of items) {
-          let teamName;
-          if (item.name === "Yuki Tsunoda") {
-            teamName = "Red Bull Racing";
-          } else if (item.name === "Liam Lawson") {
-            teamName = "Racing Bulls";
-          } else {
-            teamName = renameTeam(item.team);
-          }
-          html += `<tr>
-            <td>${item.position}</td>
-            <td>${item.name}</td>
-            <td>${teamName}</td>
-            <td>${item.points}</td>
-          </tr>`;
-        }
-        html += `</tbody></table></div>`;
-      } else if (type === 'constructors') {
-        html += `<div class="table-container"><table><thead>
-          <tr>
-            <th>Position</th>
-            <th>Name</th>
-            <th>Points</th>
-          </tr></thead><tbody>`;
-        for (const item of items) {
-          const displayName = renameTeam(item.name);
-          const link = constructorTeamLinks[displayName];
-          html += `<tr>
-            <td>${item.position}</td>
-            <td>${
-              link
-                ? `<a class="team-link-table" href="${link}" target="_blank" rel="noopener">${displayName}</a>`
-                : displayName
-            }</td>
-            <td>${item.points}</td>
-          </tr>`;
-        }
-        html += `</tbody></table></div>`;
+    // Keep layout fitting the viewport and update top position when resized
+    (function(){
+      function adjustLayout(){
+        const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 160;
+        const app = document.querySelector('.app');
+        if(app) app.style.top = headerH + 'px';
       }
-      content.innerHTML = html;
-    }
-
-    function parseDrivers(json) {
-      try {
-        const lists = json?.MRData?.StandingsTable?.StandingsLists;
-        if (!lists || !lists.length) return [];
-        const drivers = lists[0]?.DriverStandings || [];
-        return drivers.map(d => ({
-          position: d.positionText || d.position || '-',
-          name: `${d.Driver.givenName} ${d.Driver.familyName}`,
-          team: d.Constructors[0]?.name || '',
-          points: d.points
-        }));
-      } catch { return []; }
-    }
-    function parseConstructors(json) {
-      try {
-        const lists = json?.MRData?.StandingsTable?.StandingsLists;
-        if (!lists || !lists.length) return [];
-        const constructors = lists[0]?.ConstructorStandings || [];
-        return constructors.map(c => ({
-          position: c.positionText || c.position || '-',
-          name: c.Constructor?.name || '-',
-          points: c.points
-        }));
-      } catch { return []; }
-    }
-
-    async function fetchStandings(type) {
-      let cached = getCache(type);
-      if (cached) return cached;
-      showLoading();
-      try {
-        const url = API[type];
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error('Network error');
-        const json = await resp.json();
-        let items = [];
-        if (type === 'drivers') items = parseDrivers(json);
-        else items = parseConstructors(json);
-        if (!items.length) throw new Error('No data');
-        setCache(type, items);
-        return items;
-      } catch {
-        showError();
-        return null;
-      }
-    }
-
-    function setTabInURL(type) {
-      history.replaceState(null, '', '#' + type);
-    }
-
-    async function switchTab(type) {
-      if (activeTab === type) return;
-      activeTab = type;
-      tabs.drivers.classList.toggle('active', type === 'drivers');
-      tabs.constructors.classList.toggle('active', type === 'constructors');
-      setTabInURL(type);
-      showLoading();
-      let items = getCache(type);
-      if (!items) items = await fetchStandings(type);
-      if (!items || !items.length) {
-        showError();
-        return;
-      }
-      renderTable(type, items);
-    }
-
-    function initialLoad() {
-      let tabType = 'drivers';
-      if (location.hash === '#constructors') tabType = 'constructors';
-      activeTab = tabType;
-      tabs.drivers.classList.toggle('active', tabType === 'drivers');
-      tabs.constructors.classList.toggle('active', tabType === 'constructors');
-      setTabInURL(tabType);
-      showLoading();
-      fetchStandings(tabType).then(items => {
-        if (!items || !items.length) {
-          showError();
-          return;
-        }
-        renderTable(tabType, items);
-      });
-    }
-
-    tabs.drivers.addEventListener('click', () => {
-      if (activeTab !== 'drivers') switchTab('drivers');
-    });
-    tabs.constructors.addEventListener('click', () => {
-      if (activeTab !== 'constructors') switchTab('constructors');
-    });
-
-    window.addEventListener('DOMContentLoaded', initialLoad);
+      window.addEventListener('resize', adjustLayout);
+      adjustLayout();
+    })();
   </script>
 </body>
 </html>
