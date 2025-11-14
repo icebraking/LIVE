@@ -19,12 +19,12 @@
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
       --header-h: 160px;
       --headline-top-offset: 12px;
+      --mobile-break: 900px;
     }
 
     /*
       UNIVERSAL COPPERPLATE GOTHIC
-      Copperplate/Gothic family is applied first; sensible fallbacks follow.
-      All visible text is transformed to uppercase.
+      Primary font set to Copperplate-family with fallbacks. Text uppercase.
     */
     html,body{
       height:100%;
@@ -33,46 +33,73 @@
       background: var(--black);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow:hidden; /* no page scrolling */
+      overflow:hidden; /* desktop: keep no page scrolling; mobile override below */
       font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
-      text-transform: uppercase; /* make all page words capital */
+      text-transform: uppercase;
       color: #ffffff;
     }
 
-    /* Hide scrollbars for extra safety */
+    /* Hide scrollbars (most browsers) */
     * { scrollbar-width: none; -ms-overflow-style: none; }
     *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
     a { color: inherit; text-decoration: none; }
     :focus { outline: none; }
 
-    /* Fixed headline: now bold and italic, using the same size as the main labels */
+    /* Fixed headline: bold italic, same size as main labels */
     .floating-title {
       position: fixed;
-      top: var(--headline-top-offset); /* lowered slightly from the very top */
+      top: var(--headline-top-offset);
       left: 0;
       right: 0;
       height: calc(var(--header-h) - var(--headline-top-offset));
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 60;
-      pointer-events: none;
-      background: rgba(0,0,0,1); /* pure black across the top */
-      font-style: italic; /* italic as requested */
-      font-weight: 800;   /* bold to match labels */
+      z-index: 80;
+      pointer-events: none; /* header text not interactive */
+      font-style: italic;
+      font-weight: 800;
       color: rgba(255,255,255,0.98);
-      /* use the shared main label size so it's identical to STANDINGS */
       font-size: var(--main-label-size);
-      white-space: nowrap; /* keep it one line */
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       letter-spacing: 0.8px;
       line-height: 1;
       text-align: center;
+      padding: 0 12px;
     }
 
-    /* App container positioned under the header (no scrollbars) */
+    /* Hamburger button inside header (hidden on desktop) */
+    .hamburger {
+      position: fixed;
+      left: 16px;
+      top: calc(var(--headline-top-offset) + 8px);
+      z-index: 100;
+      width:40px;
+      height:40px;
+      border-radius:8px;
+      background: rgba(255,255,255,0.03);
+      display:none; /* shown on mobile via media query */
+      align-items:center;
+      justify-content:center;
+      border:0;
+      color:#fff;
+      cursor:pointer;
+      pointer-events:auto; /* ensure it's clickable */
+    }
+    .hamburger:focus { outline:3px solid rgba(255,0,0,0.18); outline-offset:3px }
+
+    .hamburger .bar{
+      width:18px;
+      height:2px;
+      background:#fff;
+      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
+      display:block;
+    }
+
+    /* App positioned under header */
     .app {
       position: absolute;
       top: var(--header-h);
@@ -88,7 +115,7 @@
       overflow: hidden;
     }
 
-    /* Sidebar: permanent, compact, no scrollbars */
+    /* Sidebar */
     .sidebar {
       background: rgba(10,10,10,1);
       border-radius: 12px;
@@ -96,7 +123,7 @@
       height: 100%;
       box-shadow: 0 14px 40px rgba(0,0,0,0.85);
       border: 1px solid rgba(255,255,255,0.03);
-      overflow: hidden;
+      overflow: hidden; /* desktop: no scroll */
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -109,7 +136,7 @@
       padding:10px;
       border-radius:8px;
       color:#fff;
-      font-weight:700; /* bold for sidebar links for clarity */
+      font-weight:700;
       font-size:0.98rem;
       transition: transform .12s ease, background .12s ease, color .12s ease;
     }
@@ -156,14 +183,17 @@
       user-select: none;
       overflow: hidden;
       justify-content: flex-start;
+      -webkit-tap-highlight-color: rgba(255,255,255,0.02);
     }
+    .row:active { transform: translateY(-2px) scale(0.999) }
+
     .row:hover, .row:focus-within {
       transform: translateY(-6px);
       box-shadow: 0 20px 48px rgba(0,0,0,0.78);
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
     }
 
-    /* Main labels: use the shared size and bold weight */
+    /* Main labels: shared size and bold weight */
     .label {
       display:flex;
       align-items:center;
@@ -195,31 +225,80 @@
       border-radius:12px;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 980px) {
-      :root { --header-h: 120px; }
-      .floating-title { font-size: clamp(1.2rem, 4.5vw, 2.8rem); }
-      .app { grid-template-columns: 180px 1fr; gap:16px; padding:16px; top: var(--header-h); }
-      .sidebar { padding:12px; }
-      .row { padding:20px; }
-      .label { font-size: clamp(1.3rem, 5.5vw, 2.8rem); }
+    /* Mobile styles */
+    @media (max-width: var(--mobile-break)) {
+      /* allow vertical scrolling on small devices */
+      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+
+      /* show hamburger */
+      .hamburger { display:flex; }
+
+      /* app becomes single column; sidebar hidden by default (off-canvas) */
+      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: var(--header-h); }
+      .sidebar {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        width: 78%;
+        max-width: 320px;
+        height: calc(100vh - var(--header-h));
+        transform: translateX(-110%);
+        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        z-index: 140;
+        overflow:auto; /* allow sidebar scrolling if many links */
+        -webkit-overflow-scrolling: touch;
+      }
+      .sidebar.open { transform: translateX(0); }
+
+      /* scrim overlay when sidebar open */
+      .scrim {
+        display:block;
+        position: fixed;
+        inset: var(--header-h) 0 0 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 130;
+        opacity:0;
+        pointer-events:none;
+        transition: opacity .18s ease;
+      }
+      .scrim.visible { opacity:1; pointer-events:auto; }
+
+      /* main content reduced width and spacing */
+      .main { padding-bottom: 40px; }
+      .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
+      .row { padding: 18px 20px; border-radius:10px; }
+      .label { font-size: clamp(1.25rem, 7vw, 2.4rem); }
+
+      /* shrink header sizing on small screens */
+      :root { --header-h: 96px; --headline-top-offset: 8px; }
+      .floating-title { font-size: var(--main-label-size); padding: 0 10px; }
     }
-    @media (max-width: 560px) {
-      :root { --header-h: 96px; }
-      .floating-title { font-size: clamp(1rem, 6.5vw, 2rem); }
-      .app { grid-template-columns: 140px 1fr; padding:12px; gap:12px; top: var(--header-h); }
-      .row { padding:14px; }
-      .label { font-size: clamp(0.95rem, 7.8vw, 1.8rem); }
+
+    /* small screens */
+    @media (max-width: 420px) {
+      .sidebar { width: 86%; max-width: 280px; }
+      .label { font-size: clamp(1.05rem, 9vw, 1.8rem); }
+      :root { --header-h: 84px; --headline-top-offset: 6px; }
+      .floating-title { font-size: clamp(14px, 9vw, 20px); white-space: nowrap; }
+      .hamburger { left: 10px; top: calc(var(--headline-top-offset) + 6px); width:36px; height:36px;}
     }
   </style>
 </head>
 <body>
-  <!-- Header text now bold, italic, and same size as main labels -->
+  <!-- Header text (bold italic, same size as main labels) -->
   <div class="floating-title" aria-hidden="true"><em>THE F1 HUB FOR THE ICE BRAKERS!</em></div>
 
+  <!-- Hamburger toggle (mobile) -->
+  <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+    <span class="bar" aria-hidden="true"></span>
+  </button>
+
+  <!-- mobile scrim -->
+  <div id="scrim" class="scrim" aria-hidden="true"></div>
+
   <div class="app" role="application" aria-label="THE F1 HUB FOR THE ICE BRAKERS!">
-    <!-- Sidebar -->
-    <nav class="sidebar" role="navigation" aria-label="Primary sidebar">
+    <!-- Permanent sidebar (desktop) / off-canvas (mobile) -->
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
         <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
         <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
@@ -234,18 +313,17 @@
     <main class="main" role="main" aria-label="Primary actions">
       <section class="table" role="region" aria-label="Actions table">
         <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
-          <!-- Updated: clicking STANDINGS now navigates to standings.html in same folder -->
           <a class="anchor" href="standings.html" aria-label="Open Standings" tabindex="0"></a>
           <div class="label" id="lbl-standings"><span class="dot" aria-hidden="true"></span>STANDINGS</div>
         </div>
 
         <div class="row" role="group" aria-labelledby="lbl-schedule" tabindex="-1">
-          <a class="anchor" href="#schedule" aria-label="Open Schedule" tabindex="0"></a>
+          <a class="anchor" href="schedule.html" aria-label="Open Schedule" tabindex="0"></a>
           <div class="label" id="lbl-schedule"><span class="dot" aria-hidden="true"></span>SCHEDULE</div>
         </div>
 
         <div class="row" role="group" aria-labelledby="lbl-results" tabindex="-1">
-          <a class="anchor" href="#results" aria-label="Open Results" tabindex="0"></a>
+          <a class="anchor" href="results.html" aria-label="Open Results" tabindex="0"></a>
           <div class="label" id="lbl-results"><span class="dot" aria-hidden="true"></span>RESULTS</div>
         </div>
       </section>
@@ -253,15 +331,79 @@
   </div>
 
   <script>
-    // Keep layout fitting the viewport and update top position when resized
+    // Mobile sidebar toggle + accessibility helpers
     (function(){
-      function adjustLayout(){
-        const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 160;
-        const app = document.querySelector('.app');
-        if(app) app.style.top = headerH + 'px';
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.getElementById('sidebarToggle');
+      const scrim = document.getElementById('scrim');
+      const mobileBreakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-break')) || 900;
+
+      function isMobile() {
+        return window.innerWidth <= mobileBreakpoint;
       }
-      window.addEventListener('resize', adjustLayout);
-      adjustLayout();
+
+      function setSidebar(open){
+        if(isMobile()){
+          if(open){
+            sidebar.classList.add('open');
+            scrim.classList.add('visible');
+            sidebar.setAttribute('aria-hidden','false');
+            toggle.setAttribute('aria-expanded','true');
+            scrim.setAttribute('aria-hidden','false');
+            // focus the first link for keyboard users
+            const first = sidebar.querySelector('a');
+            if(first) first.focus();
+          } else {
+            sidebar.classList.remove('open');
+            scrim.classList.remove('visible');
+            sidebar.setAttribute('aria-hidden','true');
+            toggle.setAttribute('aria-expanded','false');
+            scrim.setAttribute('aria-hidden','true');
+            toggle.focus();
+          }
+        }
+      }
+
+      toggle.addEventListener('click', function(){
+        const open = sidebar.classList.contains('open');
+        setSidebar(!open);
+      });
+
+      scrim.addEventListener('click', function(){
+        setSidebar(false);
+      });
+
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape'){
+          setSidebar(false);
+        }
+      });
+
+      // Ensure correct initial state on resize / load
+      function syncState(){
+        if(!isMobile()){
+          // desktop: ensure sidebar visible and not transformed
+          sidebar.classList.remove('open');
+          sidebar.style.transform = '';
+          sidebar.setAttribute('aria-hidden','false');
+          scrim.classList.remove('visible');
+          scrim.setAttribute('aria-hidden','true');
+          toggle.setAttribute('aria-expanded','false');
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          // mobile: allow body scrolling and keep sidebar closed
+          sidebar.setAttribute('aria-hidden','true');
+          scrim.classList.remove('visible');
+          scrim.setAttribute('aria-hidden','true');
+          toggle.setAttribute('aria-expanded','false');
+          document.documentElement.style.overflow = 'auto';
+        }
+      }
+
+      window.addEventListener('resize', syncState);
+      window.addEventListener('orientationchange', syncState);
+      window.addEventListener('load', syncState);
+      syncState();
     })();
   </script>
 </body>
