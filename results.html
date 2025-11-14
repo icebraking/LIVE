@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ICE BRAKERS — F1 RESULTS</title>
+
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    :root{
+      --bg: #000000;
+      --fg: #ffffff;
+      --muted: rgba(255,255,255,0.04);
+      --card: rgba(255,255,255,0.02);
+      --accent: #ff0000;
+      --gap: 14px;
+      --font: "Copperplate Gothic", "Copperplate", serif;
+      --year-item-h: 44px;
+      --year-visible-count: 3; /* show 3 visible items in the dropdown viewport */
+      --year-visible: calc(var(--year-item-h) * var(--year-visible-count));
+
+      /* scrollbar tuning */
+      --scroll-track: rgba(255,255,255,0.02);
+      --scroll-thumb: rgba(255,255,255,0.08);
+      --scroll-thumb-hover: rgba(255,255,255,0.14);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family: var(--font);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-transform: uppercase;
+      overflow:auto;
+      scrollbar-color: var(--scroll-thumb) var(--scroll-track); /* Firefox */
+      scrollbar-width: thin; /* Firefox */
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 18px auto 64px auto;
+      padding: 18px;
+      box-sizing: border-box;
+      position: relative; /* ensure absolutely positioned home button anchored to page content */
+    }
+
+    /* Center the dropdown at the very top area, no other text should appear there */
+    .top-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .year-select {
+      width: 220px;
+      background: var(--card);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.03);
+      padding: 8px;
+      box-sizing: border-box;
+      user-select: none;
+      color: var(--fg);
+      font-weight: 700;
+      scrollbar-gutter: stable;
+    }
+
+    .year-display {
+      display:flex;
+      align-items:center;
+      justify-content:center; /* center the hidden label area visually */
+      gap:8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* hide the selected year text visually while preserving the element for accessibility / scripting */
+    .year-display .selected-year { display: none; }
+
+    .year-list {
+      margin-top: 8px;
+      max-height: var(--year-visible);
+      overflow-y: auto;
+      background: transparent;
+      padding: 4px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+    }
+
+    /* WebKit scrollbars blend to page and are subtle but usable */
+    .year-list::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    .races-wrap-scroll::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    .year-list::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-track,
+    .races-wrap-scroll::-webkit-scrollbar-track {
+      background: var(--scroll-track);
+    }
+    .year-list::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb,
+    .races-wrap-scroll::-webkit-scrollbar-thumb {
+      background: var(--scroll-thumb);
+      border-radius: 10px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    .year-list::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover,
+    .races-wrap-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--scroll-thumb-hover);
+    }
+
+    .year-item {
+      height: var(--year-item-h);
+      line-height: var(--year-item-h);
+      padding: 0 8px;
+      box-sizing: border-box;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .12s, transform .08s;
+      white-space: nowrap;
+    }
+    .year-item:hover, .year-item:focus { background: rgba(255,255,255,0.03); transform: translateY(-1px); }
+    .year-item.active { background: rgba(255,255,255,0.06); color: var(--fg); }
+
+    /* Races table / list */
+    .card {
+      margin-top: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
+
+    .races-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+    .race-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 220px;
+      gap: 12px;
+      padding: 12px;
+      align-items: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .12s, transform .08s;
+      border: 1px solid transparent;
+      margin-bottom: 10px;
+      background: transparent;
+      user-select:none;
+    }
+    .race-row:hover { background: rgba(255,255,255,0.02); transform: translateY(-2px); }
+    .round { font-weight:800; text-align:left; }
+    .race-name { font-weight:800; }
+    .race-date { text-align:right; font-weight:700; color: rgba(255,255,255,0.9); }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-weight:700;
+    }
+
+    .results-table thead th {
+      text-align:left;
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .results-table tbody td {
+      padding: 8px;
+      border-bottom: 1px dashed rgba(255,255,255,0.02);
+      vertical-align: middle;
+    }
+
+    .loading, .error {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      margin-top: 12px;
+      font-weight:800;
+    }
+
+    /* Home button anchored to the bottom-left corner of the page content (moves with content) */
+    .home-inflow {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:52px;
+      height:52px;
+      border-radius:10px;
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      text-decoration:none;
+      z-index: 30;
+    }
+    .home-inflow:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+    .home-inflow svg { width:22px; height:22px; fill: currentColor; }
+
+    /* Modal (popup) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 980px;
+      max-height: 90vh;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(10,10,10,1), rgba(8,8,8,1));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 8px;
+    }
+    .modal-title {
+      font-weight:800;
+      font-size:1.05rem;
+    }
+    .modal-close {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--fg);
+      cursor: pointer;
+      font-weight:800;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.02); transform: translateY(-2px); }
+
+    @media (max-width:720px) {
+      .race-row { grid-template-columns: 48px 1fr 120px; }
+      .year-select { width: 160px; }
+      .modal { max-width: 92vw; padding: 12px; }
+    }
+    @media (max-width:420px) {
+      .race-row { grid-template-columns: 48px 1fr; }
+      .race-date { display: none; }
+      .year-select { width: 100%; }
+      .wrap { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-center">
+    <!-- centered dropdown only at the top; no other top text -->
+    <div class="year-select" id="yearSelect" aria-label="Select year">
+      <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false" aria-haspopup="listbox">
+        <!-- selected-year element preserved for accessibility and scripting but hidden visually -->
+        <span id="selectedYearLabel" class="selected-year">2025</span>
+      </div>
+      <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="pageWrap">
+    <div id="status" class="loading card">Please select a year (default 2025) — races will appear below.</div>
+
+    <div id="racesWrap" class="card" style="display:none">
+      <div id="racesList" aria-live="polite" class="races-wrap-scroll"></div>
+    </div>
+
+    <!-- Home button positioned inside .wrap so it is anchored to the page content bottom-left and scrolls with the page -->
+    <a href="index.html" class="home-inflow" aria-label="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- Modal overlay for race results -->
+  <div id="resultsModalOverlay" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Results</div>
+        <button id="modalClose" class="modal-close" aria-label="Close results">CLOSE</button>
+      </div>
+      <div id="modalBody">
+        <div class="loading">Loading results…</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const YEAR_START = 1950;
+      const YEAR_END = 2025;
+      // Landing visible window set so user sees recent years on load.
+      const DEFAULT_VISIBLE_MIN = 2023; // with 3 visible items this shows 2023,2024,2025
+      const API_BASE = 'https://api.jolpi.ca/ergast/f1';
+
+      const yearListEl = document.getElementById('yearList');
+      const yearDisplayBtn = document.getElementById('yearDisplay');
+      const selectedYearLabel = document.getElementById('selectedYearLabel');
+      const statusEl = document.getElementById('status');
+      const racesWrap = document.getElementById('racesWrap');
+      const racesList = document.getElementById('racesList');
+
+      // modal elements
+      const modalOverlay = document.getElementById('resultsModalOverlay');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalBody = document.getElementById('modalBody');
+      const modalCloseBtn = document.getElementById('modalClose');
+
+      const years = [];
+      for (let y = YEAR_START; y <= YEAR_END; y++) years.push(y);
+
+      function renderYearList() {
+        yearListEl.innerHTML = '';
+        years.forEach(y => {
+          const item = document.createElement('div');
+          item.className = 'year-item';
+          item.setAttribute('role','option');
+          item.tabIndex = 0;
+          item.dataset.year = y;
+          item.textContent = y;
+          item.addEventListener('click', () => selectYear(Number(y)));
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectYear(Number(y)); }
+            if (e.key === 'ArrowDown') { e.preventDefault(); focusNextYear(item); }
+            if (e.key === 'ArrowUp') { e.preventDefault(); focusPrevYear(item); }
+          });
+          yearListEl.appendChild(item);
+        });
+      }
+
+      function focusNextYear(el) {
+        const next = el.nextElementSibling;
+        if (next) next.focus();
+      }
+      function focusPrevYear(el) {
+        const prev = el.previousElementSibling;
+        if (prev) prev.focus();
+      }
+
+      let selectedYear = YEAR_END;
+
+      function markActiveYear() {
+        const items = yearListEl.querySelectorAll('.year-item');
+        items.forEach(it => it.classList.toggle('active', Number(it.dataset.year) === selectedYear));
+        if (selectedYearLabel) selectedYearLabel.textContent = selectedYear;
+      }
+
+      function scrollYearListToDefaultWindow() {
+        const target = yearListEl.querySelector(`.year-item[data-year="${DEFAULT_VISIBLE_MIN}"]`);
+        if (target) {
+          yearListEl.scrollTop = target.offsetTop;
+        } else {
+          yearListEl.scrollTop = yearListEl.scrollHeight;
+        }
+      }
+
+      yearDisplayBtn.addEventListener('click', () => {
+        yearListEl.focus();
+      });
+      yearDisplayBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); const first = yearListEl.querySelector('.year-item'); if(first) first.focus(); }
+      });
+
+      async function selectYear(year) {
+        if (!year) return;
+        selectedYear = year;
+        markActiveYear();
+        statusEl.className = 'loading card';
+        statusEl.textContent = `Loading races for ${selectedYear}…`;
+        racesWrap.style.display = 'none';
+        racesList.innerHTML = '';
+        try {
+          const url = `${API_BASE}/${selectedYear}.json`;
+          const cacheKey = `ergast_calendar_${selectedYear}`;
+          const raw = localStorage.getItem(cacheKey);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < 60*5)) {
+              renderRaces(parsed.data);
+              return;
+            }
+          }
+          const resp = await fetch(url, { cache: 'no-store' });
+          if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
+          const json = await resp.json();
+          const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch(e){}
+          renderRaces(races);
+        } catch (err) {
+          console.error(err);
+          statusEl.className = 'error card';
+          statusEl.textContent = `Failed to load races for ${selectedYear} — ${err && err.message ? err.message : 'network error'}`;
+        }
+      }
+
+      // helper: format date YYYY-MM-DD (or ISO) to DD-MM-YYYY
+      function fmtDateDMY(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) {
+          const parts = iso.split('-');
+          if (parts.length >= 3) {
+            return `${parts[2].padStart(2,'0')}-${parts[1].padStart(2,'0')}-${parts[0]}`;
+          }
+          return iso;
+        }
+        const dd = String(d.getDate()).padStart(2,'0');
+        const mm = String(d.getMonth() + 1).padStart(2,'0');
+        const yyyy = d.getFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+      }
+
+      function renderRaces(races) {
+        statusEl.style.display = 'none';
+        racesWrap.style.display = 'block';
+        racesList.innerHTML = '';
+        if (!Array.isArray(races) || races.length === 0) {
+          racesList.innerHTML = `<div class="loading">No races found for ${selectedYear}</div>`;
+          return;
+        }
+        races.forEach(race => {
+          const round = race.round || '';
+          const raceRow = document.createElement('div');
+          raceRow.className = 'race-row';
+          raceRow.tabIndex = 0;
+          raceRow.dataset.round = round;
+          raceRow.dataset.year = selectedYear;
+
+          const colRound = document.createElement('div');
+          colRound.className = 'round';
+          colRound.textContent = round;
+
+          const colName = document.createElement('div');
+          colName.className = 'race-name';
+          colName.textContent = (race.raceName || '').toUpperCase();
+
+          const colDate = document.createElement('div');
+          colDate.className = 'race-date';
+          colDate.textContent = fmtDateDMY(race.date || '').toUpperCase();
+
+          raceRow.appendChild(colRound);
+          raceRow.appendChild(colName);
+          raceRow.appendChild(colDate);
+
+          // when clicked, show results in popup modal
+          raceRow.addEventListener('click', () => openResultsModal(selectedYear, round, race.raceName || '', race.date || ''));
+          raceRow.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openResultsModal(selectedYear, round, race.raceName || '', race.date || ''); } });
+
+          racesList.appendChild(raceRow);
+        });
+      }
+
+      // Modal functions
+      function openModal() {
+        modalOverlay.classList.add('open');
+        modalOverlay.setAttribute('aria-hidden', 'false');
+        modalCloseBtn.focus();
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modalOverlay.classList.remove('open');
+        modalOverlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      modalCloseBtn.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
+      });
+
+      async function openResultsModal(year, round, raceName, raceDate) {
+        modalTitle.textContent = `${(raceName || 'Race').toUpperCase()} — ${fmtDateDMY(raceDate||'')}`;
+        modalBody.innerHTML = '<div class="loading">Loading results…</div>';
+        openModal();
+
+        try {
+          const cacheKey = `ergast_results_${year}_${round}`;
+          const raw = localStorage.getItem(cacheKey);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < 60*5)) {
+              populateResultsModal(parsed.data, year, round);
+              return;
+            }
+          }
+
+          const url = `${API_BASE}/${year}/${round}/results.json`;
+          const resp = await fetch(url, { cache: 'no-store' });
+          if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
+          const json = await resp.json();
+          const results = (json && json.MRData && json.MRData.RaceTable && Array.isArray(json.MRData.RaceTable.Races) && json.MRData.RaceTable.Races[0] && json.MRData.RaceTable.Races[0].Results) ? json.MRData.RaceTable.Races[0].Results : [];
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: results })); } catch(e){}
+          populateResultsModal(results, year, round);
+        } catch (err) {
+          console.error(err);
+          modalBody.innerHTML = `<div class="error">Failed to load results — ${err && err.message ? err.message : 'network error'}</div>`;
+        }
+      }
+
+      function populateResultsModal(results, year, round) {
+        if (!Array.isArray(results) || results.length === 0) {
+          modalBody.innerHTML = `<div class="loading">No results available for ${year} round ${round}</div>`;
+          return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'results-table';
+        const thead = document.createElement('thead');
+        thead.innerHTML = `<tr>
+          <th>POS</th>
+          <th>DRIVER</th>
+          <th>CONSTRUCTOR</th>
+          <th>LAPS</th>
+          <th>TIME / STATUS</th>
+          <th>PTS</th>
+        </tr>`;
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        results.forEach(r => {
+          const tr = document.createElement('tr');
+          const posTd = document.createElement('td'); posTd.textContent = r.position || '-';
+          const driverName = (r.Driver && ((r.Driver.givenName || '') + ' ' + (r.Driver.familyName || ''))) || (r.Driver && r.Driver.familyName) || '-';
+          const driverTd = document.createElement('td'); driverTd.textContent = driverName.toUpperCase();
+          const consName = (r.Constructor && r.Constructor.name) || '-';
+          const consTd = document.createElement('td'); consTd.textContent = consName.toUpperCase();
+          const lapsTd = document.createElement('td'); lapsTd.textContent = r.laps || '-';
+          const timeTd = document.createElement('td'); timeTd.textContent = (r.Time && r.Time.time) ? r.Time.time : (r.status || '-');
+          const ptsTd = document.createElement('td'); ptsTd.textContent = r.points || '0';
+
+          tr.appendChild(posTd);
+          tr.appendChild(driverTd);
+          tr.appendChild(consTd);
+          tr.appendChild(lapsTd);
+          tr.appendChild(timeTd);
+          tr.appendChild(ptsTd);
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        modalBody.innerHTML = '';
+        modalBody.appendChild(table);
+      }
+
+      // INITIALIZE
+      renderYearList();
+      selectedYear = YEAR_END;
+      markActiveYear();
+      setTimeout(() => { scrollYearListToDefaultWindow(); }, 120);
+      setTimeout(() => { selectYear(selectedYear); }, 250);
+    })();
+  </script>
+</body>
+</html>
