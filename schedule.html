@@ -94,7 +94,7 @@
       border-radius: 10px;
       background: transparent;
       transition: background .15s, transform .12s;
-      cursor: pointer;
+      cursor: default; /* changed to default since rows no longer expand */
       user-select: none;
       margin-bottom: 12px;
       border: 1px solid rgba(255,255,255,0.03);
@@ -129,7 +129,7 @@
       color: var(--fg);
     }
 
-    /* Expanded details row container (hidden by default) */
+    /* Expanded details CSS left in place but not used (no JS will toggle it) */
     .details {
       overflow: hidden;
       max-height: 0;
@@ -275,9 +275,8 @@
 
         const container = document.createElement('div');
         container.className = 'row';
-        container.tabIndex = 0;
-        container.setAttribute('role','button');
-        container.setAttribute('aria-expanded','false');
+        container.tabIndex = -1; // not interactive anymore
+        container.setAttribute('role','listitem');
         container.dataset.index = idx;
 
         const left = document.createElement('div');
@@ -299,58 +298,9 @@
 
         container.appendChild(left); container.appendChild(right);
 
-        const details = document.createElement('div');
-        details.className = 'details';
-        details.setAttribute('aria-hidden','true');
+        // Note: expansion/details have been removed per request — no click/keyboard handlers are attached.
 
-        const sessionsNode = document.createElement('div');
-        sessionsNode.className = 'sessions';
-
-        const sessionNames = ['P1','P2','P3','QUALIFYING','RACE'];
-        sessionNames.forEach(name => {
-          const sEl = document.createElement('div');
-          sEl.className = 'session';
-          const nameDiv = document.createElement('div');
-          nameDiv.className = 'name';
-          nameDiv.textContent = name;
-          sEl.appendChild(nameDiv);
-          sessionsNode.appendChild(sEl);
-        });
-
-        details.appendChild(sessionsNode);
-
-        function toggleOpen() {
-          const open = details.classList.contains('open');
-          if (open) {
-            details.classList.remove('open');
-            details.style.maxHeight = '0px';
-            details.setAttribute('aria-hidden','true');
-            container.setAttribute('aria-expanded','false');
-          } else {
-            details.classList.add('open');
-            details.setAttribute('aria-hidden','false');
-            container.setAttribute('aria-expanded','true');
-            requestAnimationFrame(() => {
-              details.style.maxHeight = details.scrollHeight + 'px';
-            });
-            setTimeout(() => {
-              details.scrollIntoView({ behavior:'smooth', block:'nearest' });
-            }, 50);
-          }
-        }
-
-        container.addEventListener('click', (e) => {
-          if (e.target && (e.target.closest && e.target.closest('a'))) return;
-          toggleOpen();
-        });
-        container.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleOpen();
-          }
-        });
-
-        return { container, details };
+        return container;
       }
 
       function renderRaces(races) {
@@ -364,9 +314,8 @@
         statusEl.style.display = 'none';
         listWrap.style.display = 'block';
         races.forEach((r, idx) => {
-          const { container, details } = createRow(r, idx);
+          const container = createRow(r, idx);
           scheduleEl.appendChild(container);
-          scheduleEl.appendChild(details);
         });
       }
 
