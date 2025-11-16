@@ -176,6 +176,7 @@
       transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
       will-change: transform;
       text-align: center;
+      width: 150px;
     }
     .icon img {
       display:block;
@@ -213,6 +214,57 @@
       min-width: 60px;
     }
 
+    /* Rating UI */
+    .rating {
+      margin-top: 6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+    .rate-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+    }
+    .rate-btn.selected {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      transform: translateY(-3px);
+    }
+    .rate-submit {
+      margin-left: 6px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 0;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .rate-submit:active { transform: translateY(1px); }
+
+    .avg {
+      margin-top: 6px;
+      color: #ffffff;
+      font-family: "Copperplate Gothic", "Copperplate", serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.95;
+      line-height: 1;
+    }
+
     /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
@@ -248,7 +300,7 @@
       .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
       .icon img { width: 150px; height: 75px; object-fit: contain; }
-      .counter { font-size: 0.75rem; }
+      .counter, .avg { font-size: 0.75rem; }
 
       :root { --header-h: 96px; --headline-top-offset: 8px; }
     }
@@ -333,7 +385,7 @@
       </ul>
     </nav>
 
-    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 with counters below -->
+    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 with counters and ratings below -->
     <main class="main" role="main" aria-label="News content">
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
@@ -343,6 +395,18 @@
                 <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
               </a>
               <div class="counter" id="counter-f1" aria-live="polite">0 views</div>
+
+              <div class="rating" aria-label="Rate Formula 1">
+                <div class="rate-group" data-key="f1" role="radiogroup" aria-label="Formula1 rating">
+                  <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
+                  <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
+                  <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
+                  <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
+                  <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
+                </div>
+                <button class="rate-submit" data-key="f1" aria-label="Submit rating">Submit</button>
+              </div>
+              <div class="avg" id="avg-f1" aria-live="polite">Average: — (0 votes)</div>
             </div>
 
             <div class="icon" data-key="pf1">
@@ -350,6 +414,18 @@
                 <img src="pf1.png" alt="PlanetF1" width="150" height="75">
               </a>
               <div class="counter" id="counter-pf1" aria-live="polite">0 views</div>
+
+              <div class="rating" aria-label="Rate PlanetF1">
+                <div class="rate-group" data-key="pf1" role="radiogroup" aria-label="PlanetF1 rating">
+                  <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
+                  <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
+                  <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
+                  <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
+                  <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
+                </div>
+                <button class="rate-submit" data-key="pf1" aria-label="Submit rating">Submit</button>
+              </div>
+              <div class="avg" id="avg-pf1" aria-live="polite">Average: — (0 votes)</div>
             </div>
 
             <div class="icon" data-key="race">
@@ -357,6 +433,18 @@
                 <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
               </a>
               <div class="counter" id="counter-race" aria-live="polite">0 views</div>
+
+              <div class="rating" aria-label="Rate The Race">
+                <div class="rate-group" data-key="race" role="radiogroup" aria-label="The Race rating">
+                  <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
+                  <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
+                  <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
+                  <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
+                  <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
+                </div>
+                <button class="rate-submit" data-key="race" aria-label="Submit rating">Submit</button>
+              </div>
+              <div class="avg" id="avg-race" aria-live="polite">Average: — (0 votes)</div>
             </div>
 
             <div class="icon" data-key="racefans">
@@ -364,6 +452,18 @@
                 <img src="racefans.png" alt="RaceFans" width="150" height="75">
               </a>
               <div class="counter" id="counter-racefans" aria-live="polite">0 views</div>
+
+              <div class="rating" aria-label="Rate RaceFans">
+                <div class="rate-group" data-key="racefans" role="radiogroup" aria-label="RaceFans rating">
+                  <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
+                  <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
+                  <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
+                  <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
+                  <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
+                </div>
+                <button class="rate-submit" data-key="racefans" aria-label="Submit rating">Submit</button>
+              </div>
+              <div class="avg" id="avg-racefans" aria-live="polite">Average: — (0 votes)</div>
             </div>
           </div>
         </div>
@@ -452,73 +552,235 @@
   </script>
 
   <script>
-    // Simple client-side view counters using localStorage.
-    // Keying: "views:{key}" where key is f1, pf1, race, racefans.
-    // Counters update immediately on click and persist per-browser.
+    // View counters and Ratings (client-side, persisted in localStorage)
     (function(){
       const keys = ['f1','pf1','race','racefans'];
 
-      function storageKey(k){ return 'views:' + k; }
+      /* ---- localStorage helpers ---- */
+      function viewsKey(k){ return 'views:' + k; }
+      function ratingsKey(k){ return 'ratings:' + k; }        // stores JSON { sum: number, count: number }
+      function userRatingKey(k){ return 'rating-user:' + k; } // stores the user's own rating (1-5)
 
-      function readCount(k){
-        const n = parseInt(localStorage.getItem(storageKey(k)), 10);
+      function readInt(key){
+        const n = parseInt(localStorage.getItem(key), 10);
         return isNaN(n) ? 0 : n;
       }
 
-      function writeCount(k, n){
-        localStorage.setItem(storageKey(k), String(n));
+      function readJSON(key){
+        try {
+          const v = localStorage.getItem(key);
+          return v ? JSON.parse(v) : null;
+        } catch(e){
+          return null;
+        }
       }
 
-      function formatCount(n){
+      function writeJSON(key, obj){
+        try {
+          localStorage.setItem(key, JSON.stringify(obj));
+        } catch(e){}
+      }
+
+      /* ---- View counters (existing) ---- */
+      function formatViews(n){
         return n + (n === 1 ? ' view' : ' views');
       }
 
-      // Initialize counters in DOM
+      // Initialize view counters
       keys.forEach(k => {
         const el = document.getElementById('counter-' + k);
         if(el){
-          el.textContent = formatCount(readCount(k));
+          el.textContent = formatViews(readInt(viewsKey(k)));
         }
       });
 
-      // Attach click handlers to anchors with class 'counted'
+      // Attach click handlers to anchors with class 'counted' to increment view counts
       const anchors = document.querySelectorAll('a.counted[data-key]');
       anchors.forEach(a => {
         const key = a.getAttribute('data-key');
-        // increment on click before navigation; also support keyboard activation
         a.addEventListener('click', function(e){
           try {
-            const n = readCount(key) + 1;
-            writeCount(key, n);
+            const current = readInt(viewsKey(key));
+            const next = current + 1;
+            localStorage.setItem(viewsKey(key), String(next));
             const el = document.getElementById('counter-' + key);
-            if(el) el.textContent = formatCount(n);
+            if(el) el.textContent = formatViews(next);
           } catch(err){
-            // silently ignore storage errors (e.g., private mode)
+            // ignore storage errors
           }
-          // allow navigation to proceed (target="_blank" will open new tab)
+          // allow navigation to proceed (target="_blank" opens new tab)
         });
 
-        // Also increment on keypress Enter when focused on the link (for some browsers)
+        // keyboard activation
         a.addEventListener('keydown', function(e){
           if(e.key === 'Enter' || e.key === ' '){
             try {
-              const n = readCount(key) + 1;
-              writeCount(key, n);
+              const current = readInt(viewsKey(key));
+              const next = current + 1;
+              localStorage.setItem(viewsKey(key), String(next));
               const el = document.getElementById('counter-' + key);
-              if(el) el.textContent = formatCount(n);
+              if(el) el.textContent = formatViews(next);
             } catch(err){}
           }
         });
       });
 
-      // Optional: expose a simple reset function on window for testing (not required)
-      window.__newsCounters = {
-        readCount,
-        writeCount,
-        resetAll: function(){
-          keys.forEach(k => { writeCount(k, 0); const el = document.getElementById('counter-' + k); if(el) el.textContent = formatCount(0); });
+      /* ---- Ratings logic ---- */
+      function readRatings(k){
+        const obj = readJSON(ratingsKey(k));
+        if(!obj || typeof obj.sum !== 'number' || typeof obj.count !== 'number'){
+          return { sum: 0, count: 0 };
         }
-      };
+        return obj;
+      }
+
+      function writeRatings(k, sum, count){
+        writeJSON(ratingsKey(k), { sum: sum, count: count });
+      }
+
+      function readUserRating(k){
+        const n = parseInt(localStorage.getItem(userRatingKey(k)), 10);
+        return isNaN(n) ? null : n;
+      }
+
+      function writeUserRating(k, v){
+        try {
+          if(v === null) localStorage.removeItem(userRatingKey(k));
+          else localStorage.setItem(userRatingKey(k), String(v));
+        } catch(e){}
+      }
+
+      function computeAverage(sum, count){
+        if(count === 0) return null;
+        return (sum / count);
+      }
+
+      function formatAverage(sum, count){
+        if(count === 0) return 'Average: — (0 votes)';
+        const avg = computeAverage(sum, count);
+        return 'Average: ' + avg.toFixed(1) + ' (' + count + (count === 1 ? ' vote)' : ' votes)');
+      }
+
+      // Initialize averages and restore user's selected buttons
+      keys.forEach(k => {
+        const obj = readRatings(k);
+        const avgEl = document.getElementById('avg-' + k);
+        if(avgEl) avgEl.textContent = formatAverage(obj.sum, obj.count);
+
+        // restore user's last rating UI
+        const user = readUserRating(k);
+        if(user !== null){
+          const group = document.querySelector('.rate-group[data-key="' + k + '"]');
+          if(group){
+            const btn = group.querySelector('.rate-btn[data-value="' + user + '"]');
+            if(btn) btn.classList.add('selected');
+          }
+        }
+      });
+
+      // Rate button interactions (select rating visually)
+      const rateGroups = document.querySelectorAll('.rate-group');
+      rateGroups.forEach(group => {
+        const k = group.getAttribute('data-key');
+        group.addEventListener('click', function(e){
+          const btn = e.target.closest('.rate-btn');
+          if(!btn) return;
+          const val = parseInt(btn.getAttribute('data-value'), 10);
+          // mark selection
+          group.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          // store temporary selection attribute on the group for reading by submit
+          group.setAttribute('data-selected', String(val));
+        });
+
+        // keyboard support: focus + Space/Enter selects
+        group.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){
+            const btn = e.target.closest('.rate-btn');
+            if(!btn) return;
+            e.preventDefault();
+            btn.click();
+          }
+        });
+      });
+
+      // Submit rating handlers
+      const submitButtons = document.querySelectorAll('.rate-submit');
+      submitButtons.forEach(btn => {
+        const key = btn.getAttribute('data-key');
+        btn.addEventListener('click', function(){
+          const group = document.querySelector('.rate-group[data-key="' + key + '"]');
+          if(!group) return;
+          const sel = group.getAttribute('data-selected');
+          if(!sel){
+            // no selection; highlight to indicate required
+            group.querySelectorAll('.rate-btn').forEach(b => {
+              b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 220 });
+            });
+            return;
+          }
+          const val = parseInt(sel, 10);
+          if(isNaN(val) || val < 1 || val > 5) return;
+
+          try {
+            const prev = readUserRating(key); // previous rating by this user (if any)
+            const obj = readRatings(key);
+            let sum = obj.sum;
+            let count = obj.count;
+
+            if(prev === null){
+              // new vote
+              sum += val;
+              count += 1;
+            } else {
+              // user changed their vote; adjust sum but not count
+              sum = sum - prev + val;
+            }
+            // persist
+            writeRatings(key, sum, count);
+            writeUserRating(key, val);
+
+            // update UI average
+            const avgEl = document.getElementById('avg-' + key);
+            if(avgEl) avgEl.textContent = formatAverage(sum, count);
+
+            // option: visually mark selected (already set on click)
+            // also ensure the group's selected attribute reflects the stored rating
+            group.setAttribute('data-selected', String(val));
+          } catch(err){
+            // ignore storage issues
+          }
+        });
+
+        // keyboard: Enter activates submit
+        btn.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            btn.click();
+          }
+        });
+      });
+
+      // Expose simple API for debugging (optional)
+      window.__newsCounters = window.__newsCounters || {};
+      Object.assign(window.__newsCounters, {
+        readCount: function(k){ return readInt(viewsKey(k)); },
+        readRatings: function(k){ return readRatings(k); },
+        readUserRating: readUserRating,
+        resetAll: function(){
+          keys.forEach(k => {
+            try {
+              localStorage.removeItem(viewsKey(k));
+              localStorage.removeItem(ratingsKey(k));
+              localStorage.removeItem(userRatingKey(k));
+              const c = document.getElementById('counter-' + k); if(c) c.textContent = formatViews(0);
+              const a = document.getElementById('avg-' + k); if(a) a.textContent = formatAverage(0,0);
+              const group = document.querySelector('.rate-group[data-key="' + k + '"]');
+              if(group){ group.removeAttribute('data-selected'); group.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected')); }
+            } catch(e){}
+          });
+        }
+      });
     })();
   </script>
 </body>
