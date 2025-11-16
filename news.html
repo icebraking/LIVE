@@ -171,6 +171,10 @@
       width: calc(7 * 150px + 6 * 12px); /* fixed width so columns align */
       max-width: 100%;
       box-sizing: content-box;
+
+      /* SHIFT ENTIRE ICONS AREA UP BY 150px (user request) */
+      transform: translateY(-150px);
+      will-change: transform;
     }
 
     /* Top (first) icon occupies the first row in column 4 */
