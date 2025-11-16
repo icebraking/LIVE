@@ -143,8 +143,10 @@
       max-width: 100%;
       box-sizing: content-box;
 
-      /* MOVED DOWN BY 110px relative to previous -150px -> now -40px (i.e. 110px downward) */
-      transform: translateY(-40px);
+      /* SHIFT ENTIRE ICONS AREA: moved down by 50px relative to the previous state.
+         Previously we used translateY(-150px) then set to -40px (110px down).
+         Now move everything further down by 50px -> translateY(10px). */
+      transform: translateY(10px);
       will-change: transform;
     }
 
@@ -195,10 +197,11 @@
     }
     .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
 
-    /* Home button placed beneath left navigation, fixed bottom-left */
+    /* Home button placed beneath left navigation, fixed bottom-left.
+       Moved right by 50px from previous left:12px -> left:62px */
     .home-button {
       position: fixed;
-      left: 12px;               /* aligns visually beneath left nav */
+      left: 62px;               /* moved 50px right from 12px */
       bottom: 12px;
       width: 46px;
       height: 46px;
@@ -238,7 +241,7 @@
       .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
       .icon img { width: 150px; height: 75px; object-fit: contain; }
-      :root { --header-h: 0; --headline-top-offset: 0; }
+      :root { --header_h: 0; --headline-top-offset: 0; }
 
       /* On narrow screens switch the icons layout to a responsive grid while preserving image size */
       .icons-wrapper {
@@ -250,8 +253,8 @@
       }
       .grid35 { grid-template-columns: repeat(7, 150px); }
 
-      /* Move home button slightly to avoid overlapping the mobile sidebar when open */
-      .home-button { left: 8px; bottom: 14px; }
+      /* Move home button right by 50px on mobile too (previous mobile left was 8px -> now 58px) */
+      .home-button { left: 58px; bottom: 14px; }
     }
 
     @media (max-width: 420px) {
