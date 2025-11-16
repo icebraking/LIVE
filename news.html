@@ -3,34 +3,408 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>News</title>
+  <title>NEWS — THE F1 HUB</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+
   <style>
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    :root{
+      --black: #000000;
+      --accent-red: #FF0000;
+      --sidebar-w: 220px;
+      --gap: 22px;
+      --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
+      --header-h: 96px;              /* reserved header space (no tagline shown) */
+      --headline-top-offset: 8px;
+      --mobile-break: 900px;
+    }
+
+    /* Page shell (matching index.html: background, font, uppercase) */
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background: var(--black);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden; /* desktop: keep no page scrolling; mobile override below */
+      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    /* Hide scrollbars (most browsers) */
+    * { scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    :focus { outline: none; }
+
+    /* Small-screen hamburger (kept for parity with index.html) */
+    .hamburger {
+      position: fixed;
+      left: 16px;
+      top: calc(var(--headline-top-offset) + 8px);
+      z-index: 100;
+      width:40px;
+      height:40px;
+      border-radius:8px;
+      background: rgba(255,255,255,0.03);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      color:#fff;
+      cursor:pointer;
+      pointer-events:auto;
+    }
+    .hamburger:focus { outline:3px solid rgba(255,0,0,0.18); outline-offset:3px }
+    .hamburger .bar{
+      width:18px;
+      height:2px;
+      background:#fff;
+      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
+      display:block;
+    }
+
+    /* App positioned at top (header reserved by --header-h even though tagline removed) */
+    .app {
+      position: absolute;
+      top: var(--header-h);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: var(--gap);
+      padding: var(--gap);
+      box-sizing: border-box;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* Sidebar styling (identical to index.html) */
+    .sidebar {
+      background: rgba(10,10,10,1);
+      border-radius: 12px;
+      padding: 16px;
+      height: 100%;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.03);
+      overflow: hidden;
       display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .menu a {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      color:#fff;
+      font-weight:700;
+      font-size:0.98rem;
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
+    .menu a:hover, .menu a:focus {
+      background: rgba(255,255,255,0.03);
+      color: var(--accent-red);
+      transform: translateX(6px);
+    }
+    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
+
+    /* Main area */
+    .main {
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow: hidden;
+    }
+
+    .table {
+      width:100%;
+      max-width:1100px;
+      height:100%;
+      display:grid;
+      /* Single centered row now that other rows are removed */
+      grid-template-rows: 1fr;
+      gap: 18px;
       align-items: center;
+      justify-items: center;
+      overflow: hidden;
+    }
+
+    .row {
+      position: relative;
+      display:flex;
+      align-items:center;
+      padding: 28px 32px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .12s ease;
+      cursor: default;
+      user-select: none;
+      overflow: visible;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #f8f8f8;
+      -webkit-tap-highlight-color: rgba(255,255,255,0.02);
     }
-    .container {
-      text-align: center;
+    .row:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.78); }
+
+    /* Image replacing the old NEWS label (centered in the only row) */
+    .news-badge {
+      display:inline-block;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+      will-change: transform;
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
+      padding: 8px;
     }
-    a img {
-      display: inline-block;
-      max-width: 100%;
+    .news-badge img {
+      display:block;
+      width: 360px;           /* elegant default size on desktop */
+      max-width: 46vw;        /* responsive */
       height: auto;
-      cursor: pointer;
       border: 0;
+      background: transparent;
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+      border-radius: 8px;
+      transform-origin: center;
+    }
+    /* Lift effect on hover and focus (keyboard accessible) */
+    .news-badge:hover, .news-badge:focus-within {
+      transform: translateY(-10px);
+      box-shadow: 0 32px 68px rgba(0,0,0,0.75);
+    }
+    .news-badge:hover img, .news-badge:focus-within img {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 28px 56px rgba(0,0,0,0.6);
+    }
+    .news-badge:focus-within { outline: 3px solid rgba(255,0,0,0.14); outline-offset: 6px; border-radius:12px; }
+
+    /* Anchor covering the image (click opens in new tab) */
+    .news-badge a { display:block; }
+
+    /* Mobile styles (same behaviour as index.html) */
+    @media (max-width: var(--mobile-break)) {
+      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+      .hamburger { display:flex; }
+      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: var(--header-h); }
+      .sidebar {
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        width: 78%;
+        max-width: 320px;
+        height: calc(100vh - var(--header-h));
+        transform: translateX(-110%);
+        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        z-index: 140;
+        overflow:auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .scrim {
+        display:block;
+        position: fixed;
+        inset: var(--header-h) 0 0 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 130;
+        opacity:0;
+        pointer-events:none;
+        transition: opacity .18s ease;
+      }
+      .scrim.visible { opacity:1; pointer-events:auto; }
+
+      .main { padding-bottom: 40px; }
+      .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
+      .row { padding: 18px 20px; border-radius:10px; }
+      .news-badge img { width: 220px; max-width: 60vw; }
+
+      :root { --header-h: 96px; --headline-top-offset: 8px; }
+    }
+
+    @media (max-width: 420px) {
+      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+      .hamburger { display:none !important; }
+      .app {
+        position: absolute;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        bottom: auto;
+        display: block;
+        gap: 12px;
+        padding: 10px;
+        overflow: visible;
+      }
+      .sidebar {
+        position: static !important;
+        transform: none !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: none !important;
+        display: block !important;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(10,10,10,0.96);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        overflow: visible;
+      }
+      .menu {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
+      .main {
+        margin-top: 10px;
+        padding-bottom: 48px;
+        display: block;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
+      .news-badge img { width: 180px; max-width: 58vw; }
+
+      :root { --header-h: 84px; --headline-top-offset: 6px; }
+    }
+
+    @media (max-width: 360px) {
+      .menu a { padding: 8px 10px; font-size: 0.95rem; }
+      .app { padding: 8px; }
+      .news-badge img { width: 150px; max-width: 56vw; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer">
-      <img src="f1.png" alt="Formula 1 — Latest news" />
-    </a>
+  <!-- mobile hamburger (kept for parity with index.html) -->
+  <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+    <span class="bar" aria-hidden="true"></span>
+  </button>
+
+  <!-- mobile scrim -->
+  <div id="scrim" class="scrim" aria-hidden="true"></div>
+
+  <div class="app" role="application" aria-label="News page with left navigation">
+    <!-- Sidebar navigation (kept identical to index.html) -->
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Main area: f1.png sits centered in the main content -->
+    <main class="main" role="main" aria-label="News content">
+      <section class="table" role="region" aria-label="News">
+        <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
+          <div class="news-badge" id="lbl-news">
+            <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Open Formula 1 latest news (opens in new tab)">
+              <img src="f1.png" alt="Formula 1 — Latest news">
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
+
+  <script>
+    // Mobile sidebar toggle + accessibility helpers (same behavior as index.html)
+    (function(){
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.getElementById('sidebarToggle');
+      const scrim = document.getElementById('scrim');
+      const mobileBreakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-break')) || 900;
+
+      function isMobile() {
+        return window.innerWidth <= mobileBreakpoint;
+      }
+
+      function setSidebar(open){
+        if(isMobile()){
+          if(open){
+            sidebar.classList.add('open');
+            scrim.classList.add('visible');
+            sidebar.setAttribute('aria-hidden','false');
+            toggle.setAttribute('aria-expanded','true');
+            scrim.setAttribute('aria-hidden','false');
+            const first = sidebar.querySelector('a');
+            if(first) first.focus();
+          } else {
+            sidebar.classList.remove('open');
+            scrim.classList.remove('visible');
+            sidebar.setAttribute('aria-hidden','true');
+            toggle.setAttribute('aria-expanded','false');
+            scrim.setAttribute('aria-hidden','true');
+            if(toggle) toggle.focus();
+          }
+        }
+      }
+
+      if(toggle){
+        toggle.addEventListener('click', function(){
+          const open = sidebar.classList.contains('open');
+          setSidebar(!open);
+        });
+      }
+
+      if(scrim){
+        scrim.addEventListener('click', function(){
+          setSidebar(false);
+        });
+      }
+
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape'){
+          setSidebar(false);
+        }
+      });
+
+      // Ensure correct initial state on resize / load
+      function syncState(){
+        const isPhone = window.matchMedia('(max-width:420px)').matches;
+
+        if(!isMobile() || isPhone){
+          sidebar.classList.remove('open');
+          sidebar.style.transform = '';
+          sidebar.setAttribute('aria-hidden','false');
+          scrim.classList.remove('visible');
+          scrim.setAttribute('aria-hidden','true');
+          if(toggle) toggle.setAttribute('aria-expanded','false');
+          document.documentElement.style.overflow = isPhone ? 'auto' : 'hidden';
+        } else {
+          sidebar.setAttribute('aria-hidden','true');
+          scrim.classList.remove('visible');
+          scrim.setAttribute('aria-hidden','true');
+          if(toggle) toggle.setAttribute('aria-expanded','false');
+          document.documentElement.style.overflow = 'auto';
+        }
+      }
+
+      window.addEventListener('resize', syncState);
+      window.addEventListener('orientationchange', syncState);
+      window.addEventListener('load', syncState);
+      syncState();
+    })();
+  </script>
 </body>
 </html>
