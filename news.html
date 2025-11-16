@@ -16,12 +16,12 @@
       --sidebar-w: 220px;
       --gap: 22px;
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
-      --header-h: 96px;              /* reserved header space (no tagline shown) */
+      --header-h: 96px;
       --headline-top-offset: 8px;
       --mobile-break: 900px;
     }
 
-    /* Page shell (matching index.html: background, font, uppercase) */
+    /* Page shell */
     html,body{
       height:100%;
       margin:0;
@@ -29,330 +29,117 @@
       background: var(--black);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      overflow:hidden; /* desktop: keep no page scrolling; mobile override below */
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      overflow:hidden;
+      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", serif;
       text-transform: uppercase;
       color: #ffffff;
     }
 
-    /* Hide scrollbars (most browsers) */
+    /* Hide scrollbars */
     * { scrollbar-width: none; -ms-overflow-style: none; }
     *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
     a { color: inherit; text-decoration: none; }
     :focus { outline: none; }
 
-    /* Small-screen hamburger (kept for parity with index.html) */
-    .hamburger {
-      position: fixed;
-      left: 16px;
-      top: calc(var(--headline-top-offset) + 8px);
-      z-index: 100;
-      width:40px;
-      height:40px;
-      border-radius:8px;
-      background: rgba(255,255,255,0.03);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      border:0;
-      color:#fff;
-      cursor:pointer;
-      pointer-events:auto;
-    }
+    .hamburger { position: fixed; left: 16px; top: calc(var(--headline-top-offset) + 8px); z-index: 100; width:40px; height:40px; border-radius:8px; background: rgba(255,255,255,0.03); display:none; align-items:center; justify-content:center; border:0; color:#fff; cursor:pointer; }
     .hamburger:focus { outline:3px solid rgba(255,0,0,0.18); outline-offset:3px }
-    .hamburger .bar{
-      width:18px;
-      height:2px;
-      background:#fff;
-      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
-      display:block;
-    }
+    .hamburger .bar{ width:18px; height:2px; background:#fff; box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff; display:block; }
 
-    /* App positioned at top (header reserved by --header-h even though tagline removed) */
     .app {
-      position: absolute;
-      top: var(--header-h);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: grid;
-      grid-template-columns: var(--sidebar-w) 1fr;
-      gap: var(--gap);
-      padding: var(--gap);
-      box-sizing: border-box;
-      align-items: stretch;
-      overflow: hidden;
+      position: absolute; top: var(--header-h); left: 0; right: 0; bottom: 0;
+      display: grid; grid-template-columns: var(--sidebar-w) 1fr; gap: var(--gap);
+      padding: var(--gap); box-sizing: border-box; align-items: stretch; overflow: hidden;
     }
 
-    /* Sidebar styling (identical to index.html) */
     .sidebar {
-      background: rgba(10,10,10,1);
-      border-radius: 12px;
-      padding: 16px;
-      height: 100%;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.03);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      background: rgba(10,10,10,1); border-radius: 12px; padding: 16px; height: 100%;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.85); border: 1px solid rgba(255,255,255,0.03);
+      overflow: hidden; display: flex; flex-direction: column; gap: 10px;
     }
     .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-    .menu a {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.98rem;
-      transition: transform .12s ease, background .12s ease, color .12s ease;
-    }
+    .menu a { display:flex; gap:12px; align-items:center; padding:10px; border-radius:8px; color:#fff; font-weight:700; font-size:0.98rem; transition: transform .12s ease, background .12s ease, color .12s ease; }
     .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
-    .menu a:hover, .menu a:focus {
-      background: rgba(255,255,255,0.03);
-      color: var(--accent-red);
-      transform: translateX(6px);
-    }
+    .menu a:hover, .menu a:focus { background: rgba(255,255,255,0.03); color: var(--accent-red); transform: translateX(6px); }
     .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
 
-    /* Main area */
-    .main {
-      height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow: hidden;
-    }
+    .main { height: 100%; display:flex; align-items:center; justify-content:center; overflow: hidden; }
 
     .table {
-      width:100%;
-      max-width:1100px;
-      height:100%;
-      display:grid;
-      /* Single centered row */
-      grid-template-rows: 1fr;
-      gap: 18px;
-      align-items: center;
-      justify-items: center;
-      overflow: hidden;
+      width:100%; max-width:1100px; height:100%; display:grid; grid-template-rows: 1fr;
+      gap: 18px; align-items: center; justify-items: center; overflow: hidden;
     }
 
     .row {
-      position: relative;
-      display:flex;
-      align-items:center;
-      padding: 28px 32px;
-      border-radius: 12px;
+      position: relative; display:flex; align-items:center; padding: 28px 32px; border-radius: 12px;
       background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 28px rgba(0,0,0,0.6);
       transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .12s ease;
-      cursor: default;
-      user-select: none;
-      overflow: visible;
-      justify-content: center;
+      cursor: default; user-select: none; overflow: visible; justify-content: center;
       -webkit-tap-highlight-color: rgba(255,255,255,0.02);
     }
     .row:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.78); }
 
-    /* Icon row: four icons in the top row, each exactly 150x75 pixels */
-    .icon-row {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    /* Icon row and items */
+    .icon-row { display: flex; gap: 20px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
 
     .icon {
-      display:inline-block;
-      border-radius: 8px;
-      overflow: hidden;
+      display:inline-block; border-radius: 8px; overflow: visible;
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
-      padding: 6px;
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
-      will-change: transform;
-      text-align: center;
+      padding: 6px; transition: transform .22s, box-shadow .18s; will-change: transform; text-align: center;
       width: 150px;
     }
-    .icon img {
-      display:block;
-      width: 150px;    /* fixed pixel width */
-      height: 75px;    /* fixed pixel height */
-      object-fit: contain; /* preserve aspect */
-      border: 0;
-      background: transparent;
-      border-radius: 4px;
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
-      transform-origin: center;
-      margin: 0 auto;
-    }
-    .icon:hover, .icon:focus-within {
-      transform: translateY(-8px);
-      box-shadow: 0 24px 56px rgba(0,0,0,0.65);
-    }
-    .icon:hover img, .icon:focus-within img {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
-    }
-    .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
+    .icon img { display:block; width: 150px; height: 75px; object-fit: contain; border-radius: 4px; margin: 0 auto; }
 
-    /* View counter styling: small, elegant, white */
+    /* compact counter: only numbers (small, elegant, white) */
     .counter {
-      margin-top: 8px;
-      color: #ffffff;
-      font-family: "Copperplate Gothic", "Copperplate", serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.6px;
-      text-transform: none; /* keep numbers as-is */
-      opacity: 0.95;
-      line-height: 1;
-      min-width: 60px;
+      margin-top: 8px; color: #ffffff; font-family: "Copperplate Gothic", "Copperplate", serif;
+      font-size: 0.75rem; font-weight: 400; letter-spacing: 0.6px; text-transform: none; opacity: 0.95;
+      line-height: 1; min-width: 60px; text-align:center;
     }
 
-    /* Rating UI */
-    .rating {
-      margin-top: 6px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-    }
+    /* Rating controls: star at left + five numeric buttons (no wording) */
+    .rating-wrap { margin-top: 6px; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .star { width:20px; height:20px; flex: 0 0 20px; display:inline-flex; align-items:center; justify-content:center; }
+    .star svg { width:20px; height:20px; fill:#ffffff; opacity:0.95; }
+
     .rate-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.02);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.85rem;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+      width: 28px; height: 28px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02); color: #fff; font-weight: 700; cursor: pointer; font-size: 0.85rem;
+      display:inline-flex; align-items:center; justify-content:center; transition: transform .12s ease, background .12s ease;
     }
-    .rate-btn.selected {
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-      transform: translateY(-3px);
-    }
-    .rate-submit {
-      margin-left: 6px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      border: 0;
-      background: rgba(255,255,255,0.06);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.75rem;
-    }
-    .rate-submit:active { transform: translateY(1px); }
+    .rate-btn:focus { outline: 2px solid rgba(255,255,255,0.12); outline-offset: 3px; }
 
-    .avg {
-      margin-top: 6px;
-      color: #ffffff;
-      font-family: "Copperplate Gothic", "Copperplate", serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      opacity: 0.95;
-      line-height: 1;
+    /* Average number: only numeric (one decimal), styled small & white */
+    .avg-num {
+      margin-top: 8px; color: #ffffff; font-family: "Copperplate Gothic", "Copperplate", serif;
+      font-size: 0.9rem; font-weight: 600; opacity: 0.98; text-align:center; line-height: 1;
     }
 
-    /* Keep image pixel size on mobile as requested */
+    /* Hidden helper */
+    .hidden { display: none !important; }
+
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
       .hamburger { display:flex; }
       .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: var(--header-h); }
-      .sidebar {
-        position: fixed;
-        top: var(--header-h);
-        left: 0;
-        width: 78%;
-        max-width: 320px;
-        height: calc(100vh - var(--header-h));
-        transform: translateX(-110%);
-        transition: transform .28s cubic-bezier(.2,.9,.2,1);
-        z-index: 140;
-        overflow:auto;
-        -webkit-overflow-scrolling: touch;
-      }
+      .sidebar { position: fixed; top: var(--header-h); left: 0; width: 78%; max-width: 320px; height: calc(100vh - var(--header-h)); transform: translateX(-110%); transition: transform .28s; z-index: 140; overflow:auto; -webkit-overflow-scrolling: touch; }
       .sidebar.open { transform: translateX(0); }
-      .scrim {
-        display:block;
-        position: fixed;
-        inset: var(--header-h) 0 0 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 130;
-        opacity:0;
-        pointer-events:none;
-        transition: opacity .18s ease;
-      }
-      .scrim.visible { opacity:1; pointer-events:auto; }
-
       .main { padding-bottom: 40px; }
-      .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
       .icon img { width: 150px; height: 75px; object-fit: contain; }
-      .counter, .avg { font-size: 0.75rem; }
-
+      .counter, .avg-num { font-size: 0.75rem; }
       :root { --header-h: 96px; --headline-top-offset: 8px; }
     }
 
     @media (max-width: 420px) {
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
       .hamburger { display:none !important; }
-      .app {
-        position: absolute;
-        top: var(--header-h);
-        left: 0;
-        right: 0;
-        bottom: auto;
-        display: block;
-        gap: 12px;
-        padding: 10px;
-        overflow: visible;
-      }
-      .sidebar {
-        position: static !important;
-        transform: none !important;
-        width: auto !important;
-        height: auto !important;
-        max-width: none !important;
-        display: block !important;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: rgba(10,10,10,0.96);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        overflow: visible;
-      }
-      .menu {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-      }
-      .main {
-        margin-top: 10px;
-        padding-bottom: 48px;
-        display: block;
-        height: auto !important;
-        overflow: visible !important;
-      }
-      .table {
-        height: auto !important;
-        overflow: visible !important;
-      }
+      .app { position: absolute; top: var(--header-h); left: 0; right: 0; bottom: auto; display: block; gap: 12px; padding: 10px; overflow: visible; }
+      .sidebar { position: static !important; transform: none !important; width: auto !important; height: auto !important; max-width: none !important; display: block !important; padding: 10px 12px; border-radius: 10px; background: rgba(10,10,10,0.96); box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: visible; }
+      .menu { display: flex !important; flex-direction: column !important; gap: 8px; padding: 0; margin: 0; width: 100%; }
+      .main { margin-top: 10px; padding-bottom: 48px; display: block; height: auto !important; overflow: visible !important; }
+      .table { height: auto !important; overflow: visible !important; }
       .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-
       :root { --header-h: 84px; --headline-top-offset: 6px; }
     }
 
@@ -364,16 +151,13 @@
   </style>
 </head>
 <body>
-  <!-- mobile hamburger (kept for parity with index.html) -->
   <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
     <span class="bar" aria-hidden="true"></span>
   </button>
 
-  <!-- mobile scrim -->
   <div id="scrim" class="scrim" aria-hidden="true"></div>
 
   <div class="app" role="application" aria-label="News page with left navigation">
-    <!-- Sidebar navigation (kept identical to index.html) -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
         <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
@@ -385,86 +169,105 @@
       </ul>
     </nav>
 
-    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 with counters and ratings below -->
     <main class="main" role="main" aria-label="News content">
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
           <div class="icon-row" id="lbl-news" aria-label="News icons">
+
+            <!-- F1 -->
             <div class="icon" data-key="f1">
-              <a class="counted" href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 latest (opens in new tab)" data-key="f1">
+              <a class="counted" href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" data-key="f1" aria-label="Formula 1 latest link">
                 <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
               </a>
-              <div class="counter" id="counter-f1" aria-live="polite">0 views</div>
+              <div class="counter" id="counter-f1" aria-live="polite">0</div>
 
-              <div class="rating" aria-label="Rate Formula 1">
-                <div class="rate-group" data-key="f1" role="radiogroup" aria-label="Formula1 rating">
+              <!-- rating controls shown only if user hasn't voted yet for this key -->
+              <div class="rating-wrap" data-key="f1" role="group" aria-label="Rate Formula 1">
+                <div class="star" aria-hidden="true">
+                  <!-- white star SVG -->
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 17.3 6.18 20.5l1.18-6.88L2.5 9.5l6.9-1L12 2.5l2.6 6 6.9 1-4.86 4.12L17.82 20.5z"></path></svg>
+                </div>
+                <div class="rate-buttons" role="radiogroup" aria-label="Rating buttons for Formula 1">
                   <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
                   <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
                   <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
                   <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
                   <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
                 </div>
-                <button class="rate-submit" data-key="f1" aria-label="Submit rating">Submit</button>
               </div>
-              <div class="avg" id="avg-f1" aria-live="polite">Average: — (0 votes)</div>
+
+              <div class="avg-num hidden" id="avg-f1" aria-live="polite">0.0</div>
             </div>
 
+            <!-- PlanetF1 -->
             <div class="icon" data-key="pf1">
-              <a class="counted" href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)" data-key="pf1">
+              <a class="counted" href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" data-key="pf1" aria-label="PlanetF1 link">
                 <img src="pf1.png" alt="PlanetF1" width="150" height="75">
               </a>
-              <div class="counter" id="counter-pf1" aria-live="polite">0 views</div>
+              <div class="counter" id="counter-pf1" aria-live="polite">0</div>
 
-              <div class="rating" aria-label="Rate PlanetF1">
-                <div class="rate-group" data-key="pf1" role="radiogroup" aria-label="PlanetF1 rating">
+              <div class="rating-wrap" data-key="pf1" role="group" aria-label="Rate PlanetF1">
+                <div class="star" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 17.3 6.18 20.5l1.18-6.88L2.5 9.5l6.9-1L12 2.5l2.6 6 6.9 1-4.86 4.12L17.82 20.5z"></path></svg>
+                </div>
+                <div class="rate-buttons" role="radiogroup" aria-label="Rating buttons for PlanetF1">
                   <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
                   <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
                   <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
                   <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
                   <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
                 </div>
-                <button class="rate-submit" data-key="pf1" aria-label="Submit rating">Submit</button>
               </div>
-              <div class="avg" id="avg-pf1" aria-live="polite">Average: — (0 votes)</div>
+
+              <div class="avg-num hidden" id="avg-pf1" aria-live="polite">0.0</div>
             </div>
 
+            <!-- The Race -->
             <div class="icon" data-key="race">
-              <a class="counted" href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)" data-key="race">
+              <a class="counted" href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" data-key="race" aria-label="The Race link">
                 <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
               </a>
-              <div class="counter" id="counter-race" aria-live="polite">0 views</div>
+              <div class="counter" id="counter-race" aria-live="polite">0</div>
 
-              <div class="rating" aria-label="Rate The Race">
-                <div class="rate-group" data-key="race" role="radiogroup" aria-label="The Race rating">
+              <div class="rating-wrap" data-key="race" role="group" aria-label="Rate The Race">
+                <div class="star" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 17.3 6.18 20.5l1.18-6.88L2.5 9.5l6.9-1L12 2.5l2.6 6 6.9 1-4.86 4.12L17.82 20.5z"></path></svg>
+                </div>
+                <div class="rate-buttons" role="radiogroup" aria-label="Rating buttons for The Race">
                   <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
                   <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
                   <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
                   <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
                   <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
                 </div>
-                <button class="rate-submit" data-key="race" aria-label="Submit rating">Submit</button>
               </div>
-              <div class="avg" id="avg-race" aria-live="polite">Average: — (0 votes)</div>
+
+              <div class="avg-num hidden" id="avg-race" aria-live="polite">0.0</div>
             </div>
 
+            <!-- RaceFans -->
             <div class="icon" data-key="racefans">
-              <a class="counted" href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)" data-key="racefans">
+              <a class="counted" href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" data-key="racefans" aria-label="RaceFans link">
                 <img src="racefans.png" alt="RaceFans" width="150" height="75">
               </a>
-              <div class="counter" id="counter-racefans" aria-live="polite">0 views</div>
+              <div class="counter" id="counter-racefans" aria-live="polite">0</div>
 
-              <div class="rating" aria-label="Rate RaceFans">
-                <div class="rate-group" data-key="racefans" role="radiogroup" aria-label="RaceFans rating">
+              <div class="rating-wrap" data-key="racefans" role="group" aria-label="Rate RaceFans">
+                <div class="star" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 17.3 6.18 20.5l1.18-6.88L2.5 9.5l6.9-1L12 2.5l2.6 6 6.9 1-4.86 4.12L17.82 20.5z"></path></svg>
+                </div>
+                <div class="rate-buttons" role="radiogroup" aria-label="Rating buttons for RaceFans">
                   <button class="rate-btn" data-value="1" aria-label="Rate 1">1</button>
                   <button class="rate-btn" data-value="2" aria-label="Rate 2">2</button>
                   <button class="rate-btn" data-value="3" aria-label="Rate 3">3</button>
                   <button class="rate-btn" data-value="4" aria-label="Rate 4">4</button>
                   <button class="rate-btn" data-value="5" aria-label="Rate 5">5</button>
                 </div>
-                <button class="rate-submit" data-key="racefans" aria-label="Submit rating">Submit</button>
               </div>
-              <div class="avg" id="avg-racefans" aria-live="polite">Average: — (0 votes)</div>
+
+              <div class="avg-num hidden" id="avg-racefans" aria-live="polite">0.0</div>
             </div>
+
           </div>
         </div>
       </section>
@@ -479,26 +282,17 @@
       const scrim = document.getElementById('scrim');
       const mobileBreakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-break')) || 900;
 
-      function isMobile() {
-        return window.innerWidth <= mobileBreakpoint;
-      }
+      function isMobile() { return window.innerWidth <= mobileBreakpoint; }
 
       function setSidebar(open){
         if(isMobile()){
           if(open){
-            sidebar.classList.add('open');
-            scrim.classList.add('visible');
-            sidebar.setAttribute('aria-hidden','false');
-            toggle.setAttribute('aria-expanded','true');
-            scrim.setAttribute('aria-hidden','false');
-            const first = sidebar.querySelector('a');
-            if(first) first.focus();
+            sidebar.classList.add('open'); scrim.classList.add('visible');
+            sidebar.setAttribute('aria-hidden','false'); toggle.setAttribute('aria-expanded','true'); scrim.setAttribute('aria-hidden','false');
+            const first = sidebar.querySelector('a'); if(first) first.focus();
           } else {
-            sidebar.classList.remove('open');
-            scrim.classList.remove('visible');
-            sidebar.setAttribute('aria-hidden','true');
-            toggle.setAttribute('aria-expanded','false');
-            scrim.setAttribute('aria-hidden','true');
+            sidebar.classList.remove('open'); scrim.classList.remove('visible');
+            sidebar.setAttribute('aria-hidden','true'); toggle.setAttribute('aria-expanded','false'); scrim.setAttribute('aria-hidden','true');
             if(toggle) toggle.focus();
           }
         }
@@ -510,37 +304,18 @@
           setSidebar(!open);
         });
       }
+      if(scrim) scrim.addEventListener('click', function(){ setSidebar(false); });
+      document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setSidebar(false); });
 
-      if(scrim){
-        scrim.addEventListener('click', function(){
-          setSidebar(false);
-        });
-      }
-
-      document.addEventListener('keydown', function(e){
-        if(e.key === 'Escape'){
-          setSidebar(false);
-        }
-      });
-
-      // Ensure correct initial state on resize / load
       function syncState(){
         const isPhone = window.matchMedia('(max-width:420px)').matches;
-
         if(!isMobile() || isPhone){
-          sidebar.classList.remove('open');
-          sidebar.style.transform = '';
-          sidebar.setAttribute('aria-hidden','false');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          if(toggle) toggle.setAttribute('aria-expanded','false');
+          sidebar.classList.remove('open'); sidebar.style.transform = ''; sidebar.setAttribute('aria-hidden','false');
+          scrim.classList.remove('visible'); scrim.setAttribute('aria-hidden','true'); if(toggle) toggle.setAttribute('aria-expanded','false');
           document.documentElement.style.overflow = isPhone ? 'auto' : 'hidden';
         } else {
-          sidebar.setAttribute('aria-hidden','true');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          if(toggle) toggle.setAttribute('aria-expanded','false');
-          document.documentElement.style.overflow = 'auto';
+          sidebar.setAttribute('aria-hidden','true'); scrim.classList.remove('visible'); scrim.setAttribute('aria-hidden','true');
+          if(toggle) toggle.setAttribute('aria-expanded','false'); document.documentElement.style.overflow = 'auto';
         }
       }
 
@@ -552,49 +327,37 @@
   </script>
 
   <script>
-    // View counters and Ratings (client-side, persisted in localStorage)
+    // Counters and immediate rating (every click counts, persisted per-browser).
     (function(){
       const keys = ['f1','pf1','race','racefans'];
 
-      /* ---- localStorage helpers ---- */
       function viewsKey(k){ return 'views:' + k; }
-      function ratingsKey(k){ return 'ratings:' + k; }        // stores JSON { sum: number, count: number }
-      function userRatingKey(k){ return 'rating-user:' + k; } // stores the user's own rating (1-5)
+      function ratingsKey(k){ return 'ratings:' + k; }    // JSON { sum, count }
+      function votedKey(k){ return 'voted:' + k; }        // boolean flag indicating this browser already voted (so hide controls)
 
       function readInt(key){
         const n = parseInt(localStorage.getItem(key), 10);
         return isNaN(n) ? 0 : n;
       }
-
       function readJSON(key){
-        try {
-          const v = localStorage.getItem(key);
-          return v ? JSON.parse(v) : null;
-        } catch(e){
-          return null;
-        }
+        try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : { sum:0, count:0 }; } catch(e){ return { sum:0, count:0 }; }
+      }
+      function writeJSON(key,obj){
+        try { localStorage.setItem(key, JSON.stringify(obj)); } catch(e){}
       }
 
-      function writeJSON(key, obj){
-        try {
-          localStorage.setItem(key, JSON.stringify(obj));
-        } catch(e){}
+      function formatAvg(sum, count){
+        if(count === 0) return '0.0';
+        return (sum / count).toFixed(1);
       }
 
-      /* ---- View counters (existing) ---- */
-      function formatViews(n){
-        return n + (n === 1 ? ' view' : ' views');
-      }
-
-      // Initialize view counters
+      // Initialize view counters (numbers only)
       keys.forEach(k => {
         const el = document.getElementById('counter-' + k);
-        if(el){
-          el.textContent = formatViews(readInt(viewsKey(k)));
-        }
+        if(el) el.textContent = String(readInt(viewsKey(k)));
       });
 
-      // Attach click handlers to anchors with class 'counted' to increment view counts
+      // Increment view counts on image link click
       const anchors = document.querySelectorAll('a.counted[data-key]');
       anchors.forEach(a => {
         const key = a.getAttribute('data-key');
@@ -604,14 +367,9 @@
             const next = current + 1;
             localStorage.setItem(viewsKey(key), String(next));
             const el = document.getElementById('counter-' + key);
-            if(el) el.textContent = formatViews(next);
-          } catch(err){
-            // ignore storage errors
-          }
-          // allow navigation to proceed (target="_blank" opens new tab)
+            if(el) el.textContent = String(next);
+          } catch(err){}
         });
-
-        // keyboard activation
         a.addEventListener('keydown', function(e){
           if(e.key === 'Enter' || e.key === ' '){
             try {
@@ -619,168 +377,86 @@
               const next = current + 1;
               localStorage.setItem(viewsKey(key), String(next));
               const el = document.getElementById('counter-' + key);
-              if(el) el.textContent = formatViews(next);
+              if(el) el.textContent = String(next);
             } catch(err){}
           }
         });
       });
 
-      /* ---- Ratings logic ---- */
-      function readRatings(k){
-        const obj = readJSON(ratingsKey(k));
-        if(!obj || typeof obj.sum !== 'number' || typeof obj.count !== 'number'){
-          return { sum: 0, count: 0 };
-        }
-        return obj;
-      }
-
-      function writeRatings(k, sum, count){
-        writeJSON(ratingsKey(k), { sum: sum, count: count });
-      }
-
-      function readUserRating(k){
-        const n = parseInt(localStorage.getItem(userRatingKey(k)), 10);
-        return isNaN(n) ? null : n;
-      }
-
-      function writeUserRating(k, v){
-        try {
-          if(v === null) localStorage.removeItem(userRatingKey(k));
-          else localStorage.setItem(userRatingKey(k), String(v));
-        } catch(e){}
-      }
-
-      function computeAverage(sum, count){
-        if(count === 0) return null;
-        return (sum / count);
-      }
-
-      function formatAverage(sum, count){
-        if(count === 0) return 'Average: — (0 votes)';
-        const avg = computeAverage(sum, count);
-        return 'Average: ' + avg.toFixed(1) + ' (' + count + (count === 1 ? ' vote)' : ' votes)');
-      }
-
-      // Initialize averages and restore user's selected buttons
+      // Setup rating UI: if user already voted (votedKey true), hide controls and show average
       keys.forEach(k => {
-        const obj = readRatings(k);
+        const voted = localStorage.getItem(votedKey(k)) === '1';
+        const wrap = document.querySelector('.rating-wrap[data-key="' + k + '"]');
         const avgEl = document.getElementById('avg-' + k);
-        if(avgEl) avgEl.textContent = formatAverage(obj.sum, obj.count);
-
-        // restore user's last rating UI
-        const user = readUserRating(k);
-        if(user !== null){
-          const group = document.querySelector('.rate-group[data-key="' + k + '"]');
-          if(group){
-            const btn = group.querySelector('.rate-btn[data-value="' + user + '"]');
-            if(btn) btn.classList.add('selected');
-          }
+        const ratings = readJSON(ratingsKey(k));
+        if(voted){
+          if(wrap) wrap.classList.add('hidden');
+          if(avgEl){ avgEl.classList.remove('hidden'); avgEl.textContent = formatAvg(ratings.sum, ratings.count); }
+        } else {
+          // If user hasn't voted, hide average until they vote
+          if(avgEl) avgEl.classList.add('hidden');
+          if(wrap) wrap.classList.remove('hidden');
         }
       });
 
-      // Rate button interactions (select rating visually)
-      const rateGroups = document.querySelectorAll('.rate-group');
-      rateGroups.forEach(group => {
-        const k = group.getAttribute('data-key');
-        group.addEventListener('click', function(e){
-          const btn = e.target.closest('.rate-btn');
-          if(!btn) return;
-          const val = parseInt(btn.getAttribute('data-value'), 10);
-          // mark selection
-          group.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          // store temporary selection attribute on the group for reading by submit
-          group.setAttribute('data-selected', String(val));
-        });
+      // Add click handlers to rating buttons: immediate vote, hide controls, show avg
+      document.querySelectorAll('.rating-wrap').forEach(wrap => {
+        const key = wrap.getAttribute('data-key');
+        wrap.querySelectorAll('.rate-btn').forEach(btn => {
+          btn.addEventListener('click', function(e){
+            const val = parseInt(btn.getAttribute('data-value'), 10);
+            if(isNaN(val)) return;
+            try {
+              // read existing totals
+              const obj = readJSON(ratingsKey(key));
+              const newSum = (obj.sum || 0) + val;
+              const newCount = (obj.count || 0) + 1;
+              writeJSON(ratingsKey(key), { sum: newSum, count: newCount });
 
-        // keyboard support: focus + Space/Enter selects
-        group.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){
-            const btn = e.target.closest('.rate-btn');
-            if(!btn) return;
-            e.preventDefault();
-            btn.click();
-          }
-        });
-      });
+              // mark as voted so controls are hidden on subsequent loads
+              try { localStorage.setItem(votedKey(key), '1'); } catch(e){}
 
-      // Submit rating handlers
-      const submitButtons = document.querySelectorAll('.rate-submit');
-      submitButtons.forEach(btn => {
-        const key = btn.getAttribute('data-key');
-        btn.addEventListener('click', function(){
-          const group = document.querySelector('.rate-group[data-key="' + key + '"]');
-          if(!group) return;
-          const sel = group.getAttribute('data-selected');
-          if(!sel){
-            // no selection; highlight to indicate required
-            group.querySelectorAll('.rate-btn').forEach(b => {
-              b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 220 });
-            });
-            return;
-          }
-          const val = parseInt(sel, 10);
-          if(isNaN(val) || val < 1 || val > 5) return;
+              // hide controls and show avg number only
+              const avgEl = document.getElementById('avg-' + key);
+              if(avgEl){
+                avgEl.textContent = formatAvg(newSum, newCount);
+                avgEl.classList.remove('hidden');
+              }
+              // hide rating controls (star + buttons)
+              wrap.classList.add('hidden');
 
-          try {
-            const prev = readUserRating(key); // previous rating by this user (if any)
-            const obj = readRatings(key);
-            let sum = obj.sum;
-            let count = obj.count;
-
-            if(prev === null){
-              // new vote
-              sum += val;
-              count += 1;
-            } else {
-              // user changed their vote; adjust sum but not count
-              sum = sum - prev + val;
+            } catch(err){
+              // ignore storage errors
             }
-            // persist
-            writeRatings(key, sum, count);
-            writeUserRating(key, val);
+          });
 
-            // update UI average
-            const avgEl = document.getElementById('avg-' + key);
-            if(avgEl) avgEl.textContent = formatAverage(sum, count);
-
-            // option: visually mark selected (already set on click)
-            // also ensure the group's selected attribute reflects the stored rating
-            group.setAttribute('data-selected', String(val));
-          } catch(err){
-            // ignore storage issues
-          }
-        });
-
-        // keyboard: Enter activates submit
-        btn.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){
-            e.preventDefault();
-            btn.click();
-          }
+          // keyboard support: Enter or Space triggers vote
+          btn.addEventListener('keydown', function(e){
+            if(e.key === 'Enter' || e.key === ' '){
+              e.preventDefault();
+              btn.click();
+            }
+          });
         });
       });
 
-      // Expose simple API for debugging (optional)
-      window.__newsCounters = window.__newsCounters || {};
-      Object.assign(window.__newsCounters, {
-        readCount: function(k){ return readInt(viewsKey(k)); },
-        readRatings: function(k){ return readRatings(k); },
-        readUserRating: readUserRating,
-        resetAll: function(){
+      // Expose some helpers for debugging/testing
+      window.__newsRatings = {
+        readRatings: function(k){ return readJSON(ratingsKey(k)); },
+        readViews: function(k){ return readInt(viewsKey(k)); },
+        reset: function(){
           keys.forEach(k => {
             try {
               localStorage.removeItem(viewsKey(k));
               localStorage.removeItem(ratingsKey(k));
-              localStorage.removeItem(userRatingKey(k));
-              const c = document.getElementById('counter-' + k); if(c) c.textContent = formatViews(0);
-              const a = document.getElementById('avg-' + k); if(a) a.textContent = formatAverage(0,0);
-              const group = document.querySelector('.rate-group[data-key="' + k + '"]');
-              if(group){ group.removeAttribute('data-selected'); group.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected')); }
+              localStorage.removeItem(votedKey(k));
+              const c = document.getElementById('counter-' + k); if(c) c.textContent = '0';
+              const avgEl = document.getElementById('avg-' + k); if(avgEl){ avgEl.textContent = '0.0'; avgEl.classList.add('hidden'); }
+              const wrap = document.querySelector('.rating-wrap[data-key="' + k + '"]'); if(wrap) wrap.classList.remove('hidden');
             } catch(e){}
           });
         }
-      });
+      };
     })();
   </script>
 </body>
