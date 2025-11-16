@@ -132,7 +132,7 @@
       max-width:1100px;
       height:100%;
       display:grid;
-      /* Single centered row now that other rows are removed */
+      /* Single centered row */
       grid-template-rows: 1fr;
       gap: 18px;
       align-items: center;
@@ -158,43 +158,46 @@
     }
     .row:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.78); }
 
-    /* Image replacing the old NEWS label (centered in the only row)
-       Enforce EXACT pixel size 150x75 as requested. */
-    .news-badge {
+    /* Icon row: four icons in the top row, each exactly 150x75 pixels */
+    .icon-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .icon {
       display:inline-block;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
-      will-change: transform;
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
       padding: 6px;
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+      will-change: transform;
     }
-    .news-badge img {
+    .icon img {
       display:block;
       width: 150px;    /* fixed pixel width */
       height: 75px;    /* fixed pixel height */
-      object-fit: contain; /* preserve aspect, center inside 150x75 */
+      object-fit: contain; /* preserve aspect */
       border: 0;
       background: transparent;
+      border-radius: 4px;
       transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
-      border-radius: 6px;
       transform-origin: center;
     }
-    /* Lift effect on hover and focus (keyboard accessible) */
-    .news-badge:hover, .news-badge:focus-within {
-      transform: translateY(-10px);
-      box-shadow: 0 32px 68px rgba(0,0,0,0.75);
+    .icon:hover, .icon:focus-within {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 56px rgba(0,0,0,0.65);
     }
-    .news-badge:hover img, .news-badge:focus-within img {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 28px 56px rgba(0,0,0,0.6);
+    .icon:hover img, .icon:focus-within img {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
     }
-    .news-badge:focus-within { outline: 3px solid rgba(255,0,0,0.14); outline-offset: 6px; border-radius:12px; }
+    .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
 
-    /* Anchor covering the image (click opens in new tab) */
-    .news-badge a { display:block; }
-
-    /* Mobile styles (same behaviour as index.html) */
+    /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
       .hamburger { display:flex; }
@@ -228,8 +231,7 @@
       .main { padding-bottom: 40px; }
       .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
-      /* Keep image pixel size the same on mobile as requested (150x75) */
-      .news-badge img { width: 150px; height: 75px; object-fit: contain; }
+      .icon img { width: 150px; height: 75px; object-fit: contain; }
 
       :root { --header-h: 96px; --headline-top-offset: 8px; }
     }
@@ -281,8 +283,6 @@
         overflow: visible !important;
       }
       .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-      /* Keep image pixel size the same on very small phones as well */
-      .news-badge img { width: 150px; height: 75px; object-fit: contain; }
 
       :root { --header-h: 84px; --headline-top-offset: 6px; }
     }
@@ -290,7 +290,7 @@
     @media (max-width: 360px) {
       .menu a { padding: 8px 10px; font-size: 0.95rem; }
       .app { padding: 8px; }
-      .news-badge img { width: 150px; height: 75px; object-fit: contain; }
+      .icon img { width: 150px; height: 75px; object-fit: contain; }
     }
   </style>
 </head>
@@ -316,14 +316,34 @@
       </ul>
     </nav>
 
-    <!-- Main area: f1.png sits centered in the main content at exactly 150x75 pixels -->
+    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 -->
     <main class="main" role="main" aria-label="News content">
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
-          <div class="news-badge" id="lbl-news">
-            <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Open Formula 1 latest news (opens in new tab)">
-              <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
-            </a>
+          <div class="icon-row" id="lbl-news" aria-label="News icons">
+            <div class="icon">
+              <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 latest (opens in new tab)">
+                <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
+              </a>
+            </div>
+
+            <div class="icon">
+              <a href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)">
+                <img src="pf1.png" alt="PlanetF1" width="150" height="75">
+              </a>
+            </div>
+
+            <div class="icon">
+              <a href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)">
+                <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
+              </a>
+            </div>
+
+            <div class="icon">
+              <a href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)">
+                <img src="racefans.png" alt="RaceFans" width="150" height="75">
+              </a>
+            </div>
           </div>
         </div>
       </section>
