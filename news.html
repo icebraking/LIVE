@@ -16,8 +16,8 @@
       --sidebar-w: 220px;
       --gap: 22px;
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
-      --header-h: 96px;              /* reserved header space (no tagline shown) */
-      --headline-top-offset: 8px;
+      --header-h: 0;              /* header removed: no reserved top space */
+      --headline-top-offset: 0;
       --mobile-break: 900px;
     }
 
@@ -42,37 +42,10 @@
     a { color: inherit; text-decoration: none; }
     :focus { outline: none; }
 
-    /* Small-screen hamburger (kept for parity with index.html) */
-    .hamburger {
-      position: fixed;
-      left: 16px;
-      top: calc(var(--headline-top-offset) + 8px);
-      z-index: 100;
-      width:40px;
-      height:40px;
-      border-radius:8px;
-      background: rgba(255,255,255,0.03);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      border:0;
-      color:#fff;
-      cursor:pointer;
-      pointer-events:auto;
-    }
-    .hamburger:focus { outline:3px solid rgba(255,0,0,0.18); outline-offset:3px }
-    .hamburger .bar{
-      width:18px;
-      height:2px;
-      background:#fff;
-      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
-      display:block;
-    }
-
-    /* App positioned at top (header reserved by --header-h even though tagline removed) */
+    /* App positioned at top (header removed so top: 0) */
     .app {
       position: absolute;
-      top: var(--header-h);
+      top: 0; /* was var(--header-h) */
       left: 0;
       right: 0;
       bottom: 0;
@@ -124,7 +97,7 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      overflow: hidden;
+      overflow: auto; /* allow main content scrolling if needed */
     }
 
     .table {
@@ -137,14 +110,13 @@
       gap: 18px;
       align-items: center;
       justify-items: center;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .row {
       position: relative;
       display:flex;
       align-items:center;
-      /* reduced padding to help make the final row visible */
       padding: 18px 20px;
       border-radius: 12px;
       background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
@@ -162,17 +134,16 @@
     /* Icons wrapper: top single icon above a 7x5 grid of the remaining 35 icons */
     .icons-wrapper {
       display: grid;
-      /* two rows: top single icon row + grid of 35 below */
       grid-template-columns: repeat(7, 150px);
       grid-auto-rows: auto;
-      gap: 12px; /* reduced gap to fit content so last row is visible */
+      gap: 12px;
       justify-content: center;
       align-items: start;
       width: calc(7 * 150px + 6 * 12px); /* fixed width so columns align */
       max-width: 100%;
       box-sizing: content-box;
 
-      /* SHIFT ENTIRE ICONS AREA UP BY 150px (user request) */
+      /* keep the earlier content shift if present - unchanged */
       transform: translateY(-150px);
       will-change: transform;
     }
@@ -224,18 +195,37 @@
     }
     .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
 
+    /* Home button placed beneath left navigation, fixed bottom-left */
+    .home-button {
+      position: fixed;
+      left: 12px;               /* aligns visually beneath left nav */
+      bottom: 12px;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+      z-index: 200;
+      cursor: pointer;
+    }
+    .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
+    .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
+
     /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-      .hamburger { display:flex; }
-      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: var(--header-h); }
+      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: 0; }
       .sidebar {
         position: fixed;
-        top: var(--header-h);
+        top: 0;
         left: 0;
         width: 78%;
         max-width: 320px;
-        height: calc(100vh - var(--header-h));
+        height: 100vh;
         transform: translateX(-110%);
         transition: transform .28s cubic-bezier(.2,.9,.2,1);
         z-index: 140;
@@ -243,23 +233,13 @@
         -webkit-overflow-scrolling: touch;
       }
       .sidebar.open { transform: translateX(0); }
-      .scrim {
-        display:block;
-        position: fixed;
-        inset: var(--header-h) 0 0 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 130;
-        opacity:0;
-        pointer-events:none;
-        transition: opacity .18s ease;
-      }
-      .scrim.visible { opacity:1; pointer-events:auto; }
+      /* scrim removed along with header/hamburger */
 
       .main { padding-bottom: 40px; }
       .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
       .icon img { width: 150px; height: 75px; object-fit: contain; }
-      :root { --header-h: 96px; --headline-top-offset: 8px; }
+      :root { --header-h: 0; --headline-top-offset: 0; }
 
       /* On narrow screens switch the icons layout to a responsive grid while preserving image size */
       .icons-wrapper {
@@ -270,14 +250,16 @@
         padding-bottom: 8px;
       }
       .grid35 { grid-template-columns: repeat(7, 150px); }
+
+      /* Move home button slightly to avoid overlapping the mobile sidebar when open */
+      .home-button { left: 8px; bottom: 14px; }
     }
 
     @media (max-width: 420px) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-      .hamburger { display:none !important; }
       .app {
         position: absolute;
-        top: var(--header-h);
+        top: 0;
         left: 0;
         right: 0;
         bottom: auto;
@@ -319,7 +301,7 @@
         overflow: visible !important;
       }
       .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-      :root { --header-h: 84px; --headline-top-offset: 6px; }
+      :root { --header-h: 0; --headline-top-offset: 0; }
     }
 
     @media (max-width: 360px) {
@@ -330,14 +312,6 @@
   </style>
 </head>
 <body>
-  <!-- mobile hamburger (kept for parity with index.html) -->
-  <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
-    <span class="bar" aria-hidden="true"></span>
-  </button>
-
-  <!-- mobile scrim -->
-  <div id="scrim" class="scrim" aria-hidden="true"></div>
-
   <div class="app" role="application" aria-label="News page with left navigation">
     <!-- Sidebar navigation (kept identical to index.html) -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
@@ -350,6 +324,11 @@
         <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
       </ul>
     </nav>
+
+    <!-- Home icon fixed beneath the left navigation at bottom-left -->
+    <a class="home-button" href="index.html" aria-label="Home" title="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 8h-3v8h-12v-8h-3l9-8zm0-3l-12 10v10h7v-7h10v7h7v-10l-12-10z"/></svg>
+    </a>
 
     <!-- Main area: top row contains single f1.png; below it a 7x5 grid holding the other 35 images -->
     <main class="main" role="main" aria-label="News content">
@@ -620,74 +599,29 @@
   </div>
 
   <script>
-    // Mobile sidebar toggle + accessibility helpers (same behavior as index.html)
+    // Mobile sidebar toggle + accessibility helpers (kept but adjusted because header/hamburger removed)
     (function(){
       const sidebar = document.getElementById('sidebar');
-      const toggle = document.getElementById('sidebarToggle');
-      const scrim = document.getElementById('scrim');
-      const mobileBreakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-break')) || 900;
-
-      function isMobile() {
-        return window.innerWidth <= mobileBreakpoint;
-      }
-
-      function setSidebar(open){
-        if(isMobile()){
-          if(open){
-            sidebar.classList.add('open');
-            scrim.classList.add('visible');
-            sidebar.setAttribute('aria-hidden','false');
-            toggle.setAttribute('aria-expanded','true');
-            scrim.setAttribute('aria-hidden','false');
-            const first = sidebar.querySelector('a');
-            if(first) first.focus();
-          } else {
-            sidebar.classList.remove('open');
-            scrim.classList.remove('visible');
-            sidebar.setAttribute('aria-hidden','true');
-            toggle.setAttribute('aria-expanded','false');
-            scrim.setAttribute('aria-hidden','true');
-            if(toggle) toggle.focus();
-          }
-        }
-      }
-
-      if(toggle){
-        toggle.addEventListener('click', function(){
-          const open = sidebar.classList.contains('open');
-          setSidebar(!open);
-        });
-      }
-
-      if(scrim){
-        scrim.addEventListener('click', function(){
-          setSidebar(false);
-        });
-      }
-
+      // no hamburger or scrim in this layout; keep a minimal keyboard handler
       document.addEventListener('keydown', function(e){
         if(e.key === 'Escape'){
-          setSidebar(false);
+          // close open sidebar on mobile if it uses .open class
+          if(sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
         }
       });
 
       // Ensure correct initial state on resize / load
       function syncState(){
         const isPhone = window.matchMedia('(max-width:420px)').matches;
-
-        if(!isMobile() || isPhone){
+        if(!isPhone){
+          // desktop: keep sidebar visible and not transformed
           sidebar.classList.remove('open');
           sidebar.style.transform = '';
           sidebar.setAttribute('aria-hidden','false');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          if(toggle) toggle.setAttribute('aria-expanded','false');
-          document.documentElement.style.overflow = isPhone ? 'auto' : 'hidden';
+          document.documentElement.style.overflow = 'hidden';
         } else {
-          sidebar.setAttribute('aria-hidden','true');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          if(toggle) toggle.setAttribute('aria-expanded','false');
+          // mobile: sidebar may be hidden by default (slide-in)
+          sidebar.setAttribute('aria-hidden','false');
           document.documentElement.style.overflow = 'auto';
         }
       }
