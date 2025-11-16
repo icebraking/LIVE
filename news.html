@@ -129,7 +129,7 @@
 
     .table {
       width:100%;
-      max-width:1260px; /* increased to comfortably fit 7 cols of 150px + gaps */
+      max-width:1260px; /* accomodate 7 columns of 150px + gaps */
       height:100%;
       display:grid;
       /* Single centered row */
@@ -144,7 +144,8 @@
       position: relative;
       display:flex;
       align-items:center;
-      padding: 28px 32px;
+      /* reduced padding to help make the final row visible */
+      padding: 18px 20px;
       border-radius: 12px;
       background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
       border: 1px solid rgba(255,255,255,0.03);
@@ -161,11 +162,13 @@
     /* Icons wrapper: top single icon above a 7x5 grid of the remaining 35 icons */
     .icons-wrapper {
       display: grid;
+      /* two rows: top single icon row + grid of 35 below */
       grid-template-columns: repeat(7, 150px);
-      gap: 20px;
+      grid-auto-rows: auto;
+      gap: 12px; /* reduced gap to fit content so last row is visible */
       justify-content: center;
       align-items: start;
-      width: calc(7 * 150px + 6 * 20px); /* fixed width so columns align */
+      width: calc(7 * 150px + 6 * 12px); /* fixed width so columns align */
       max-width: 100%;
       box-sizing: content-box;
     }
@@ -181,7 +184,7 @@
       grid-column: 1 / -1;
       display: grid;
       grid-template-columns: repeat(7, 150px);
-      gap: 20px;
+      gap: 12px;
       justify-content: center;
     }
 
@@ -349,7 +352,7 @@
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
           <div class="icons-wrapper" id="lbl-news" aria-label="News icons">
-            <!-- Top single icon, placed above the 4th column of the grid below -->
+            <!-- Top single icon, placed above the fourth column of the grid below -->
             <div class="top-slot">
               <div class="icon" data-key="f1">
                 <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 — Latest news (opens in new tab)">
@@ -408,8 +411,6 @@
                   <img src="f1i.png" alt="F1i" width="150" height="75">
                 </a>
               </div>
-
-              <!-- row 2, col 1..7 done; continue row-major for remaining rows -->
 
               <!-- 8 -->
               <div class="icon" data-key="f1oversteer">
