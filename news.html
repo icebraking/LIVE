@@ -199,20 +199,6 @@
     }
     .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
 
-    /* View counter styling: small, elegant, white */
-    .counter {
-      margin-top: 8px;
-      color: #ffffff;
-      font-family: "Copperplate Gothic", "Copperplate", serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.6px;
-      text-transform: none; /* keep numbers as-is */
-      opacity: 0.95;
-      line-height: 1;
-      min-width: 60px;
-    }
-
     /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
@@ -333,7 +319,7 @@
       </ul>
     </nav>
 
-    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 with counters below -->
+    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 -->
     <main class="main" role="main" aria-label="News content">
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
@@ -342,28 +328,24 @@
               <a class="counted" href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 latest (opens in new tab)" data-key="f1">
                 <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
               </a>
-              <div class="counter" id="counter-f1" aria-live="polite">0 views</div>
             </div>
 
             <div class="icon" data-key="pf1">
               <a class="counted" href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)" data-key="pf1">
                 <img src="pf1.png" alt="PlanetF1" width="150" height="75">
               </a>
-              <div class="counter" id="counter-pf1" aria-live="polite">0 views</div>
             </div>
 
             <div class="icon" data-key="race">
               <a class="counted" href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)" data-key="race">
                 <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
               </a>
-              <div class="counter" id="counter-race" aria-live="polite">0 views</div>
             </div>
 
             <div class="icon" data-key="racefans">
               <a class="counted" href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)" data-key="racefans">
                 <img src="racefans.png" alt="RaceFans" width="150" height="75">
               </a>
-              <div class="counter" id="counter-racefans" aria-live="polite">0 views</div>
             </div>
           </div>
         </div>
@@ -448,77 +430,6 @@
       window.addEventListener('orientationchange', syncState);
       window.addEventListener('load', syncState);
       syncState();
-    })();
-  </script>
-
-  <script>
-    // Simple client-side view counters using localStorage.
-    // Keying: "views:{key}" where key is f1, pf1, race, racefans.
-    // Counters update immediately on click and persist per-browser.
-    (function(){
-      const keys = ['f1','pf1','race','racefans'];
-
-      function storageKey(k){ return 'views:' + k; }
-
-      function readCount(k){
-        const n = parseInt(localStorage.getItem(storageKey(k)), 10);
-        return isNaN(n) ? 0 : n;
-      }
-
-      function writeCount(k, n){
-        localStorage.setItem(storageKey(k), String(n));
-      }
-
-      function formatCount(n){
-        return n + (n === 1 ? ' view' : ' views');
-      }
-
-      // Initialize counters in DOM
-      keys.forEach(k => {
-        const el = document.getElementById('counter-' + k);
-        if(el){
-          el.textContent = formatCount(readCount(k));
-        }
-      });
-
-      // Attach click handlers to anchors with class 'counted'
-      const anchors = document.querySelectorAll('a.counted[data-key]');
-      anchors.forEach(a => {
-        const key = a.getAttribute('data-key');
-        // increment on click before navigation; also support keyboard activation
-        a.addEventListener('click', function(e){
-          try {
-            const n = readCount(key) + 1;
-            writeCount(key, n);
-            const el = document.getElementById('counter-' + key);
-            if(el) el.textContent = formatCount(n);
-          } catch(err){
-            // silently ignore storage errors (e.g., private mode)
-          }
-          // allow navigation to proceed (target="_blank" will open new tab)
-        });
-
-        // Also increment on keypress Enter when focused on the link (for some browsers)
-        a.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){
-            try {
-              const n = readCount(key) + 1;
-              writeCount(key, n);
-              const el = document.getElementById('counter-' + key);
-              if(el) el.textContent = formatCount(n);
-            } catch(err){}
-          }
-        });
-      });
-
-      // Optional: expose a simple reset function on window for testing (not required)
-      window.__newsCounters = {
-        readCount,
-        writeCount,
-        resetAll: function(){
-          keys.forEach(k => { writeCount(k, 0); const el = document.getElementById('counter-' + k); if(el) el.textContent = formatCount(0); });
-        }
-      };
     })();
   </script>
 </body>
