@@ -129,7 +129,7 @@
 
     .table {
       width:100%;
-      max-width:1100px;
+      max-width:1260px; /* increased to comfortably fit 7 cols of 150px + gaps */
       height:100%;
       display:grid;
       /* Single centered row */
@@ -158,13 +158,31 @@
     }
     .row:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.78); }
 
-    /* Icon row: four icons in the top row, each exactly 150x75 pixels */
-    .icon-row {
-      display: flex;
+    /* Icons wrapper: top single icon above a 7x5 grid of the remaining 35 icons */
+    .icons-wrapper {
+      display: grid;
+      grid-template-columns: repeat(7, 150px);
       gap: 20px;
-      align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
+      align-items: start;
+      width: calc(7 * 150px + 6 * 20px); /* fixed width so columns align */
+      max-width: 100%;
+      box-sizing: content-box;
+    }
+
+    /* Top (first) icon occupies the first row in column 4 */
+    .top-slot {
+      grid-column: 4;
+      justify-self: center;
+    }
+
+    /* The 35-grid spans full width and itself is a 7-column grid */
+    .grid35 {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(7, 150px);
+      gap: 20px;
+      justify-content: center;
     }
 
     .icon {
@@ -234,9 +252,17 @@
       .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
       .row { padding: 18px 20px; border-radius:10px; }
       .icon img { width: 150px; height: 75px; object-fit: contain; }
-      .counter { font-size: 0.75rem; }
-
       :root { --header-h: 96px; --headline-top-offset: 8px; }
+
+      /* On narrow screens switch the icons layout to a responsive grid while preserving image size */
+      .icons-wrapper {
+        width: 100%;
+        grid-template-columns: repeat(7, 150px);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+      }
+      .grid35 { grid-template-columns: repeat(7, 150px); }
     }
 
     @media (max-width: 420px) {
@@ -286,7 +312,6 @@
         overflow: visible !important;
       }
       .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-
       :root { --header-h: 84px; --headline-top-offset: 6px; }
     }
 
@@ -319,35 +344,271 @@
       </ul>
     </nav>
 
-    <!-- Main area: top row contains four icons (f1, pf1, race, racefans) each 150x75 -->
+    <!-- Main area: top row contains single f1.png; below it a 7x5 grid holding the other 35 images -->
     <main class="main" role="main" aria-label="News content">
       <section class="table" role="region" aria-label="News">
         <div class="row" role="group" aria-labelledby="lbl-news" tabindex="-1">
-          <div class="icon-row" id="lbl-news" aria-label="News icons">
-            <div class="icon" data-key="f1">
-              <a class="counted" href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 latest (opens in new tab)" data-key="f1">
-                <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
-              </a>
+          <div class="icons-wrapper" id="lbl-news" aria-label="News icons">
+            <!-- Top single icon, placed above the 4th column of the grid below -->
+            <div class="top-slot">
+              <div class="icon" data-key="f1">
+                <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 — Latest news (opens in new tab)">
+                  <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
+                </a>
+              </div>
             </div>
 
-            <div class="icon" data-key="pf1">
-              <a class="counted" href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)" data-key="pf1">
-                <img src="pf1.png" alt="PlanetF1" width="150" height="75">
-              </a>
-            </div>
+            <!-- The 35 remaining icons arranged in 7 columns and 5 rows (35 items) -->
+            <div class="grid35" aria-hidden="false" aria-label="Additional news icons">
+              <!-- 1 -->
+              <div class="icon" data-key="pf1">
+                <a href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)">
+                  <img src="pf1.png" alt="PlanetF1" width="150" height="75">
+                </a>
+              </div>
 
-            <div class="icon" data-key="race">
-              <a class="counted" href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)" data-key="race">
-                <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
-              </a>
-            </div>
+              <!-- 2 -->
+              <div class="icon" data-key="race">
+                <a href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)">
+                  <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
+                </a>
+              </div>
 
-            <div class="icon" data-key="racefans">
-              <a class="counted" href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)" data-key="racefans">
-                <img src="racefans.png" alt="RaceFans" width="150" height="75">
-              </a>
-            </div>
-          </div>
+              <!-- 3 -->
+              <div class="icon" data-key="racefans">
+                <a href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)">
+                  <img src="racefans.png" alt="RaceFans" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 4 (this will be directly below the top f1.png) -->
+              <div class="icon" data-key="crash">
+                <a href="https://www.crash.net/f1" target="_blank" rel="noopener noreferrer" aria-label="Crash — F1 (opens in new tab)">
+                  <img src="crash.png" alt="Crash — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 5 -->
+              <div class="icon" data-key="espn">
+                <a href="https://www.espn.in/f1/" target="_blank" rel="noopener noreferrer" aria-label="ESPN F1 (opens in new tab)">
+                  <img src="espn.png" alt="ESPN — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 6 -->
+              <div class="icon" data-key="rn365">
+                <a href="https://racingnews365.com/" target="_blank" rel="noopener noreferrer" aria-label="RacingNews365 (opens in new tab)">
+                  <img src="rn365.png" alt="RacingNews365" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 7 -->
+              <div class="icon" data-key="f1i">
+                <a href="https://f1i.com/" target="_blank" rel="noopener noreferrer" aria-label="F1i (opens in new tab)">
+                  <img src="f1i.png" alt="F1i" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- row 2, col 1..7 done; continue row-major for remaining rows -->
+
+              <!-- 8 -->
+              <div class="icon" data-key="f1oversteer">
+                <a href="https://www.f1oversteer.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Oversteer (opens in new tab)">
+                  <img src="f1oversteer.png" alt="F1 Oversteer" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 9 -->
+              <div class="icon" data-key="motorsport">
+                <a href="https://www.motorsport.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Motorsport — F1 (opens in new tab)">
+                  <img src="motorsport.png" alt="Motorsport — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 10 -->
+              <div class="icon" data-key="autosport">
+                <a href="https://www.autosport.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Autosport — F1 (opens in new tab)">
+                  <img src="autosport.png" alt="Autosport — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 11 -->
+              <div class="icon" data-key="sportskeeda">
+                <a href="https://www.sportskeeda.com/f1" target="_blank" rel="noopener noreferrer" aria-label="Sportskeeda — F1 (opens in new tab)">
+                  <img src="sportskeeda.png" alt="Sportskeeda — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 12 -->
+              <div class="icon" data-key="speedcafe">
+                <a href="https://speedcafe.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Speedcafe — F1 (opens in new tab)">
+                  <img src="speedcafe.png" alt="Speedcafe — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 13 -->
+              <div class="icon" data-key="skyf1">
+                <a href="https://www.skysports.com/f1" target="_blank" rel="noopener noreferrer" aria-label="Sky Sports F1 (opens in new tab)">
+                  <img src="skyf1.png" alt="Sky Sports — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 14 -->
+              <div class="icon" data-key="gpfans">
+                <a href="https://www.gpfans.com/en/f1-news/" target="_blank" rel="noopener noreferrer" aria-label="GPFans — F1 News (opens in new tab)">
+                  <img src="gpfans.png" alt="GPFans — F1 News" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 15 -->
+              <div class="icon" data-key="gp247">
+                <a href="https://www.grandprix247.com/" target="_blank" rel="noopener noreferrer" aria-label="GrandPrix247 (opens in new tab)">
+                  <img src="gp247.png" alt="GrandPrix247" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 16 -->
+              <div class="icon" data-key="gpblog">
+                <a href="https://www.gpblog.com/en" target="_blank" rel="noopener noreferrer" aria-label="GPBlog (opens in new tab)">
+                  <img src="gpblog.png" alt="GPBlog" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 17 -->
+              <div class="icon" data-key="msmag">
+                <a href="https://www.motorsportmagazine.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Motorsport Magazine — F1 (opens in new tab)">
+                  <img src="msmag.png" alt="Motorsport Magazine — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 18 -->
+              <div class="icon" data-key="gptoday">
+                <a href="https://www.gptoday.com/" target="_blank" rel="noopener noreferrer" aria-label="GPToday (opens in new tab)">
+                  <img src="gptoday.png" alt="GPToday" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 19 -->
+              <div class="icon" data-key="grandprix">
+                <a href="https://www.grandprix.com/" target="_blank" rel="noopener noreferrer" aria-label="GrandPrix (opens in new tab)">
+                  <img src="grandprix.png" alt="GrandPrix" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 20 -->
+              <div class="icon" data-key="sportsmole">
+                <a href="https://www.sportsmole.co.uk/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="SportsMole — Formula 1 (opens in new tab)">
+                  <img src="sportsmole.png" alt="SportsMole — Formula 1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 21 -->
+              <div class="icon" data-key="thejudge">
+                <a href="https://thejudge13.com/" target="_blank" rel="noopener noreferrer" aria-label="The Judge (opens in new tab)">
+                  <img src="thejudge.png" alt="The Judge" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 22 -->
+              <div class="icon" data-key="racer">
+                <a href="https://racer.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Racer — F1 (opens in new tab)">
+                  <img src="racer.png" alt="Racer — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 23 -->
+              <div class="icon" data-key="beyondtheflag">
+                <a href="https://beyondtheflag.com/formula-one/" target="_blank" rel="noopener noreferrer" aria-label="Beyond The Flag (opens in new tab)">
+                  <img src="beyondtheflag.png" alt="Beyond The Flag" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 24 -->
+              <div class="icon" data-key="autohebdo">
+                <a href="https://www.autohebdof1.com/actualites/f1" target="_blank" rel="noopener noreferrer" aria-label="Auto Hebdo F1 (opens in new tab)">
+                  <img src="autohebdo.png" alt="Auto Hebdo — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 25 -->
+              <div class="icon" data-key="f1chronicle">
+                <a href="https://f1chronicle.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Chronicle (opens in new tab)">
+                  <img src="f1chronicle.png" alt="F1 Chronicle" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 26 -->
+              <div class="icon" data-key="f1fansite">
+                <a href="https://www.f1-fansite.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Fansite (opens in new tab)">
+                  <img src="f1fansite.png" alt="F1 Fansite" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 27 -->
+              <div class="icon" data-key="motorracing">
+                <a href="https://motorracing.com/category/f1/" target="_blank" rel="noopener noreferrer" aria-label="MotorRacing — F1 (opens in new tab)">
+                  <img src="motorracing.png" alt="MotorRacing — F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 28 -->
+              <div class="icon" data-key="oness">
+                <a href="https://onestopstrategy.com/" target="_blank" rel="noopener noreferrer" aria-label="One Stop Strategy (opens in new tab)">
+                  <img src="oness.png" alt="One Stop Strategy" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 29 -->
+              <div class="icon" data-key="everything">
+                <a href="https://www.everythingf1.com/formula-1-news/" target="_blank" rel="noopener noreferrer" aria-label="Everything F1 (opens in new tab)">
+                  <img src="everything.png" alt="Everything F1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 30 -->
+              <div class="icon" data-key="newsgp">
+                <a href="https://www.news.gp/en/category/formula-1" target="_blank" rel="noopener noreferrer" aria-label="News GP — Formula 1 (opens in new tab)">
+                  <img src="newsgp.png" alt="News GP — Formula 1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 31 -->
+              <div class="icon" data-key="newsonf1">
+                <a href="https://www.newsonf1.com/" target="_blank" rel="noopener noreferrer" aria-label="NewsOnF1 (opens in new tab)">
+                  <img src="newsonf1.png" alt="NewsOnF1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 32 -->
+              <div class="icon" data-key="spbible">
+                <a href="https://www.sportbible.com/formula-1" target="_blank" rel="noopener noreferrer" aria-label="SportBible — Formula 1 (opens in new tab)">
+                  <img src="spbible.png" alt="SportBible — Formula 1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 33 -->
+              <div class="icon" data-key="sportingnews">
+                <a href="https://www.sportingnews.com/us/formula-1" target="_blank" rel="noopener noreferrer" aria-label="Sporting News — Formula 1 (opens in new tab)">
+                  <img src="sportingnews.png" alt="Sporting News — Formula 1" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 34 -->
+              <div class="icon" data-key="scuderiafans">
+                <a href="https://scuderiafans.com/" target="_blank" rel="noopener noreferrer" aria-label="Scuderia Fans (opens in new tab)">
+                  <img src="scuderiafans.png" alt="Scuderia Fans" width="150" height="75">
+                </a>
+              </div>
+
+              <!-- 35 -->
+              <div class="icon" data-key="merc">
+                <a href="https://www.mercedesamgf1.com/news/" target="_blank" rel="noopener noreferrer" aria-label="Mercedes AMG F1 — News (opens in new tab)">
+                  <img src="merc.png" alt="Mercedes AMG F1 — News" width="150" height="75">
+                </a>
+              </div>
+
+            </div> <!-- .grid35 -->
+          </div> <!-- .icons-wrapper -->
         </div>
       </section>
     </main>
