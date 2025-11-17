@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BLOGS — THE F1 HUB</title>
+
+  <!-- Favicon (optional, re-uses same name as news.html) -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+
+  <style>
+    :root{
+      --black: #000000;
+      --accent-red: #FF0000;
+      --gap: 20px;
+      --icon-w: 150px;
+      --icon-h: 75px;
+      --sidebar-w: 220px;
+      --mobile-break: 900px;
+    }
+
+    /* Page shell (matching news.html style) */
+    html,body{
+      height:100%;
+      margin:0;
+      padding:0;
+      background: var(--black);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    /* Hide scrollbars (most browsers) */
+    * { scrollbar-width: none; -ms-overflow-style: none; }
+    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    :focus { outline: none; }
+
+    .app {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      gap: var(--gap);
+      padding: var(--gap);
+      box-sizing: border-box;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* Reuse a compact sidebar like news.html for consistency */
+    .sidebar {
+      background: rgba(10,10,10,1);
+      border-radius: 12px;
+      padding: 16px;
+      height: 100%;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.03);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+    .menu a {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      color:#fff;
+      font-weight:700;
+      font-size:0.98rem;
+      transition: transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
+    .menu a:hover, .menu a:focus {
+      background: rgba(255,255,255,0.03);
+      color: var(--accent-red);
+      transform: translateX(6px);
+    }
+    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
+
+    /* Main content area */
+    .main {
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow: auto; /* allow scrolling if needed */
+    }
+
+    .center-shell {
+      width:100%;
+      max-width: calc(5 * var(--icon-w) + 4 * var(--gap)); /* fit 5 icons + gaps */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    /* Grid: 2 rows x 5 columns, icons equidistant */
+    .blogs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, var(--icon-w));
+      grid-auto-rows: var(--icon-h);
+      gap: var(--gap);
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .blog-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 6px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.002));
+      border: 1px solid rgba(255,255,255,0.03);
+      transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .14s ease;
+      will-change: transform;
+    }
+    .blog-item:focus-within, .blog-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.7);
+    }
+
+    .blog-item img {
+      width: var(--icon-w);
+      height: var(--icon-h);
+      object-fit: contain;
+      display:block;
+      border-radius:4px;
+      transition: transform .18s ease;
+    }
+    .blog-item a { display:block; width:100%; height:100%; }
+
+    /* Home button (same position and SVG as news.html) */
+    .home-button {
+      position: fixed;
+      left: 62px;
+      bottom: 12px;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.04);
+      z-index: 200;
+      cursor: pointer;
+    }
+    .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
+    .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
+
+    /* Keep image pixel size on mobile as requested */
+    @media (max-width: var(--mobile-break)) {
+      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: 0; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 78%;
+        max-width: 320px;
+        height: 100vh;
+        transform: translateX(-110%);
+        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        z-index: 140;
+        overflow:auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .center-shell { padding: 8px; }
+      .blogs-grid {
+        /* allow horizontal scroll on very narrow screens while preserving icon pixel sizes */
+        grid-auto-flow: row;
+        grid-template-columns: repeat(5, var(--icon-w));
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+      }
+      .home-button { left: 58px; bottom: 14px; }
+    }
+
+    @media (max-width: 420px) {
+      .app { position: absolute; top: 0; left: 0; right: 0; bottom: auto; display: block; gap: 12px; padding: 10px; overflow: visible; }
+      .sidebar { position: static !important; transform: none !important; width: auto !important; height: auto !important; max-width: none !important; display:block !important; padding: 10px 12px; border-radius: 10px; background: rgba(10,10,10,0.96); box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: visible; }
+      .main { margin-top: 10px; padding-bottom: 48px; display: block; height: auto !important; overflow: visible !important; }
+      .center-shell { max-width: 100%; }
+    }
+
+    @media (max-width: 360px) {
+      :root { --gap: 12px; }
+      .app { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Blogs page with left navigation">
+    <!-- Sidebar (kept for parity with news.html) -->
+    <nav class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="index.html" role="link" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z"/></svg><span>HOME</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Home icon (same SVG and position as news.html) -->
+    <a class="home-button" href="index.html" aria-label="Home" title="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+      </svg>
+    </a>
+
+    <!-- Main: 2 rows x 5 columns of blog icons -->
+    <main class="main" role="main" aria-label="Blogs content">
+      <div class="center-shell" role="region" aria-label="Blog icons">
+        <div class="blogs-grid" aria-hidden="false">
+          <!-- 1 -->
+          <div class="blog-item">
+            <a href="https://adamcooperf1.com/" target="_blank" rel="noopener noreferrer" aria-label="Adam Cooper (opens in new tab)">
+              <img src="adamcooper.png" alt="Adam Cooper" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 2 -->
+          <div class="blog-item">
+            <a href="https://3legs4wheels.com/category/podcasts/" target="_blank" rel="noopener noreferrer" aria-label="3legs4wheels Podcasts (opens in new tab)">
+              <img src="3l4w.png" alt="3legs4wheels Podcasts" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 3 -->
+          <div class="blog-item">
+            <a href="https://wtf1.com/" target="_blank" rel="noopener noreferrer" aria-label="WTF1 (opens in new tab)">
+              <img src="wtf1.png" alt="WTF1" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 4 -->
+          <div class="blog-item">
+            <a href="https://joesaward.wordpress.com/" target="_blank" rel="noopener noreferrer" aria-label="Joes Award Wordpress (opens in new tab)">
+              <img src="jswp.png" alt="Joes Award Wordpress" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 5 -->
+          <div class="blog-item">
+            <a href="https://www.lightsoutblog.com/" target="_blank" rel="noopener noreferrer" aria-label="Lights Out Blog (opens in new tab)">
+              <img src="lightsout.png" alt="Lights Out Blog" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 6 -->
+          <div class="blog-item">
+            <a href="https://www.soumilarora.com/category/sports/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="Soumi Larora — Formula 1 (opens in new tab)">
+              <img src="sa.png" alt="Soumi Larora — Formula 1" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 7 -->
+          <div class="blog-item">
+            <a href="https://destinationformula1.com/blog/" target="_blank" rel="noopener noreferrer" aria-label="Destination Formula 1 (opens in new tab)">
+              <img src="df1.png" alt="Destination Formula 1" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 8 -->
+          <div class="blog-item">
+            <a href="https://lewisf1.blogspot.com/" target="_blank" rel="noopener noreferrer" aria-label="Lewis F1 Blog (opens in new tab)">
+              <img src="af1b.png" alt="Lewis F1 Blog" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 9 -->
+          <div class="blog-item">
+            <a href="https://f1-analysis.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Analysis (opens in new tab)">
+              <img src="f1a.png" alt="F1 Analysis" width="150" height="75">
+            </a>
+          </div>
+
+          <!-- 10 -->
+          <div class="blog-item">
+            <a href="https://formula1news.co.uk/" target="_blank" rel="noopener noreferrer" aria-label="Formula1News.co.uk (opens in new tab)">
+              <img src="f1ncouk.png" alt="Formula1News.co.uk" width="150" height="75">
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Basic sidebar accessibility behavior similar to news.html (kept minimal)
+    (function(){
+      const sidebar = document.querySelector('.sidebar');
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape'){
+          if(sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
+        }
+      });
+
+      function syncState(){
+        const isPhone = window.matchMedia('(max-width:420px)').matches;
+        if(!isPhone){
+          if(sidebar) sidebar.classList.remove('open');
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          if(sidebar) sidebar.setAttribute('aria-hidden','false');
+          document.documentElement.style.overflow = 'auto';
+        }
+      }
+
+      window.addEventListener('resize', syncState);
+      window.addEventListener('orientationchange', syncState);
+      window.addEventListener('load', syncState);
+      syncState();
+    })();
+  </script>
+</body>
+</html>
