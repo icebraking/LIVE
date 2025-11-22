@@ -349,9 +349,8 @@
       if (!name) return '';
       const upper = String(name).toUpperCase();
 
-      // New rule (case-insensitive): if the fetched name contains "KICK" and "SAUBER"
-      // and selectedYear is between 1950 and 2018 inclusive, display "SAUBER".
-      if (upper.indexOf('KICK') !== -1 && upper.indexOf('SAUBER') !== -1 && Number(selectedYear) >= 1950 && Number(selectedYear) <= 2018) {
+      // Case-insensitive rule: if fetched name contains "KICK" and "SAUBER", display "SAUBER".
+      if (upper.indexOf('KICK') !== -1 && upper.indexOf('SAUBER') !== -1) {
         return 'SAUBER';
       }
 
@@ -377,12 +376,29 @@
         const allowLinks = (Number(selectedYear) === 2025);
         html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>TEAM</th><th>POINTS</th><th>WINS</th></tr></thead><tbody>`;
         for(const item of items){
+          // driver-name based team overrides (case-insensitive) per your request
+          const driverLower = (item.name || '').toLowerCase();
           let teamName;
-          if(item.name === "Yuki Tsunoda") teamName = "RED BULL RACING";
-          else if(item.name === "Liam Lawson") teamName = "RACING BULLS";
-          else teamName = renameTeam(item.team);
+          if (driverLower === 'yuki tsunoda') {
+            const y = Number(selectedYear);
+            if (y === 2024) teamName = 'RACING BULLS';
+            else if (y === 2023 || y === 2022 || y === 2021) teamName = 'ALPHATAURI';
+            else teamName = 'RED BULL RACING';
+          } else if (driverLower === 'liam lawson') {
+            teamName = 'RACING BULLS';
+          } else {
+            teamName = renameTeam(item.team);
+          }
 
-          const teamLink = constructorTeamLinks[teamName] || constructorTeamLinks[item.team] || constructorTeamLinks[(item.team || '')];
+          // Resolve link. If SAUBER display name and year 2025, link to KickSauber URL.
+          let teamLink = constructorTeamLinks[teamName] || constructorTeamLinks[item.team] || constructorTeamLinks[(item.team || '')];
+          if (teamName === 'SAUBER' && Number(selectedYear) === 2025) {
+            teamLink = constructorTeamLinks['Kick Sauber'] || constructorTeamLinks['KICK SAUBER'] || constructorTeamLinks['Sauber'] || teamLink;
+          }
+          // Also ensure ASTON MARTIN in 2025 links to specified AstonMartin URL
+          if (teamName === 'ASTON MARTIN' && Number(selectedYear) === 2025) {
+            teamLink = 'https://www.icebraking.com/AstonMartin/astonmartin.html';
+          }
 
           const teamCell = (allowLinks && teamLink)
             ? `<a class="team-link-table" href="${teamLink}" target="_blank" rel="noopener">${teamName}</a>`
@@ -394,13 +410,23 @@
         }
         html += `</tbody></table></div>`;
       } else {
-        // constructors - links allowed only for year 2025 per request
+        // constructors - links allowed only for year 2025
         const allowLinks = (Number(selectedYear) === 2025);
 
         html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>POINTS</th></tr></thead><tbody>`;
         for(const item of items){
           const displayName = renameTeam(item.name);
-          const link = constructorTeamLinks[displayName] || constructorTeamLinks[item.name] || constructorTeamLinks[(item.name || '')];
+
+          // Resolve link. If SAUBER display name and year 2025, link to KickSauber URL.
+          let link = constructorTeamLinks[displayName] || constructorTeamLinks[item.name] || constructorTeamLinks[(item.name || '')];
+          if (displayName === 'SAUBER' && Number(selectedYear) === 2025) {
+            link = constructorTeamLinks['Kick Sauber'] || constructorTeamLinks['KICK SAUBER'] || constructorTeamLinks['Sauber'] || link;
+          }
+          // Ensure ASTON MARTIN in 2025 links to specified AstonMartin URL
+          if (displayName === 'ASTON MARTIN' && Number(selectedYear) === 2025) {
+            link = 'https://www.icebraking.com/AstonMartin/astonmartin.html';
+          }
+
           const nameCell = (allowLinks && link)
             ? `<a class="team-link-table" href="${link}" target="_blank" rel="noopener">${displayName}</a>`
             : displayName;
