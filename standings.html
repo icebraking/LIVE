@@ -182,7 +182,7 @@
       width:100%;
       border-collapse: separate;
       border-spacing:0;
-      min-width: 420px;
+      min-width: 520px; /* increased to accommodate WINS column */
       font-size: 1.02rem;
       color:var(--accent);
       text-transform:uppercase;
@@ -366,7 +366,7 @@
       if(type === 'drivers'){
         // only render links when selectedYear is 2025
         const allowLinks = (Number(selectedYear) === 2025);
-        html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>TEAM</th><th>POINTS</th></tr></thead><tbody>`;
+        html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>TEAM</th><th>POINTS</th><th>WINS</th></tr></thead><tbody>`;
         for(const item of items){
           let teamName;
           if(item.name === "Yuki Tsunoda") teamName = "RED BULL RACING";
@@ -379,7 +379,9 @@
             ? `<a class="team-link-table" href="${teamLink}" target="_blank" rel="noopener">${teamName}</a>`
             : teamName;
 
-          html += `<tr><td>${item.position}</td><td>${(item.name||'').toUpperCase()}</td><td>${teamCell}</td><td>${item.points}</td></tr>`;
+          const winsDisplay = (typeof item.wins !== 'undefined') ? item.wins : 0;
+
+          html += `<tr><td>${item.position}</td><td>${(item.name||'').toUpperCase()}</td><td>${teamCell}</td><td>${item.points}</td><td>${winsDisplay}</td></tr>`;
         }
         html += `</tbody></table></div>`;
       } else {
@@ -417,7 +419,8 @@
           position: d.positionText || d.position || '-',
           name: `${d.Driver.givenName} ${d.Driver.familyName}`,
           team: d.Constructors[0]?.name || '',
-          points: d.points
+          points: d.points,
+          wins: d.wins || 0
         }));
       }catch{ return []; }
     }
