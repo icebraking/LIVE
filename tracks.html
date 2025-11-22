@@ -166,6 +166,29 @@
     .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
     .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
 
+    /* Disclaimer / footer — positioned at the bottom and constrained to the right of the sidebar */
+    .disclaimer-footer {
+      position: fixed;
+      left: calc(var(--sidebar-w) + var(--gap));
+      right: var(--gap);
+      bottom: 12px;
+      z-index: 210;
+      font-family: Cambria, "Times New Roman", serif;
+      font-size: 10px;
+      line-height: 1.2;
+      color: #ffffff;
+      background: transparent;
+      box-sizing: border-box;
+      padding: 6px 8px;
+      max-width: calc(100% - (var(--sidebar-w) + var(--gap) + 40px));
+      text-transform: none; /* ensure sentence case for this element */
+    }
+
+    .disclaimer-footer a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
     /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
       html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
@@ -194,6 +217,13 @@
         padding-bottom: 8px;
       }
       .home-button { left: 58px; bottom: 14px; }
+
+      /* on small screens allow the disclaimer to span the viewport width */
+      .disclaimer-footer {
+        left: 12px;
+        right: 12px;
+        max-width: none;
+      }
     }
 
     @media (max-width: 420px) {
@@ -201,6 +231,13 @@
       .sidebar { position: static !important; transform: none !important; width: auto !important; height: auto !important; max-width: none !important; display:block !important; padding: 10px 12px; border-radius: 10px; background: rgba(10,10,10,0.96); box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: visible; }
       .main { margin-top: 10px; padding-bottom: 48px; display: block; height: auto !important; overflow: visible !important; }
       .center-shell { max-width: 100%; }
+
+      /* when sidebar becomes static move disclaimer into normal flow */
+      .disclaimer-footer {
+        position: static;
+        margin: 12px 12px 24px;
+        padding: 0;
+      }
     }
 
     @media (max-width: 360px) {
@@ -416,6 +453,8 @@
     })();
   </script>
 
-  <p>*Chinese GP does not currently have a separate official event website run by the local organiser. Please visit https://tickets.formula1.com/en for booking tickets officially. The website listed above for Chinese GP is that of an unofficial but reputable reseller.</p>
+  <div class="disclaimer-footer" role="contentinfo" aria-label="Disclaimer">
+    *The Chinese GP does not currently have a separate official event website run by the local organiser. Please visit the official F1 <a href="https://tickets.formula1.com/en/f1-3182-china" target="_blank" rel="noopener noreferrer">website</a> for booking tickets at Shanghai. The website listed above for Chinese GP is that of an unofficial but reputable reseller.
+  </div>
 </body>
 </html>
