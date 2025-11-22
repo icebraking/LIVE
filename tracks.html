@@ -102,9 +102,12 @@
       width:100%;
       /* fit 6 icons + 5 gaps */
       max-width: calc(6 * var(--icon-w) + 5 * var(--gap));
+      /* stack ticket above the grid */
       display:flex;
-      align-items:center;
-      justify-content:center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--gap);
       padding: 12px;
       box-sizing: border-box;
     }
@@ -267,9 +270,16 @@
       </svg>
     </a>
 
-    <!-- Main: 4 rows x 6 columns of track icons (24 items from tracks.txt). All links open in new tab. -->
+    <!-- Main: ticket icon centered above the 4x6 grid, then the grid of 24 track icons -->
     <main class="main" role="main" aria-label="Tracks content">
       <div class="center-shell" role="region" aria-label="Track icons">
+        <!-- Ticket icon centered above the grid (150x75) -->
+        <div style="width:100%; display:flex; justify-content:center;">
+          <a href="https://tickets.formula1.com/en" target="_blank" rel="noopener noreferrer" aria-label="F1 Tickets (opens in new tab)">
+            <img src="f1tick.png" alt="F1 Tickets" width="150" height="75">
+          </a>
+        </div>
+
         <div class="tracks-grid" aria-hidden="false">
           <!-- Row 1 -->
           <div class="track-item">
