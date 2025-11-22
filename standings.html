@@ -347,11 +347,16 @@
 
     // helpers
     function renameTeam(name){
-      if(name === 'Red Bull') return 'RED BULL RACING';
-      if(name === 'RB F1 Team') return 'RACING BULLS';
-      if(name === 'Sauber') return 'KICK SAUBER';
-      if(name === 'Alpine F1 Team') return 'ALPINE';
-      return (name||'').toUpperCase();
+      if (!name) return '';
+      // New rule: if team is Kick Sauber and the selected year is before 2023, show Sauber instead.
+      if ((name === 'Kick Sauber' || String(name).toUpperCase() === 'KICK SAUBER') && Number(selectedYear) < 2023) {
+        return 'SAUBER';
+      }
+      if (name === 'Red Bull') return 'RED BULL RACING';
+      if (name === 'RB F1 Team') return 'RACING BULLS';
+      if (name === 'Sauber') return 'KICK SAUBER';
+      if (name === 'Alpine F1 Team') return 'ALPINE';
+      return (name || '').toUpperCase();
     }
 
     function showLoading(msg='LOADING STANDINGS...'){
@@ -388,9 +393,6 @@
         // constructors - links allowed only for year 2025 per request
         const allowLinks = (Number(selectedYear) === 2025);
 
-        // If constructors tab selected and year <= 1957, do not call API.
-        // The calling code sets this condition before fetch; this function will only render content
-        // based on items passed in. For the pre-1958 case, the caller will display a notice instead.
         html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>POINTS</th></tr></thead><tbody>`;
         for(const item of items){
           const displayName = renameTeam(item.name);
