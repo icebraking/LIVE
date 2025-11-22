@@ -100,7 +100,7 @@
 
     .center-shell {
       width:100%;
-      max-width: calc(5 * var(--icon-w) + 4 * var(--gap)); /* fit 5 icons + gaps */
+      max-width: calc(6 * var(--icon-w) + 5 * var(--gap)); /* adjusted to fit 6 icons + gaps */
       display:flex;
       align-items:center;
       justify-content:center;
@@ -108,10 +108,10 @@
       box-sizing: border-box;
     }
 
-    /* Row of 5 icons */
+    /* Row of 6 icons (updated to accommodate the new icon) */
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(5, var(--icon-w));
+      grid-template-columns: repeat(6, var(--icon-w));
       grid-auto-rows: var(--icon-h);
       gap: var(--gap);
       justify-content: center;
@@ -186,7 +186,7 @@
       .center-shell { padding: 8px; }
       .info-grid {
         grid-auto-flow: row;
-        grid-template-columns: repeat(5, var(--icon-w));
+        grid-template-columns: repeat(6, var(--icon-w));
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 8px;
@@ -228,7 +228,7 @@
       </svg>
     </a>
 
-    <!-- Main: centered single row of five info icons -->
+    <!-- Main: centered single row of six info icons -->
     <main class="main" role="main" aria-label="Info content">
       <div class="center-shell" role="region" aria-label="Info icons">
         <div class="info-grid" aria-hidden="false">
@@ -259,6 +259,12 @@
           <div class="info-item">
             <a href="https://liquipedia.net/formula1/Main_Page" target="_blank" rel="noopener noreferrer" aria-label="Liquipedia F1 (opens in new tab)">
               <img src="liqf1.png" alt="Liquipedia F1" width="150" height="75">
+            </a>
+          </div>
+
+          <div class="info-item">
+            <a href="https://www.statsf1.com/en/default.aspx" target="_blank" rel="noopener noreferrer" aria-label="Stats F1 (opens in new tab)">
+              <img src="statsf1.png" alt="Stats F1" width="150" height="75">
             </a>
           </div>
         </div>
