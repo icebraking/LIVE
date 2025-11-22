@@ -320,7 +320,6 @@
       "Red Bull Racing": "https://www.icebraking.com/RedBullRacing/redbullracing.html",
       "Williams": "https://www.icebraking.com/Williams/williams.html",
       "Racing Bulls": "https://www.icebraking.com/RacingBulls/racingbulls.html",
-      "Aston Martin": "https://www.icebraking.com/AstonMartin/astonmartin.html",
       "Kick Sauber": "https://www.icebraking.com/KickSauber/kicksauber.html",
       "Haas F1 Team": "https://www.icebraking.com/HaasF1Team/haasf1team.html",
       "Alpine": "https://www.icebraking.com/Alpine/alpine.html",
@@ -348,15 +347,20 @@
     // helpers
     function renameTeam(name){
       if (!name) return '';
-      // New rule: if team is Kick Sauber and the selected year is before 2023, show Sauber instead.
-      if ((name === 'Kick Sauber' || String(name).toUpperCase() === 'KICK SAUBER') && Number(selectedYear) < 2023) {
+      const upper = String(name).toUpperCase();
+
+      // New rule (case-insensitive): if the fetched name contains "KICK" and "SAUBER"
+      // and selectedYear is between 1950 and 2018 inclusive, display "SAUBER".
+      if (upper.indexOf('KICK') !== -1 && upper.indexOf('SAUBER') !== -1 && Number(selectedYear) >= 1950 && Number(selectedYear) <= 2018) {
         return 'SAUBER';
       }
-      if (name === 'Red Bull') return 'RED BULL RACING';
-      if (name === 'RB F1 Team') return 'RACING BULLS';
-      if (name === 'Sauber') return 'KICK SAUBER';
-      if (name === 'Alpine F1 Team') return 'ALPINE';
-      return (name || '').toUpperCase();
+
+      // Preserve existing renames for other teams (case-insensitive where appropriate)
+      if (upper === 'RED BULL' || upper === 'RED BULL RACING') return 'RED BULL RACING';
+      if (upper === 'RB F1 TEAM') return 'RACING BULLS';
+      if (upper === 'ALPINE F1 TEAM' || upper === 'ALPINE') return 'ALPINE';
+      // default: return uppercase team name
+      return upper;
     }
 
     function showLoading(msg='LOADING STANDINGS...'){
