@@ -491,15 +491,27 @@
       const selectedEl = yearListEl.querySelector(`.year-item[data-year="${year}"]`);
       if(selectedEl){
         // center the selected element within the visible area (adjacent years above and below)
-        const container = yearListEl;
-        const containerHeight = container.clientHeight;
-        const elOffsetTop = selectedEl.offsetTop;
-        const elHeight = selectedEl.offsetHeight;
-        const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
-        // use smooth scrolling when available
-        if ('scrollTo' in container) {
-          container.scrollTo({ top: Math.max(0, Math.round(scrollTo)), behavior: 'smooth' });
-        } else {
+        // Prefer native scrollIntoView with 'center' block for reliable centering.
+        try {
+          if (typeof selectedEl.scrollIntoView === 'function') {
+            // Use smooth center scrolling when supported by the browser
+            selectedEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+          } else {
+            // Fallback: compute scrollTop so element is centered
+            const container = yearListEl;
+            const containerHeight = container.clientHeight;
+            const elOffsetTop = selectedEl.offsetTop;
+            const elHeight = selectedEl.offsetHeight;
+            const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
+            container.scrollTop = Math.max(0, Math.round(scrollTo));
+          }
+        } catch (e) {
+          // In case some browsers throw for options, fallback to manual calculation
+          const container = yearListEl;
+          const containerHeight = container.clientHeight;
+          const elOffsetTop = selectedEl.offsetTop;
+          const elHeight = selectedEl.offsetHeight;
+          const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
           container.scrollTop = Math.max(0, Math.round(scrollTo));
         }
       }
