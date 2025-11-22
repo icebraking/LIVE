@@ -220,6 +220,19 @@
     .team-link-table { color:var(--accent); text-decoration:underline; }
     .team-link-table:hover { color:var(--accent-strong); }
 
+    /* notice for pre-1958 constructors */
+    .constructors-notice {
+      font-family: "Copperplate Gothic Bold","Copperplate Gothic","Copperplate", serif;
+      font-weight: 800;
+      text-transform: none; /* keep sentence case */
+      color: #ffffff;
+      background: transparent;
+      padding: 12px 8px;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
     /* Footer home button */
     .home-wrap{ margin-top:18px; padding-left:6px; }
     .home-btn{
@@ -372,6 +385,10 @@
       } else {
         // constructors - links allowed only for year 2025 per request
         const allowLinks = (Number(selectedYear) === 2025);
+
+        // If constructors tab selected and year <= 1957, do not call API.
+        // The calling code sets this condition before fetch; this function will only render content
+        // based on items passed in. For the pre-1958 case, the caller will display a notice instead.
         html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>POINTS</th></tr></thead><tbody>`;
         for(const item of items){
           const displayName = renameTeam(item.name);
@@ -384,6 +401,11 @@
         html += `</tbody></table></div>`;
       }
       content.innerHTML = html;
+    }
+
+    function renderConstructorsIntro() {
+      // Show the requested informational message (Copperplate Gothic Bold, sentence case)
+      content.innerHTML = `<div class="constructors-notice">The FIA Formula 1 World Championship officially introduced the Constructors' Championship (with its own separate standings and title) starting in 1958.</div>`;
     }
 
     function parseDrivers(json){
@@ -491,13 +513,16 @@
       tabDrivers.setAttribute('aria-selected', tab === 'drivers' ? 'true' : 'false');
       tabConstructors.setAttribute('aria-selected', tab === 'constructors' ? 'true' : 'false');
 
-      // keep selected tab and selected year visually consistent (both use same selected look)
-      // (year selection styling is already applied in selectYear)
-
       loadForCurrentState();
     }
 
     async function loadForCurrentState(){
+      // Special rule: if constructors tab selected AND year <= 1957, don't call API.
+      if (activeTab === 'constructors' && Number(selectedYear) <= 1957) {
+        renderConstructorsIntro();
+        return;
+      }
+
       showLoading();
       const items = await fetchStandings(activeTab, selectedYear);
       if(!items || !items.length) { showError(); return; }
