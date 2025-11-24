@@ -1,500 +1,216 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>THE F1 HUB FOR THE ICE BRAKERS!</title>
-
-  <!-- Favicon: primary (relative) and fallback (local file path) -->
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="shortcut icon" type="image/png" href="favicon.png">
-  <link rel="icon" type="image/png" href="file:///C:/Users/anoop/Documents/GitHub/LIVE/favicon.png">
-
+  <title>Racing Hub — Preview</title>
+  <!-- The original style.css has been inlined here so this file is self-contained.
+       If you already keep style.css in the same folder, you can instead open index.html
+       directly (it links to style.css). -->
   <style>
-    :root{
-      --black: #000000;
-      --accent-red: #FF0000;
-      --sidebar-w: 220px;
-      --gap: 22px;
-      --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
-      --header-h: 160px;
-      --headline-top-offset: 12px;
-      --mobile-break: 900px;
+@font-face {
+    font-family: 'Copperplate Gothic Bold';
+    src: local('Copperplate Gothic Bold'), local('Copperplate Gothic');
+    /* Fallback to serif if not available locally, though user requested this specific font */
+}
+
+:root {
+    --primary-color: #00FFFF;
+    /* Cyan */
+    --bg-color: #000000;
+    /* Black */
+    --font-family: 'Copperplate Gothic Bold', 'Copperplate Gothic', serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    font-family: var(--font-family);
+    height: 100vh;
+    overflow: hidden;
+    /* Prevent scrolling for a fixed app-like feel */
+    display: flex;
+    flex-direction: column;
+}
+
+.main-header {
+    text-align: center;
+    font-size: 2.5rem;
+    padding: 20px 0;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    padding: 40px 20px;
+    border-right: 1px solid rgba(0, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    margin-bottom: 25px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    display: block;
+    padding: 5px 0;
+    text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+.sidebar a:hover {
+    text-shadow: 0 0 10px var(--primary-color);
+    transform: translateX(10px);
+}
+
+/* Main Content Styling */
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 30px;
+    width: 100%;
+    max-width: 1000px;
+    height: 80%;
+}
+
+.grid-box {
+    border: 2px solid var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 2rem;
+    letter-spacing: 2px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background: rgba(0, 255, 255, 0.02);
+    position: relative;
+    overflow: hidden;
+}
+
+.grid-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.grid-box:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+    transform: scale(1.02);
+}
+
+.grid-box:hover::before {
+    transform: translateX(100%);
+}
+
+.box-content {
+    z-index: 1;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        overflow-y: auto;
     }
 
-    /*
-      UNIVERSAL COPPERPLATE GOTHIC
-      Primary font set to Copperplate-family with fallbacks. Text uppercase.
-    */
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
-      background: var(--black);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow:hidden; /* desktop: keep no page scrolling; mobile override below */
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
-      text-transform: uppercase;
-      color: #ffffff;
-    }
-
-    /* Hide scrollbars (most browsers) */
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
-
-    a { color: inherit; text-decoration: none; }
-    :focus { outline: none; }
-
-    /* Fixed headline: bold italic, same size as main labels */
-    .floating-title {
-      position: fixed;
-      top: var(--headline-top-offset);
-      left: 0;
-      right: 0;
-      height: calc(var(--header-h) - var(--headline-top-offset));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 80;
-      pointer-events: none; /* header text not interactive */
-      font-style: italic;
-      font-weight: 800;
-      color: rgba(255,255,255,0.98);
-      font-size: var(--main-label-size);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: 0.8px;
-      line-height: 1;
-      text-align: center;
-      padding: 0 12px;
-    }
-
-    /* Hamburger button inside header (hidden on desktop) */
-    .hamburger {
-      position: fixed;
-      left: 16px;
-      top: calc(var(--headline-top-offset) + 8px);
-      z-index: 100;
-      width:40px;
-      height:40px;
-      border-radius:8px;
-      background: rgba(255,255,255,0.03);
-      display:none; /* shown on mobile via media query */
-      align-items:center;
-      justify-content:center;
-      border:0;
-      color:#fff;
-      cursor:pointer;
-      pointer-events:auto; /* ensure it's clickable */
-    }
-    .hamburger:focus { outline:3px solid rgba(255,0,0,0.18); outline-offset:3px }
-
-    .hamburger .bar{
-      width:18px;
-      height:2px;
-      background:#fff;
-      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
-      display:block;
-    }
-
-    /* App positioned under header */
-    .app {
-      position: absolute;
-      top: var(--header-h);
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: grid;
-      grid-template-columns: var(--sidebar-w) 1fr;
-      gap: var(--gap);
-      padding: var(--gap);
-      box-sizing: border-box;
-      align-items: stretch;
-      overflow: hidden;
-    }
-
-    /* Sidebar */
     .sidebar {
-      background: rgba(10,10,10,1);
-      border-radius: 12px;
-      padding: 16px;
-      height: 100%;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.03);
-      overflow: hidden; /* desktop: no scroll */
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-    .menu a {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.98rem;
-      transition: transform .12s ease, background .12s ease, color .12s ease;
-    }
-    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
-    .menu a:hover, .menu a:focus {
-      background: rgba(255,255,255,0.03);
-      color: var(--accent-red);
-      transform: translateX(6px);
-    }
-    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
-
-    /* Main content */
-    .main {
-      height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow: hidden;
-    }
-
-    /* Three-row table */
-    .table {
-      width:100%;
-      max-width:1100px;
-      height:100%;
-      display:grid;
-      grid-template-rows: repeat(3, 1fr);
-      gap: 18px;
-      align-items: stretch;
-      overflow: hidden;
-    }
-
-    .row {
-      position: relative;
-      display:flex;
-      align-items:center;
-      padding: 28px 32px;
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .12s ease;
-      cursor: pointer;
-      user-select: none;
-      overflow: hidden;
-      justify-content: flex-start;
-      -webkit-tap-highlight-color: rgba(255,255,255,0.02);
-    }
-    .row:active { transform: translateY(-2px) scale(0.999) }
-
-    .row:hover, .row:focus-within {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.78);
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
-    }
-
-    /* Main labels: shared size and bold weight */
-    .label {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:800;
-      font-size: var(--main-label-size);
-      letter-spacing: 1px;
-      color:#fff;
-    }
-
-    .dot {
-      width:12px; height:12px; border-radius:50%;
-      background: linear-gradient(135deg, var(--accent-red), #cc0000);
-      box-shadow: 0 6px 14px rgba(255,0,0,0.12);
-      display:inline-block;
-    }
-
-    .row a.anchor {
-      position:absolute;
-      inset:0;
-      text-indent:-9999px;
-      z-index:2;
-      background:transparent;
-      border:0;
-    }
-    .row a.anchor:focus {
-      outline:3px solid rgba(255,0,0,0.18);
-      outline-offset:4px;
-      border-radius:12px;
-    }
-
-    /* Mobile styles */
-    @media (max-width: var(--mobile-break)) {
-      /* allow vertical scrolling on small devices */
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-
-      /* show hamburger */
-      .hamburger { display:flex; }
-
-      /* app becomes single column; sidebar hidden by default (off-canvas) */
-      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: var(--header-h); }
-      .sidebar {
-        position: fixed;
-        top: var(--header-h);
-        left: 0;
-        width: 78%;
-        max-width: 320px;
-        height: calc(100vh - var(--header-h));
-        transform: translateX(-110%);
-        transition: transform .28s cubic-bezier(.2,.9,.2,1);
-        z-index: 140;
-        overflow:auto; /* allow sidebar scrolling if many links */
-        -webkit-overflow-scrolling: touch;
-      }
-      .sidebar.open { transform: translateX(0); }
-
-      /* scrim overlay when sidebar open */
-      .scrim {
-        display:block;
-        position: fixed;
-        inset: var(--header-h) 0 0 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 130;
-        opacity:0;
-        pointer-events:none;
-        transition: opacity .18s ease;
-      }
-      .scrim.visible { opacity:1; pointer-events:auto; }
-
-      /* main content reduced width and spacing */
-      .main { padding-bottom: 40px; }
-      .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
-      .row { padding: 18px 20px; border-radius:10px; }
-      .label { font-size: clamp(1.25rem, 7vw, 2.4rem); }
-
-      /* shrink header sizing on small screens */
-      :root { --header-h: 96px; --headline-top-offset: 8px; }
-      .floating-title { font-size: var(--main-label-size); padding: 0 10px; }
-    }
-
-    /* Smartphone-specific layout (reverted to left/vertical navigation).
-       This media query ONLY affects small smartphone screens (narrow devices).
-       Desktop and laptop code remains unchanged.
-       NOTE: This block now ensures vertical scrolling works in mobile Chrome by allowing
-       the app/main/table to grow (overflow visible/auto and heights auto).
-    */
-    @media (max-width: 420px) {
-      /* allow vertical scrolling on phones */
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-
-      /* ensure hamburger hidden because nav is shown in-flow as vertical left nav */
-      .hamburger { display:none !important; }
-
-      /* Position the app so the sidebar appears directly below the headline (same top as desktop)
-         and allow it to expand beyond the viewport so the browser can scroll. */
-      .app {
-        position: absolute;
-        top: var(--header-h);
-        left: 0;
-        right: 0;
-        bottom: auto;            /* allow content to grow vertically */
-        display: block;
-        gap: 12px;
-        padding: 10px;
-        overflow: visible;       /* allow children to extend and be visible (so page scroll works) */
-      }
-
-      /* Make the sidebar appear as a vertical stacked menu (left/vertical style in flow) */
-      .sidebar {
-        position: static !important;
-        transform: none !important;
-        width: auto !important;
-        height: auto !important;
-        max-width: none !important;
-        display: block !important;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: rgba(10,10,10,0.96);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        overflow: visible;
-      }
-
-      /* Menu becomes a vertical list (left navigation style) */
-      .menu {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px;
-        padding: 0;
-        margin: 0;
         width: 100%;
-      }
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        padding: 20px;
+        flex-direction: row;
+        overflow-x: auto;
+        justify-content: flex-start;
+    }
 
-      .menu a {
-        padding: 10px 12px;
-        border-radius: 8px;
+    .sidebar ul {
         display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 1rem;
-      }
-
-      /* Ensure scrim is hidden since nav is in-flow */
-      .scrim { display:none !important; }
-
-      /* Place the main area (three rows) below the sidebar in normal flow.
-         Ensure main/table can grow so browser scroll works (height:auto and overflow visible). */
-      .main {
-        margin-top: 10px;
-        padding-bottom: 48px;
-        display: block;
-        height: auto !important;   /* allow natural height so page can scroll */
-        overflow: visible !important;
-      }
-
-      .table {
-        height: auto !important;   /* allow rows to flow vertically */
-        overflow: visible !important;
-      }
-
-      /* Slightly reduce row padding for smaller screens */
-      .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
-      .label { font-size: clamp(1rem, 6.5vw, 2.2rem); }
-
-      /* small-screen header tweaks */
-      :root { --header-h: 84px; --headline-top-offset: 6px; }
-      .floating-title { font-size: clamp(14px, 8vw, 20px); }
+        gap: 20px;
     }
 
-    /* small screens */
-    @media (max-width: 360px) {
-      .label { font-size: clamp(0.95rem, 7.5vw, 1.8rem); }
-      .menu a { padding: 8px 10px; font-size: 0.95rem; }
-      .app { padding: 8px; }
+    .sidebar li {
+        margin-bottom: 0;
+        white-space: nowrap;
     }
+
+    .grid-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 20px;
+    }
+
+    .grid-box {
+        min-height: 150px;
+    }
+}
   </style>
 </head>
 <body>
-  <!-- Header text (bold italic, same size as main labels) -->
-  <div class="floating-title" aria-hidden="true"><em>THE F1 HUB FOR THE ICE BRAKERS!</em></div>
-
-  <!-- Hamburger toggle (mobile) -->
-  <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
-    <span class="bar" aria-hidden="true"></span>
-  </button>
-
-  <!-- mobile scrim -->
-  <div id="scrim" class="scrim" aria-hidden="true"></div>
-
-  <div class="app" role="application" aria-label="THE F1 HUB FOR THE ICE BRAKERS!">
-    <!-- Sidebar (desktop remains unchanged; on small phones it's now in-flow vertical left-style menu) -->
-    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
-      <ul class="menu" role="list" aria-label="Sidebar links">
-        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
-        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
-        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
-        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
-        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
-        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+  <header class="main-header">THE SUPER PITSTOP 4 F1 I-C-E BRAKING</header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="#">NEWS</a></li>
+        <li><a href="#">OPINIONS & BLOGS</a></li>
+        <li><a href="#">EXPERIENCE</a></li>
+        <li><a href="#">TRACKS</a></li>
+        <li><a href="#">INFO</a></li>
+        <li><a href="#">NEWS-OL</a></li>
       </ul>
     </nav>
 
-    <!-- Main three rows (these will be placed below the sidebar on small phones) -->
-    <main class="main" role="main" aria-label="Primary actions">
-      <section class="table" role="region" aria-label="Actions table">
-        <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
-          <a class="anchor" href="standings.html" aria-label="Open Standings" tabindex="0"></a>
-          <div class="label" id="lbl-standings"><span class="dot" aria-hidden="true"></span>STANDINGS</div>
-        </div>
-
-        <div class="row" role="group" aria-labelledby="lbl-schedule" tabindex="-1">
-          <a class="anchor" href="schedule.html" aria-label="Open Schedule" tabindex="0"></a>
-          <div class="label" id="lbl-schedule"><span class="dot" aria-hidden="true"></span>SCHEDULE</div>
-        </div>
-
-        <div class="row" role="group" aria-labelledby="lbl-results" tabindex="-1">
-          <a class="anchor" href="results.html" aria-label="Open Results" tabindex="0"></a>
-          <div class="label" id="lbl-results"><span class="dot" aria-hidden="true"></span>RESULTS</div>
-        </div>
-      </section>
+    <main class="content">
+      <div class="grid-container">
+        <a href="#" class="grid-box"><div class="box-content">STANDINGS</div></a>
+        <a href="#" class="grid-box"><div class="box-content">SCHEDULE</div></a>
+        <a href="#" class="grid-box"><div class="box-content">RESULTS</div></a>
+        <a href="#" class="grid-box"><div class="box-content">FONEAI</div></a>
+      </div>
     </main>
   </div>
-
-  <script>
-    // Mobile sidebar toggle + accessibility helpers
-    (function(){
-      const sidebar = document.getElementById('sidebar');
-      const toggle = document.getElementById('sidebarToggle');
-      const scrim = document.getElementById('scrim');
-      const mobileBreakpoint = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-break')) || 900;
-
-      function isMobile() {
-        return window.innerWidth <= mobileBreakpoint;
-      }
-
-      function setSidebar(open){
-        if(isMobile()){
-          if(open){
-            sidebar.classList.add('open');
-            scrim.classList.add('visible');
-            sidebar.setAttribute('aria-hidden','false');
-            toggle.setAttribute('aria-expanded','true');
-            scrim.setAttribute('aria-hidden','false');
-            // focus the first link for keyboard users
-            const first = sidebar.querySelector('a');
-            if(first) first.focus();
-          } else {
-            sidebar.classList.remove('open');
-            scrim.classList.remove('visible');
-            sidebar.setAttribute('aria-hidden','true');
-            toggle.setAttribute('aria-expanded','false');
-            scrim.setAttribute('aria-hidden','true');
-            toggle.focus();
-          }
-        }
-      }
-
-      toggle.addEventListener('click', function(){
-        const open = sidebar.classList.contains('open');
-        setSidebar(!open);
-      });
-
-      scrim.addEventListener('click', function(){
-        setSidebar(false);
-      });
-
-      document.addEventListener('keydown', function(e){
-        if(e.key === 'Escape'){
-          setSidebar(false);
-        }
-      });
-
-      // Ensure correct initial state on resize / load
-      function syncState(){
-        // On very narrow phones we want the sidebar visible in-flow (vertical left-style list).
-        // For other mobile widths keep the off-canvas behavior; desktops/laptops remain unchanged.
-        const isPhone = window.matchMedia('(max-width:420px)').matches;
-
-        if(!isMobile() || isPhone){
-          // desktop or phone (in-flow sidebar): ensure sidebar visible and not transformed
-          sidebar.classList.remove('open');
-          sidebar.style.transform = '';
-          sidebar.setAttribute('aria-hidden','false');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          toggle.setAttribute('aria-expanded','false');
-          document.documentElement.style.overflow = isPhone ? 'auto' : 'hidden';
-        } else {
-          // mobile/tablet off-canvas behavior
-          sidebar.setAttribute('aria-hidden','true');
-          scrim.classList.remove('visible');
-          scrim.setAttribute('aria-hidden','true');
-          toggle.setAttribute('aria-expanded','false');
-          document.documentElement.style.overflow = 'auto';
-        }
-      }
-
-      window.addEventListener('resize', syncState);
-      window.addEventListener('orientationchange', syncState);
-      window.addEventListener('load', syncState);
-      syncState();
-    })();
-  </script>
 </body>
 </html>
