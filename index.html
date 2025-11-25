@@ -258,7 +258,19 @@
       font-weight: 800;
       font-size: var(--main-label-size);
       letter-spacing: 2px;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 5px var(--primary-glow);
       z-index: 2;
+      pointer-events: none;
+      /* Allow clicks to pass through to the anchor */
+    }
+
+    .row a.anchor {
+      position: absolute;
+      inset: 0;
+      text-indent: -9999px;
+      z-index: 10;
+      /* Ensure anchor is on top */
       background: transparent;
       border: 0;
     }
@@ -539,22 +551,23 @@
     <main class="main" role="main" aria-label="Primary actions">
       <section class="table" role="region" aria-label="Actions table">
         <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
-          <a class="anchor" href="standings.html" aria-label="Open Standings" tabindex="0"></a>
+          <a class="anchor" href="https://www.icebraking.com/standings.html" aria-label="Open Standings"
+            tabindex="0"></a>
           <div class="label" id="lbl-standings">STANDINGS</div>
         </div>
 
         <div class="row" role="group" aria-labelledby="lbl-schedule" tabindex="-1">
-          <a class="anchor" href="schedule.html" aria-label="Open Schedule" tabindex="0"></a>
+          <a class="anchor" href="https://www.icebraking.com/schedule.html" aria-label="Open Schedule" tabindex="0"></a>
           <div class="label" id="lbl-schedule">SCHEDULE</div>
         </div>
 
         <div class="row" role="group" aria-labelledby="lbl-results" tabindex="-1">
-          <a class="anchor" href="results.html" aria-label="Open Results" tabindex="0"></a>
+          <a class="anchor" href="https://www.icebraking.com/results.html" aria-label="Open Results" tabindex="0"></a>
           <div class="label" id="lbl-results">RESULTS</div>
         </div>
 
         <div class="row" role="group" aria-labelledby="lbl-foneai" tabindex="-1">
-          <a class="anchor" href="foneai.html" aria-label="Open FoneAI" tabindex="0"></a>
+          <a class="anchor" href="https://www.icebraking.com/foneai.html" aria-label="Open FoneAI" tabindex="0"></a>
           <div class="label" id="lbl-foneai">FONEAI</div>
         </div>
       </section>
