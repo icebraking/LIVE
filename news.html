@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -10,9 +11,11 @@
   <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
-    :root{
+    :root {
       --black: #000000;
-      --accent-red: #FF0000;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
       --sidebar-w: 220px;
       --gap: 22px;
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
@@ -22,30 +25,47 @@
     }
 
     /* Page shell (matching index.html: background, font, uppercase) */
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
       background: var(--black);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow:hidden; /* desktop: keep no page scrolling; mobile override below */
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      /* desktop: keep no page scrolling; mobile override below */
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: #ffffff;
+      color: var(--accent-cyan);
     }
 
     /* Hide scrollbars (most browsers) */
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
 
-    a { color: inherit; text-decoration: none; }
-    :focus { outline: none; }
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
 
     /* App positioned at top (header removed so top: 0) */
     .app {
       position: absolute;
-      top: 0; /* was var(--header-h) */
+      top: 0;
+      /* was var(--header-h) */
       left: 0;
       right: 0;
       bottom: 0;
@@ -60,51 +80,77 @@
 
     /* Sidebar styling (identical to index.html) */
     .sidebar {
-      background: rgba(10,10,10,1);
+      background: transparent;
       border-radius: 12px;
       padding: 16px;
       height: 100%;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.03);
+      /* box-shadow: 0 14px 40px rgba(0,0,0,0.85); */
+      border-right: 1px solid var(--border-color);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
     .menu a {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.98rem;
-      transition: transform .12s ease, background .12s ease, color .12s ease;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
     }
-    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
-    .menu a:hover, .menu a:focus {
-      background: rgba(255,255,255,0.03);
-      color: var(--accent-red);
-      transform: translateX(6px);
+
+    .menu a svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
     }
-    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
+
+    .menu a:hover,
+    .menu a:focus {
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent-cyan);
+      transform: translateX(10px);
+    }
+
+    .menu a:hover svg,
+    .menu a:focus svg {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
 
     /* Main area */
     .main {
       height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow: auto; /* allow main content scrolling if needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      /* allow main content scrolling if needed */
     }
 
     .table {
-      width:100%;
-      max-width:1260px; /* accomodate 7 columns of 150px + gaps */
-      height:100%;
-      display:grid;
+      width: 100%;
+      max-width: 1260px;
+      /* accomodate 7 columns of 150px + gaps */
+      height: 100%;
+      display: grid;
       /* Single centered row */
       grid-template-rows: 1fr;
       gap: 18px;
@@ -115,21 +161,26 @@
 
     .row {
       position: relative;
-      display:flex;
-      align-items:center;
+      display: flex;
+      align-items: center;
       padding: 18px 20px;
       border-radius: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease, background .12s ease;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
       cursor: default;
       user-select: none;
       overflow: visible;
       justify-content: center;
-      -webkit-tap-highlight-color: rgba(255,255,255,0.02);
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
     }
-    .row:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,0.78); }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
 
     /* Icons wrapper: top single icon above a 7x5 grid of the remaining 35 icons */
     .icons-wrapper {
@@ -139,7 +190,8 @@
       gap: 12px;
       justify-content: center;
       align-items: start;
-      width: calc(7 * 150px + 6 * 12px); /* fixed width so columns align */
+      width: calc(7 * 150px + 6 * 12px);
+      /* fixed width so columns align */
       max-width: 100%;
       box-sizing: content-box;
 
@@ -166,62 +218,116 @@
     }
 
     .icon {
-      display:inline-block;
+      display: inline-block;
       border-radius: 8px;
       overflow: hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.004));
+      background: rgba(0, 0, 0, 0.5);
       padding: 6px;
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
-      will-change: transform;
+      transition: all 0.3s ease;
+      will-change: transform, box-shadow;
       text-align: center;
+
+      /* Faint cyan glow by default */
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
     }
+
     .icon img {
-      display:block;
-      width: 150px;    /* fixed pixel width */
-      height: 75px;    /* fixed pixel height */
-      object-fit: contain; /* preserve aspect */
+      display: block;
+      width: 150px;
+      /* fixed pixel width */
+      height: 75px;
+      /* fixed pixel height */
+      object-fit: contain;
+      /* preserve aspect */
       border: 0;
       background: transparent;
       border-radius: 4px;
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+      transition: all 0.3s ease;
       transform-origin: center;
       margin: 0 auto;
     }
-    .icon:hover, .icon:focus-within {
+
+    /* Brighter glow on hover */
+    .icon:hover,
+    .icon:focus-within {
       transform: translateY(-8px);
-      box-shadow: 0 24px 56px rgba(0,0,0,0.65);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+      z-index: 10;
     }
-    .icon:hover img, .icon:focus-within img {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+
+    .icon:hover img,
+    .icon:focus-within img {
+      transform: scale(1.05);
     }
-    .icon:focus-within { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 6px; border-radius:8px; }
+
+    .icon:focus-within {
+      outline: 3px solid rgba(0, 255, 255, 0.5);
+      outline-offset: 6px;
+      border-radius: 8px;
+    }
 
     /* Home button placed beneath left navigation, fixed bottom-left.
        Moved right by 50px from previous left:12px -> left:62px */
     .home-button {
       position: fixed;
-      left: 62px;               /* moved 50px right from 12px */
+      left: 62px;
+      /* moved 50px right from 12px */
       bottom: 12px;
       width: 46px;
       height: 46px;
       border-radius: 8px;
-      background: rgba(255,255,255,0.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 255, 255, 0.2);
       z-index: 200;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
-    .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
+
+    .home-button svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+      transition: all 0.3s ease;
+    }
+
+    .home-button:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+    }
+
+    .home-button:hover svg {
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    .home-button:focus {
+      outline: 3px solid rgba(0, 255, 255, 0.5);
+      outline-offset: 3px;
+    }
 
     /* Keep image pixel size on mobile as requested */
     @media (max-width: var(--mobile-break)) {
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: 0; }
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+        top: 0;
+      }
+
       .sidebar {
         position: fixed;
         top: 0;
@@ -230,18 +336,42 @@
         max-width: 320px;
         height: 100vh;
         transform: translateX(-110%);
-        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        transition: transform .28s cubic-bezier(.2, .9, .2, 1);
         z-index: 140;
-        overflow:auto;
+        overflow: auto;
         -webkit-overflow-scrolling: touch;
+        background: #000;
+        border-right: 1px solid var(--border-color);
       }
-      .sidebar.open { transform: translateX(0); }
 
-      .main { padding-bottom: 40px; }
-      .table { gap:12px; grid-auto-rows: minmax(80px, 1fr); }
-      .row { padding: 18px 20px; border-radius:10px; }
-      .icon img { width: 150px; height: 75px; object-fit: contain; }
-      :root { --header_h: 0; --headline-top-offset: 0; }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        padding-bottom: 40px;
+      }
+
+      .table {
+        gap: 12px;
+        grid-auto-rows: minmax(80px, 1fr);
+      }
+
+      .row {
+        padding: 18px 20px;
+        border-radius: 10px;
+      }
+
+      .icon img {
+        width: 150px;
+        height: 75px;
+        object-fit: contain;
+      }
+
+      :root {
+        --header_h: 0;
+        --headline-top-offset: 0;
+      }
 
       /* On narrow screens switch the icons layout to a responsive grid while preserving image size */
       .icons-wrapper {
@@ -251,14 +381,26 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: 8px;
       }
-      .grid35 { grid-template-columns: repeat(7, 150px); }
+
+      .grid35 {
+        grid-template-columns: repeat(7, 150px);
+      }
 
       /* Move home button right by 50px on mobile too (previous mobile left was 8px -> now 58px) */
-      .home-button { left: 58px; bottom: 14px; }
+      .home-button {
+        left: 58px;
+        bottom: 14px;
+      }
     }
 
     @media (max-width: 420px) {
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
       .app {
         position: absolute;
         top: 0;
@@ -270,6 +412,7 @@
         padding: 10px;
         overflow: visible;
       }
+
       .sidebar {
         position: static !important;
         transform: none !important;
@@ -279,10 +422,12 @@
         display: block !important;
         padding: 10px 12px;
         border-radius: 10px;
-        background: rgba(10,10,10,0.96);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        background: rgba(10, 10, 10, 0.96);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         overflow: visible;
+        border: 1px solid var(--border-color);
       }
+
       .menu {
         display: flex !important;
         flex-direction: column !important;
@@ -291,6 +436,7 @@
         margin: 0;
         width: 100%;
       }
+
       .main {
         margin-top: 10px;
         padding-bottom: 48px;
@@ -298,31 +444,62 @@
         height: auto !important;
         overflow: visible !important;
       }
+
       .table {
         height: auto !important;
         overflow: visible !important;
       }
-      .row { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+      }
     }
 
     @media (max-width: 360px) {
-      .menu a { padding: 8px 10px; font-size: 0.95rem; }
-      .app { padding: 8px; }
-      .icon img { width: 150px; height: 75px; object-fit: contain; }
+      .menu a {
+        padding: 8px 10px;
+        font-size: 0.95rem;
+      }
+
+      .app {
+        padding: 8px;
+      }
+
+      .icon img {
+        width: 150px;
+        height: 75px;
+        object-fit: contain;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="app" role="application" aria-label="News page with left navigation">
     <!-- Sidebar navigation -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
-        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
-        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
-        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
-        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
-        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
-        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" />
+            </svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" />
+            </svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" />
+            </svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+            </svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+            </svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" />
+            </svg><span>NEWS - OL</span></a></li>
       </ul>
     </nav>
 
@@ -341,7 +518,8 @@
             <!-- Top single icon, placed above the fourth column of the grid below -->
             <div class="top-slot">
               <div class="icon" data-key="f1">
-                <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer" aria-label="Formula 1 — Latest news (opens in new tab)">
+                <a href="https://www.formula1.com/en/latest/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Formula 1 — Latest news (opens in new tab)">
                   <img src="f1.png" alt="Formula 1 — Latest news" width="150" height="75">
                 </a>
               </div>
@@ -350,211 +528,246 @@
             <!-- The 35 remaining icons arranged in 7 columns and 5 rows (35 items) -->
             <div class="grid35" aria-hidden="false" aria-label="Additional news icons">
               <div class="icon" data-key="pf1">
-                <a href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer" aria-label="PlanetF1 (opens in new tab)">
+                <a href="https://www.planetf1.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="PlanetF1 (opens in new tab)">
                   <img src="pf1.png" alt="PlanetF1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="race">
-                <a href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="The Race — Formula 1 category (opens in new tab)">
+                <a href="https://www.the-race.com/category/formula-1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="The Race — Formula 1 category (opens in new tab)">
                   <img src="race.png" alt="The Race — Formula 1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="racefans">
-                <a href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer" aria-label="RaceFans (opens in new tab)">
+                <a href="https://www.racefans.net/" target="_blank" rel="noopener noreferrer"
+                  aria-label="RaceFans (opens in new tab)">
                   <img src="racefans.png" alt="RaceFans" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="crash">
-                <a href="https://www.crash.net/f1" target="_blank" rel="noopener noreferrer" aria-label="Crash — F1 (opens in new tab)">
+                <a href="https://www.crash.net/f1" target="_blank" rel="noopener noreferrer"
+                  aria-label="Crash — F1 (opens in new tab)">
                   <img src="crash.png" alt="Crash — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="espn">
-                <a href="https://www.espn.in/f1/" target="_blank" rel="noopener noreferrer" aria-label="ESPN F1 (opens in new tab)">
+                <a href="https://www.espn.in/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="ESPN F1 (opens in new tab)">
                   <img src="espn.png" alt="ESPN — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="rn365">
-                <a href="https://racingnews365.com/" target="_blank" rel="noopener noreferrer" aria-label="RacingNews365 (opens in new tab)">
+                <a href="https://racingnews365.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="RacingNews365 (opens in new tab)">
                   <img src="rn365.png" alt="RacingNews365" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="f1i">
-                <a href="https://f1i.com/" target="_blank" rel="noopener noreferrer" aria-label="F1i (opens in new tab)">
+                <a href="https://f1i.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="F1i (opens in new tab)">
                   <img src="f1i.png" alt="F1i" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="f1oversteer">
-                <a href="https://www.f1oversteer.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Oversteer (opens in new tab)">
+                <a href="https://www.f1oversteer.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="F1 Oversteer (opens in new tab)">
                   <img src="f1oversteer.png" alt="F1 Oversteer" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="motorsport">
-                <a href="https://www.motorsport.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Motorsport — F1 (opens in new tab)">
+                <a href="https://www.motorsport.com/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Motorsport — F1 (opens in new tab)">
                   <img src="motorsport.png" alt="Motorsport — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="autosport">
-                <a href="https://www.autosport.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Autosport — F1 (opens in new tab)">
+                <a href="https://www.autosport.com/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Autosport — F1 (opens in new tab)">
                   <img src="autosport.png" alt="Autosport — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="sportskeeda">
-                <a href="https://www.sportskeeda.com/f1" target="_blank" rel="noopener noreferrer" aria-label="Sportskeeda — F1 (opens in new tab)">
+                <a href="https://www.sportskeeda.com/f1" target="_blank" rel="noopener noreferrer"
+                  aria-label="Sportskeeda — F1 (opens in new tab)">
                   <img src="sportskeeda.png" alt="Sportskeeda — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="speedcafe">
-                <a href="https://speedcafe.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Speedcafe — F1 (opens in new tab)">
+                <a href="https://speedcafe.com/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Speedcafe — F1 (opens in new tab)">
                   <img src="speedcafe.png" alt="Speedcafe — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="skyf1">
-                <a href="https://www.skysports.com/f1" target="_blank" rel="noopener noreferrer" aria-label="Sky Sports F1 (opens in new tab)">
+                <a href="https://www.skysports.com/f1" target="_blank" rel="noopener noreferrer"
+                  aria-label="Sky Sports F1 (opens in new tab)">
                   <img src="skyf1.png" alt="Sky Sports — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="gpfans">
-                <a href="https://www.gpfans.com/en/f1-news/" target="_blank" rel="noopener noreferrer" aria-label="GPFans — F1 News (opens in new tab)">
+                <a href="https://www.gpfans.com/en/f1-news/" target="_blank" rel="noopener noreferrer"
+                  aria-label="GPFans — F1 News (opens in new tab)">
                   <img src="gpfans.png" alt="GPFans — F1 News" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="gp247">
-                <a href="https://www.grandprix247.com/" target="_blank" rel="noopener noreferrer" aria-label="GrandPrix247 (opens in new tab)">
+                <a href="https://www.grandprix247.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="GrandPrix247 (opens in new tab)">
                   <img src="gp247.png" alt="GrandPrix247" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="gpblog">
-                <a href="https://www.gpblog.com/en" target="_blank" rel="noopener noreferrer" aria-label="GPBlog (opens in new tab)">
+                <a href="https://www.gpblog.com/en" target="_blank" rel="noopener noreferrer"
+                  aria-label="GPBlog (opens in new tab)">
                   <img src="gpblog.png" alt="GPBlog" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="msmag">
-                <a href="https://www.motorsportmagazine.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Motorsport Magazine — F1 (opens in new tab)">
+                <a href="https://www.motorsportmagazine.com/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Motorsport Magazine — F1 (opens in new tab)">
                   <img src="msmag.png" alt="Motorsport Magazine — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="gptoday">
-                <a href="https://www.gptoday.com/" target="_blank" rel="noopener noreferrer" aria-label="GPToday (opens in new tab)">
+                <a href="https://www.gptoday.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="GPToday (opens in new tab)">
                   <img src="gptoday.png" alt="GPToday" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="grandprix">
-                <a href="https://www.grandprix.com/" target="_blank" rel="noopener noreferrer" aria-label="GrandPrix (opens in new tab)">
+                <a href="https://www.grandprix.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="GrandPrix (opens in new tab)">
                   <img src="grandprix.png" alt="GrandPrix" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="sportsmole">
-                <a href="https://www.sportsmole.co.uk/formula-1/" target="_blank" rel="noopener noreferrer" aria-label="SportsMole — Formula 1 (opens in new tab)">
+                <a href="https://www.sportsmole.co.uk/formula-1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="SportsMole — Formula 1 (opens in new tab)">
                   <img src="sportsmole.png" alt="SportsMole — Formula 1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="thejudge">
-                <a href="https://thejudge13.com/" target="_blank" rel="noopener noreferrer" aria-label="The Judge (opens in new tab)">
+                <a href="https://thejudge13.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="The Judge (opens in new tab)">
                   <img src="thejudge.png" alt="The Judge" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="racer">
-                <a href="https://racer.com/f1/" target="_blank" rel="noopener noreferrer" aria-label="Racer — F1 (opens in new tab)">
+                <a href="https://racer.com/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Racer — F1 (opens in new tab)">
                   <img src="racer.png" alt="Racer — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="beyondtheflag">
-                <a href="https://beyondtheflag.com/formula-one/" target="_blank" rel="noopener noreferrer" aria-label="Beyond The Flag (opens in new tab)">
+                <a href="https://beyondtheflag.com/formula-one/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Beyond The Flag (opens in new tab)">
                   <img src="beyondtheflag.png" alt="Beyond The Flag" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="autohebdo">
-                <a href="https://www.autohebdof1.com/actualites/f1" target="_blank" rel="noopener noreferrer" aria-label="Auto Hebdo F1 (opens in new tab)">
+                <a href="https://www.autohebdof1.com/actualites/f1" target="_blank" rel="noopener noreferrer"
+                  aria-label="Auto Hebdo F1 (opens in new tab)">
                   <img src="autohebdo.png" alt="Auto Hebdo — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="f1chronicle">
-                <a href="https://f1chronicle.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Chronicle (opens in new tab)">
+                <a href="https://f1chronicle.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="F1 Chronicle (opens in new tab)">
                   <img src="f1chronicle.png" alt="F1 Chronicle" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="f1fansite">
-                <a href="https://www.f1-fansite.com/" target="_blank" rel="noopener noreferrer" aria-label="F1 Fansite (opens in new tab)">
+                <a href="https://www.f1-fansite.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="F1 Fansite (opens in new tab)">
                   <img src="f1fansite.png" alt="F1 Fansite" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="motorracing">
-                <a href="https://motorracing.com/category/f1/" target="_blank" rel="noopener noreferrer" aria-label="MotorRacing — F1 (opens in new tab)">
+                <a href="https://motorracing.com/category/f1/" target="_blank" rel="noopener noreferrer"
+                  aria-label="MotorRacing — F1 (opens in new tab)">
                   <img src="motorracing.png" alt="MotorRacing — F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="oness">
-                <a href="https://onestopstrategy.com/" target="_blank" rel="noopener noreferrer" aria-label="One Stop Strategy (opens in new tab)">
+                <a href="https://onestopstrategy.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="One Stop Strategy (opens in new tab)">
                   <img src="oness.png" alt="One Stop Strategy" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="everything">
-                <a href="https://www.everythingf1.com/formula-1-news/" target="_blank" rel="noopener noreferrer" aria-label="Everything F1 (opens in new tab)">
+                <a href="https://www.everythingf1.com/formula-1-news/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Everything F1 (opens in new tab)">
                   <img src="everything.png" alt="Everything F1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="newsgp">
-                <a href="https://www.news.gp/en/category/formula-1" target="_blank" rel="noopener noreferrer" aria-label="News GP — Formula 1 (opens in new tab)">
+                <a href="https://www.news.gp/en/category/formula-1" target="_blank" rel="noopener noreferrer"
+                  aria-label="News GP — Formula 1 (opens in new tab)">
                   <img src="newsgp.png" alt="News GP — Formula 1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="newsonf1">
-                <a href="https://www.newsonf1.com/" target="_blank" rel="noopener noreferrer" aria-label="NewsOnF1 (opens in new tab)">
+                <a href="https://www.newsonf1.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="NewsOnF1 (opens in new tab)">
                   <img src="newsonf1.png" alt="NewsOnF1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="spbible">
-                <a href="https://www.sportbible.com/formula-1" target="_blank" rel="noopener noreferrer" aria-label="SportBible — Formula 1 (opens in new tab)">
+                <a href="https://www.sportbible.com/formula-1" target="_blank" rel="noopener noreferrer"
+                  aria-label="SportBible — Formula 1 (opens in new tab)">
                   <img src="spbible.png" alt="SportBible — Formula 1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="sportingnews">
-                <a href="https://www.sportingnews.com/us/formula-1" target="_blank" rel="noopener noreferrer" aria-label="Sporting News — Formula 1 (opens in new tab)">
+                <a href="https://www.sportingnews.com/us/formula-1" target="_blank" rel="noopener noreferrer"
+                  aria-label="Sporting News — Formula 1 (opens in new tab)">
                   <img src="sportingnews.png" alt="Sporting News — Formula 1" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="scuderiafans">
-                <a href="https://scuderiafans.com/" target="_blank" rel="noopener noreferrer" aria-label="Scuderia Fans (opens in new tab)">
+                <a href="https://www.scuderiafans.com/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Scuderia Fans (opens in new tab)">
                   <img src="scuderiafans.png" alt="Scuderia Fans" width="150" height="75">
                 </a>
               </div>
 
               <div class="icon" data-key="merc">
-                <a href="https://www.mercedesamgf1.com/news/" target="_blank" rel="noopener noreferrer" aria-label="Mercedes AMG F1 — News (opens in new tab)">
+                <a href="https://www.mercedesamgf1.com/news/" target="_blank" rel="noopener noreferrer"
+                  aria-label="Mercedes AMG F1 — News (opens in new tab)">
                   <img src="merc.png" alt="Mercedes AMG F1 — News" width="150" height="75">
                 </a>
               </div>
@@ -568,23 +781,23 @@
 
   <script>
     // Mobile sidebar toggle + accessibility helpers (kept but adjusted because header/hamburger removed)
-    (function(){
+    (function () {
       const sidebar = document.getElementById('sidebar');
-      document.addEventListener('keydown', function(e){
-        if(e.key === 'Escape'){
-          if(sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
         }
       });
 
-      function syncState(){
+      function syncState() {
         const isPhone = window.matchMedia('(max-width:420px)').matches;
-        if(!isPhone){
+        if (!isPhone) {
           sidebar.classList.remove('open');
           sidebar.style.transform = '';
-          sidebar.setAttribute('aria-hidden','false');
+          sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'hidden';
         } else {
-          sidebar.setAttribute('aria-hidden','false');
+          sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'auto';
         }
       }
@@ -596,4 +809,5 @@
     })();
   </script>
 </body>
+
 </html>
