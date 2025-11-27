@@ -1,46 +1,61 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>TRACKS — THE F1 HUB</title>
-
-  <!-- Favicon (re-uses same name as news.html) -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
-    :root{
+    :root {
       --black: #000000;
-      --accent-red: #FF0000;
-      --gap: 20px;
-      --icon-w: 150px;
-      --icon-h: 75px;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
       --sidebar-w: 220px;
+      --gap: 22px;
       --mobile-break: 900px;
     }
 
-    /* Page shell (matching news.html style) */
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
+    /* Page shell */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
       background: var(--black);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow:hidden;
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: #ffffff;
+      color: var(--accent-cyan);
     }
 
-    /* Hide scrollbars (most browsers) */
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    /* Hide scrollbars */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
 
-    a { color: inherit; text-decoration: none; }
-    :focus { outline: none; }
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    /* App Layout */
     .app {
       position: absolute;
       top: 0;
@@ -56,100 +71,135 @@
       overflow: hidden;
     }
 
-    /* Sidebar styling copied from news.html */
+    /* Sidebar */
     .sidebar {
-      background: rgba(10,10,10,1);
+      background: transparent;
       border-radius: 12px;
       padding: 16px;
       height: 100%;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.03);
+      border-right: 1px solid var(--border-color);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-    .menu a {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.98rem;
-      transition: transform .12s ease, background .12s ease, color .12s ease;
-    }
-    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
-    .menu a:hover, .menu a:focus {
-      background: rgba(255,255,255,0.03);
-      color: var(--accent-red);
-      transform: translateX(6px);
-    }
-    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
 
-    /* Main content area */
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+    }
+
+    .menu a svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .menu a:hover,
+    .menu a:focus {
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent-cyan);
+      transform: translateX(10px);
+    }
+
+    .menu a:hover svg,
+    .menu a:focus svg {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Main Area */
     .main {
       height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow: auto; /* allow scrolling if needed */
-    }
-
-    .center-shell {
-      width:100%;
-      /* fit 6 icons + 5 gaps */
-      max-width: calc(6 * var(--icon-w) + 5 * var(--gap));
-      /* stack ticket above the grid */
-      display:flex;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      gap: var(--gap);
-      padding: 12px;
-      box-sizing: border-box;
+      overflow: auto;
+      padding-bottom: 40px;
     }
 
-    /* Grid: 4 rows x 6 columns, icons equidistant */
+    .center-shell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--gap);
+      padding: 20px;
+      width: 100%;
+      max-width: 1260px;
+    }
+
+    /* Tracks Grid */
     .tracks-grid {
       display: grid;
-      grid-template-columns: repeat(6, var(--icon-w));
-      grid-auto-rows: var(--icon-h);
-      gap: var(--gap);
+      grid-template-columns: repeat(6, 150px);
+      gap: 20px;
       justify-content: center;
       align-items: center;
-      width: 100%;
     }
 
     .track-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-block;
       border-radius: 8px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.5);
       padding: 6px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      transition: transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .14s ease;
-      will-change: transform;
-    }
-    .track-item:focus-within, .track-item:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.7);
+      transition: all 0.3s ease;
+      will-change: transform, box-shadow;
+      text-align: center;
+
+      /* Faint cyan glow by default */
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
     }
 
     .track-item img {
-      width: var(--icon-w);
-      height: var(--icon-h);
+      display: block;
+      width: 150px;
+      height: 75px;
       object-fit: contain;
-      display:block;
-      border-radius:4px;
-      transition: transform .18s ease;
+      border: 0;
+      background: transparent;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+      margin: 0 auto;
     }
-    .track-item a { display:block; width:100%; height:100%; }
 
-    /* Home button (same position and SVG as news.html) */
+    /* Brighter glow on hover */
+    .track-item:hover,
+    .track-item:focus-within {
+      transform: translateY(-8px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+      z-index: 10;
+    }
+
+    .track-item:hover img,
+    .track-item:focus-within img {
+      transform: scale(1.05);
+    }
+
+    /* Home Button */
     .home-button {
       position: fixed;
       left: 62px;
@@ -157,45 +207,65 @@
       width: 46px;
       height: 46px;
       border-radius: 8px;
-      background: rgba(255,255,255,0.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 255, 255, 0.2);
       z-index: 200;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
-    .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
 
-    /* Disclaimer / footer — positioned at the bottom and constrained to the right of the sidebar */
+    .home-button svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+      transition: all 0.3s ease;
+    }
+
+    .home-button:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+    }
+
+    .home-button:hover svg {
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
     .disclaimer-footer {
-      position: fixed;
-      left: calc(var(--sidebar-w) + var(--gap));
-      right: var(--gap);
-      bottom: 12px;
-      z-index: 210;
-      font-family: Cambria, "Times New Roman", serif;
+      margin-top: 20px;
+      font-family: Cambria, serif;
       font-size: 10px;
-      line-height: 1.2;
-      color: #ffffff;
-      background: transparent;
-      box-sizing: border-box;
-      padding: 6px 8px;
-      max-width: calc(100% - (var(--sidebar-w) + var(--gap) + 40px));
-      text-transform: none; /* ensure sentence case for this element */
+      color: var(--accent-cyan);
+      text-transform: none;
+      text-align: center;
+      width: 100%;
     }
 
     .disclaimer-footer a {
-      color: #ffffff;
       text-decoration: underline;
     }
 
-    /* Keep image pixel size on mobile as requested */
+    /* Mobile */
     @media (max-width: var(--mobile-break)) {
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: 0; }
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+        top: 0;
+      }
+
       .sidebar {
         position: fixed;
         top: 0;
@@ -204,254 +274,168 @@
         max-width: 320px;
         height: 100vh;
         transform: translateX(-110%);
-        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        transition: transform .28s cubic-bezier(.2, .9, .2, 1);
         z-index: 140;
-        overflow:auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: auto;
+        background: #000;
+        border-right: 1px solid var(--border-color);
       }
-      .sidebar.open { transform: translateX(0); }
-      .center-shell { padding: 8px; }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        padding-bottom: 40px;
+        display: block;
+        height: auto;
+      }
+
       .tracks-grid {
-        /* allow horizontal scroll on very narrow screens while preserving icon pixel sizes */
-        grid-auto-flow: row;
-        grid-template-columns: repeat(6, var(--icon-w));
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        width: 100%;
       }
-      .home-button { left: 58px; bottom: 14px; }
 
-      /* on small screens allow the disclaimer to span the viewport width */
-      .disclaimer-footer {
-        left: 12px;
-        right: 12px;
-        max-width: none;
+      .home-button {
+        left: 58px;
+        bottom: 14px;
       }
     }
 
-    @media (max-width: 420px) {
-      .app { position: absolute; top: 0; left: 0; right: 0; bottom: auto; display: block; gap: 12px; padding: 10px; overflow: visible; }
-      .sidebar { position: static !important; transform: none !important; width: auto !important; height: auto !important; max-width: none !important; display:block !important; padding: 10px 12px; border-radius: 10px; background: rgba(10,10,10,0.96); box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: visible; }
-      .main { margin-top: 10px; padding-bottom: 48px; display: block; height: auto !important; overflow: visible !important; }
-      .center-shell { max-width: 100%; }
-
-      /* when sidebar becomes static move disclaimer into normal flow */
-      .disclaimer-footer {
-        position: static;
-        margin: 12px 12px 24px;
-        padding: 0;
+    @media (max-width: 1200px) {
+      .tracks-grid {
+        grid-template-columns: repeat(4, 150px);
       }
-    }
-
-    @media (max-width: 360px) {
-      :root { --gap: 12px; }
-      .app { padding: 8px; }
     }
   </style>
 </head>
+
 <body>
   <div class="app" role="application" aria-label="Tracks page with left navigation">
-    <!-- Sidebar navigation: EXACTLY the same links and markup as in news.html -->
+    <!-- Sidebar navigation -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
-        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
-        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
-        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
-        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
-        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
-        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" />
+            </svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" />
+            </svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" />
+            </svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+            </svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+            </svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" />
+            </svg><span>NEWS - OL</span></a></li>
       </ul>
     </nav>
 
-    <!-- Home icon (same SVG and position as news.html) -->
+    <!-- Home icon -->
     <a class="home-button" href="index.html" aria-label="Home" title="Home">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
       </svg>
     </a>
 
-    <!-- Main: ticket icon centered above the 4x6 grid, then the grid of 24 track icons -->
+    <!-- Main: Tracks grid -->
     <main class="main" role="main" aria-label="Tracks content">
-      <div class="center-shell" role="region" aria-label="Track icons">
-        <!-- Ticket icon centered above the grid (150x75) -->
-        <div style="width:100%; display:flex; justify-content:center;">
-          <a href="https://tickets.formula1.com/en" target="_blank" rel="noopener noreferrer" aria-label="F1 Tickets (opens in new tab)">
-            <img src="f1tick.png" alt="F1 Tickets" width="150" height="75">
-          </a>
+      <div class="center-shell">
+        <div style="display:flex; justify-content:center; width:100%;">
+          <a href="https://tickets.formula1.com/en" target="_blank"><img src="f1tick.png" alt="F1 Tickets" width="150"
+              height="75"></a>
         </div>
 
-        <div class="tracks-grid" aria-hidden="false">
-          <!-- Row 1 -->
-          <div class="track-item">
-            <a href="https://www.grandprix.com.au/" target="_blank" rel="noopener noreferrer" aria-label="Australian Grand Prix (opens in new tab)">
-              <img src="aus.png" alt="Australian Grand Prix" width="150" height="75">
-            </a>
+        <div class="tracks-grid">
+          <div class="track-item"><a href="https://www.grandprix.com.au/" target="_blank"><img src="aus.png"
+                alt="Australia"></a></div>
+          <div class="track-item"><a href="https://www.formula1shanghai.com/" target="_blank"><img src="chn.png"
+                alt="China"></a></div>
+          <div class="track-item"><a href="https://www.suzukacircuit.jp/eng/" target="_blank"><img src="jpn.png"
+                alt="Japan"></a></div>
+          <div class="track-item"><a href="https://www.bahraingp.com/" target="_blank"><img src="bah.png"
+                alt="Bahrain"></a></div>
+          <div class="track-item"><a href="https://saudiarabiangp.com/en" target="_blank"><img src="sar.png"
+                alt="Saudi Arabia"></a></div>
+          <div class="track-item"><a href="https://f1miamigp.com/" target="_blank"><img src="mim.png" alt="Miami"></a>
           </div>
 
-          <div class="track-item">
-            <a href="https://www.formula1shanghai.com/" target="_blank" rel="noopener noreferrer" aria-label="Chinese Grand Prix - Shanghai (opens in new tab)">
-              <img src="chn.png" alt="Chinese Grand Prix - Shanghai" width="150" height="75">
-            </a>
+          <div class="track-item"><a href="https://gpcanada.ca/en/" target="_blank"><img src="can.png" alt="Canada"></a>
           </div>
+          <div class="track-item"><a href="https://monaco-grandprix.com/en/" target="_blank"><img src="mon.png"
+                alt="Monaco"></a></div>
+          <div class="track-item"><a href="https://www.circuitcat.com/en/" target="_blank"><img src="cat.png"
+                alt="Spain"></a></div>
+          <div class="track-item"><a href="https://www.redbullring.com/en/" target="_blank"><img src="atr.png"
+                alt="Austria"></a></div>
+          <div class="track-item"><a href="https://www.silverstone.co.uk/" target="_blank"><img src="eng.png"
+                alt="UK"></a></div>
+          <div class="track-item"><a href="https://www.spagrandprix.com/en/" target="_blank"><img src="bel.png"
+                alt="Belgium"></a></div>
 
-          <div class="track-item">
-            <a href="https://www.suzukacircuit.jp/eng/" target="_blank" rel="noopener noreferrer" aria-label="Japanese Grand Prix - Suzuka (opens in new tab)">
-              <img src="jpn.png" alt="Japanese Grand Prix - Suzuka" width="150" height="75">
-            </a>
-          </div>
+          <div class="track-item"><a href="https://hungaroring.hu/en" target="_blank"><img src="hun.png"
+                alt="Hungary"></a></div>
+          <div class="track-item"><a href="https://www.dutchgp.com/en/" target="_blank"><img src="nel.png"
+                alt="Netherlands"></a></div>
+          <div class="track-item"><a href="https://www.monzanet.it/en/" target="_blank"><img src="ity.png"
+                alt="Italy"></a></div>
+          <div class="track-item"><a href="https://www.madring.com/en" target="_blank"><img src="esp.png"
+                alt="Madrid"></a></div>
+          <div class="track-item"><a href="https://www.bakucitycircuit.com/" target="_blank"><img src="abn.png"
+                alt="Azerbaijan"></a></div>
+          <div class="track-item"><a href="https://singaporegp.sg/en/" target="_blank"><img src="sgp.png"
+                alt="Singapore"></a></div>
 
-          <div class="track-item">
-            <a href="https://www.bahraingp.com/" target="_blank" rel="noopener noreferrer" aria-label="Bahrain Grand Prix (opens in new tab)">
-              <img src="bah.png" alt="Bahrain Grand Prix" width="150" height="75">
-            </a>
+          <div class="track-item"><a href="https://circuitoftheamericas.com/" target="_blank"><img src="aut.png"
+                alt="Austin"></a></div>
+          <div class="track-item"><a href="https://www.mexicogp.mx/" target="_blank"><img src="mex.png"
+                alt="Mexico"></a></div>
+          <div class="track-item"><a href="https://f1saopaulo.com.br/en/" target="_blank"><img src="brl.png"
+                alt="Brazil"></a></div>
+          <div class="track-item"><a href="https://www.f1lasvegasgp.com/" target="_blank"><img src="veg.png"
+                alt="Las Vegas"></a></div>
+          <div class="track-item"><a href="https://www.lcsc.qa/" target="_blank"><img src="qtr.png" alt="Qatar"></a>
           </div>
+          <div class="track-item"><a href="https://www.abudhabigp.com/en/" target="_blank"><img src="uae.png"
+                alt="Abu Dhabi"></a></div>
+        </div>
 
-          <div class="track-item">
-            <a href="https://saudiarabiangp.com/en" target="_blank" rel="noopener noreferrer" aria-label="Saudi Arabian Grand Prix (opens in new tab)">
-              <img src="sar.png" alt="Saudi Arabian Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://f1miamigp.com/" target="_blank" rel="noopener noreferrer" aria-label="Miami Grand Prix (opens in new tab)">
-              <img src="mim.png" alt="Miami Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <!-- Row 2 -->
-          <div class="track-item">
-            <a href="https://gpcanada.ca/en/" target="_blank" rel="noopener noreferrer" aria-label="Canadian Grand Prix (opens in new tab)">
-              <img src="can.png" alt="Canadian Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://monaco-grandprix.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Monaco Grand Prix (opens in new tab)">
-              <img src="mon.png" alt="Monaco Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.circuitcat.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Circuit de Barcelona-Catalunya (opens in new tab)">
-              <img src="cat.png" alt="Circuit de Barcelona-Catalunya" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.redbullring.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Red Bull Ring - Austria (opens in new tab)">
-              <img src="atr.png" alt="Red Bull Ring - Austria" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.silverstone.co.uk/" target="_blank" rel="noopener noreferrer" aria-label="Silverstone - Great Britain (opens in new tab)">
-              <img src="eng.png" alt="Silverstone - Great Britain" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.spagrandprix.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Spa-Francorchamps - Belgium (opens in new tab)">
-              <img src="bel.png" alt="Spa-Francorchamps - Belgium" width="150" height="75">
-            </a>
-          </div>
-
-          <!-- Row 3 -->
-          <div class="track-item">
-            <a href="https://hungaroring.hu/en" target="_blank" rel="noopener noreferrer" aria-label="Hungaroring - Hungary (opens in new tab)">
-              <img src="hun.png" alt="Hungaroring - Hungary" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.dutchgp.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Dutch Grand Prix - Zandvoort (opens in new tab)">
-              <img src="nel.png" alt="Dutch Grand Prix - Zandvoort" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.monzanet.it/en/" target="_blank" rel="noopener noreferrer" aria-label="Autodromo Nazionale Monza - Italy (opens in new tab)">
-              <img src="ity.png" alt="Autodromo Nazionale Monza - Italy" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.madring.com/en" target="_blank" rel="noopener noreferrer" aria-label="Circuito de Madrid (opens in new tab)">
-              <img src="esp.png" alt="Circuito de Madrid" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.bakucitycircuit.com/" target="_blank" rel="noopener noreferrer" aria-label="Baku City Circuit - Azerbaijan (opens in new tab)">
-              <img src="abn.png" alt="Baku City Circuit - Azerbaijan" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://singaporegp.sg/en/" target="_blank" rel="noopener noreferrer" aria-label="Singapore Grand Prix (opens in new tab)">
-              <img src="sgp.png" alt="Singapore Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <!-- Row 4 -->
-          <div class="track-item">
-            <a href="https://circuitoftheamericas.com/" target="_blank" rel="noopener noreferrer" aria-label="Circuit of The Americas - Austin (opens in new tab)">
-              <img src="aut.png" alt="Circuit of The Americas - Austin" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.mexicogp.mx/" target="_blank" rel="noopener noreferrer" aria-label="Mexican Grand Prix (opens in new tab)">
-              <img src="mex.png" alt="Mexican Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://f1saopaulo.com.br/en/" target="_blank" rel="noopener noreferrer" aria-label="São Paulo Grand Prix (opens in new tab)">
-              <img src="brl.png" alt="São Paulo Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.f1lasvegasgp.com/" target="_blank" rel="noopener noreferrer" aria-label="Las Vegas Grand Prix (opens in new tab)">
-              <img src="veg.png" alt="Las Vegas Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.lcsc.qa/" target="_blank" rel="noopener noreferrer" aria-label="Qatar Grand Prix (opens in new tab)">
-              <img src="qtr.png" alt="Qatar Grand Prix" width="150" height="75">
-            </a>
-          </div>
-
-          <div class="track-item">
-            <a href="https://www.abudhabigp.com/en/" target="_blank" rel="noopener noreferrer" aria-label="Abu Dhabi Grand Prix (opens in new tab)">
-              <img src="uae.png" alt="Abu Dhabi Grand Prix" width="150" height="75">
-            </a>
-          </div>
+        <div class="disclaimer-footer">
+          *The Chinese GP does not currently have a separate official event website run by the local organiser. Please
+          visit
+          the official F1 <a href="https://tickets.formula1.com/en/f1-3182-china" target="_blank">website</a> for
+          booking
+          tickets at Shanghai.
         </div>
       </div>
     </main>
   </div>
 
   <script>
-    // Mobile sidebar toggle + accessibility helpers (kept similar to news.html)
-    (function(){
+    // Mobile sidebar toggle
+    (function () {
       const sidebar = document.getElementById('sidebar');
-      document.addEventListener('keydown', function(e){
-        if(e.key === 'Escape'){
-          if(sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
         }
       });
 
-      function syncState(){
+      function syncState() {
         const isPhone = window.matchMedia('(max-width:420px)').matches;
-        if(!isPhone){
-          if(sidebar) sidebar.classList.remove('open');
-          if(sidebar) sidebar.style.transform = '';
-          if(sidebar) sidebar.setAttribute('aria-hidden','false');
+        if (!isPhone) {
+          if (sidebar) sidebar.classList.remove('open');
+          if (sidebar) sidebar.style.transform = '';
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'hidden';
         } else {
-          if(sidebar) sidebar.setAttribute('aria-hidden','false');
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'auto';
         }
       }
@@ -462,9 +446,6 @@
       syncState();
     })();
   </script>
-
-  <div class="disclaimer-footer" role="contentinfo" aria-label="Disclaimer">
-    *The Chinese GP does not currently have a separate official event website run by the local organiser. Please visit the official F1 <a href="https://tickets.formula1.com/en/f1-3182-china" target="_blank" rel="noopener noreferrer">website</a> for booking tickets at Shanghai. The website listed above for Chinese GP is that of an unofficial but reputable reseller.
-  </div>
 </body>
+
 </html>

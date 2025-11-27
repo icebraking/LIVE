@@ -1,289 +1,350 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ICE BRAKERS — F1 RESULTS</title>
-
+  <title>RESULTS — THE F1 HUB</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
-    :root{
-      --bg: #000000;
-      --fg: #ffffff;
-      --muted: rgba(255,255,255,0.04);
-      --card: rgba(255,255,255,0.02);
-      --accent: #ff0000;
-      --gap: 14px;
-      --font: "Copperplate Gothic", "Copperplate", serif;
-      --year-item-h: 44px;
-      --year-visible-count: 3; /* show 3 visible items in the dropdown viewport */
-      --year-visible: calc(var(--year-item-h) * var(--year-visible-count));
-
-      /* scrollbar tuning */
-      --scroll-track: rgba(255,255,255,0.02);
-      --scroll-thumb: rgba(255,255,255,0.08);
-      --scroll-thumb-hover: rgba(255,255,255,0.14);
+    :root {
+      --black: #000000;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
+      --card-bg: rgba(0, 255, 255, 0.02);
+      --gap: 22px;
     }
 
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
-      background:var(--bg);
-      color:var(--fg);
-      font-family: var(--font);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    /* Page shell */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--black);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      overflow:auto;
-      scrollbar-color: var(--scroll-thumb) var(--scroll-track); /* Firefox */
-      scrollbar-width: thin; /* Firefox */
+      color: var(--accent-cyan);
     }
 
-    a { color: inherit; text-decoration: none; }
-
-    .wrap {
-      max-width: 1100px;
-      margin: 18px auto 64px auto;
-      padding: 18px;
-      box-sizing: border-box;
-      position: relative; /* ensure absolutely positioned home button anchored to page content */
+    /* Hide scrollbars */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    /* Center the dropdown at the very top area, no other text should appear there */
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    /* Layout */
     .top-center {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
+      z-index: 100;
     }
 
+    .wrap {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow-y: auto;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Year Select */
     .year-select {
-      width: 220px;
-      background: var(--card);
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.03);
-      padding: 8px;
-      box-sizing: border-box;
-      user-select: none;
-      color: var(--fg);
-      font-weight: 700;
-      scrollbar-gutter: stable;
+      position: relative;
+      width: 200px;
     }
 
     .year-display {
-      display:flex;
-      align-items:center;
-      justify-content:center; /* center the hidden label area visually */
-      gap:8px;
-      padding: 6px 8px;
-      border-radius: 8px;
-      background: transparent;
+      background: var(--black);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
       cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
     }
 
-    /* hide the selected year text visually while preserving the element for accessibility / scripting */
-    .year-display .selected-year { display: none; }
+    .year-display:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      background: rgba(0, 255, 255, 0.1);
+    }
 
     .year-list {
-      margin-top: 8px;
-      max-height: var(--year-visible);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--black);
+      border: 1px solid var(--border-color);
+      max-height: 300px;
       overflow-y: auto;
-      background: transparent;
-      padding: 4px;
-      box-sizing: border-box;
+      display: none;
+      z-index: 200;
       border-radius: 8px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+      margin-top: 5px;
     }
 
-    /* WebKit scrollbars blend to page and are subtle but usable */
-    .year-list::-webkit-scrollbar,
-    body::-webkit-scrollbar,
-    .races-wrap-scroll::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    .year-list::-webkit-scrollbar-track,
-    body::-webkit-scrollbar-track,
-    .races-wrap-scroll::-webkit-scrollbar-track {
-      background: var(--scroll-track);
-    }
-    .year-list::-webkit-scrollbar-thumb,
-    body::-webkit-scrollbar-thumb,
-    .races-wrap-scroll::-webkit-scrollbar-thumb {
-      background: var(--scroll-thumb);
-      border-radius: 10px;
-      border: 2px solid transparent;
-      background-clip: padding-box;
-    }
-    .year-list::-webkit-scrollbar-thumb:hover,
-    body::-webkit-scrollbar-thumb:hover,
-    .races-wrap-scroll::-webkit-scrollbar-thumb:hover {
-      background: var(--scroll-thumb-hover);
+    .year-select:focus-within .year-list {
+      display: block;
     }
 
     .year-item {
-      height: var(--year-item-h);
-      line-height: var(--year-item-h);
-      padding: 0 8px;
-      box-sizing: border-box;
-      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
       cursor: pointer;
-      transition: background .12s, transform .08s;
-      white-space: nowrap;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
     }
-    .year-item:hover, .year-item:focus { background: rgba(255,255,255,0.03); transform: translateY(-1px); }
-    .year-item.active { background: rgba(255,255,255,0.06); color: var(--fg); }
 
-    /* Races table / list */
+    .year-item:hover,
+    .year-item.active {
+      background: var(--accent-cyan);
+      color: var(--black);
+    }
+
+    /* Cards */
     .card {
-      margin-top: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      border-radius: 10px;
-      padding: 12px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2px;
     }
 
-    .races-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0;
+    .loading,
+    .error {
+      padding: 20px;
+      text-align: center;
     }
+
+    .error {
+      color: #ff3333;
+      border-color: rgba(255, 0, 0, 0.3);
+    }
+
+    /* Races List */
     .race-row {
       display: grid;
-      grid-template-columns: 60px 1fr 220px;
-      gap: 12px;
-      padding: 12px;
-      align-items: center;
-      border-radius: 8px;
+      grid-template-columns: 60px 1fr 120px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
       cursor: pointer;
-      transition: background .12s, transform .08s;
-      border: 1px solid transparent;
-      margin-bottom: 10px;
-      background: transparent;
-      user-select:none;
+      transition: all 0.2s ease;
+      align-items: center;
     }
-    .race-row:hover { background: rgba(255,255,255,0.02); transform: translateY(-2px); }
-    .round { font-weight:800; text-align:left; }
-    .race-name { font-weight:800; }
-    .race-date { text-align:right; font-weight:700; color: rgba(255,255,255,0.9); }
 
+    .race-row:last-child {
+      border-bottom: none;
+    }
+
+    .race-row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      transform: translateX(5px);
+      box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+    }
+
+    .round {
+      font-weight: bold;
+      color: rgba(0, 255, 255, 0.6);
+    }
+
+    .race-name {
+      font-weight: bold;
+    }
+
+    .race-date {
+      text-align: right;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--black);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+    }
+
+    .modal-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--accent-cyan);
+      color: var(--black);
+    }
+
+    #modalBody {
+      padding: 0;
+      overflow-y: auto;
+    }
+
+    /* Results Table */
     .results-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
-      font-weight:700;
     }
 
-    .results-table thead th {
-      text-align:left;
-      padding: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-    .results-table tbody td {
-      padding: 8px;
-      border-bottom: 1px dashed rgba(255,255,255,0.02);
-      vertical-align: middle;
-    }
-
-    .loading, .error {
+    .results-table th {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 255, 255, 0.1);
       padding: 12px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-      margin-top: 12px;
-      font-weight:800;
+      text-align: left;
+      font-size: 0.9rem;
     }
 
-    /* Home button now placed in-flow below content: at least 1cm below the last word */
+    .results-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.05);
+    }
+
+    .results-table tr:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    /* Home Button */
     .home-inflow {
-      position: static; /* in-flow so it moves with page content */
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:52px;
-      height:52px;
-      border-radius:10px;
-      background: rgba(255,255,255,0.03);
-      color: #fff;
-      text-decoration:none;
-      margin-top: 1cm; /* ensure at least 1 centimeter below last content */
-      margin-left: 12px; /* keep it visually at left corner of content area */
-      z-index: 30;
-    }
-    .home-inflow:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
-    .home-inflow svg { width:22px; height:22px; fill: currentColor; }
-
-    /* Modal (popup) */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    .modal-overlay.open { display: flex; }
-
-    .modal {
-      width: 100%;
-      max-width: 980px;
-      max-height: 90vh;
-      overflow: auto;
-      background: linear-gradient(180deg, rgba(10,10,10,1), rgba(8,8,8,1));
-      border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-      -webkit-overflow-scrolling: touch;
-    }
-    .modal-header {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 8px;
-    }
-    .modal-title {
-      font-weight:800;
-      font-size:1.05rem;
-    }
-    .modal-close {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 8px 10px;
+      width: 46px;
+      height: 46px;
       border-radius: 8px;
-      color: var(--fg);
-      cursor: pointer;
-      font-weight:800;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      margin: 20px auto;
+      transition: all 0.3s ease;
     }
-    .modal-close:hover { background: rgba(255,255,255,0.02); transform: translateY(-2px); }
 
-    @media (max-width:720px) {
-      .race-row { grid-template-columns: 48px 1fr 120px; }
-      .year-select { width: 160px; }
-      .modal { max-width: 92vw; padding: 12px; }
+    .home-inflow svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
     }
+
+    .home-inflow:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+      transform: scale(1.05);
+    }
+
     @media (max-width:420px) {
-      .race-row { grid-template-columns: 48px 1fr; }
-      .race-date { display: none; }
-      .year-select { width: 100%; }
-      .wrap { padding: 12px; }
+      .race-row {
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+      }
+
+      .race-date {
+        display: none;
+      }
+
+      .year-select {
+        width: 100%;
+      }
+
+      .wrap {
+        padding: 12px;
+        top: 70px;
+      }
+
+      .results-table th,
+      .results-table td {
+        padding: 8px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="top-center">
-    <!-- centered dropdown only at the top; no other top text -->
     <div class="year-select" id="yearSelect" aria-label="Select year">
-      <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false" aria-haspopup="listbox">
-        <!-- selected-year element preserved for accessibility and scripting but hidden visually -->
+      <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false"
+        aria-haspopup="listbox">
         <span id="selectedYearLabel" class="selected-year">2025</span>
       </div>
       <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
@@ -297,7 +358,6 @@
       <div id="racesList" aria-live="polite" class="races-wrap-scroll"></div>
     </div>
 
-    <!-- Home button placed in-flow after content with margin-top:1cm so it's at least 1cm below last word -->
     <a href="index.html" class="home-inflow" aria-label="Home">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
@@ -319,11 +379,10 @@
   </div>
 
   <script>
-    (function(){
+    (function () {
       const YEAR_START = 1950;
       const YEAR_END = 2025;
-      // Landing visible window set so user sees recent years on load.
-      const DEFAULT_VISIBLE_MIN = 2023; // with 3 visible items this shows 2023,2024,2025
+      const DEFAULT_VISIBLE_MIN = 2023;
       const API_BASE = 'https://api.jolpi.ca/ergast/f1';
 
       const yearListEl = document.getElementById('yearList');
@@ -333,7 +392,6 @@
       const racesWrap = document.getElementById('racesWrap');
       const racesList = document.getElementById('racesList');
 
-      // modal elements
       const modalOverlay = document.getElementById('resultsModalOverlay');
       const modalTitle = document.getElementById('modalTitle');
       const modalBody = document.getElementById('modalBody');
@@ -347,7 +405,7 @@
         years.forEach(y => {
           const item = document.createElement('div');
           item.className = 'year-item';
-          item.setAttribute('role','option');
+          item.setAttribute('role', 'option');
           item.tabIndex = 0;
           item.dataset.year = y;
           item.textContent = y;
@@ -388,10 +446,12 @@
       }
 
       yearDisplayBtn.addEventListener('click', () => {
+        // Toggle display via CSS focus-within or manual class if needed, but CSS handles it via focus-within on parent
+        // Just focus the list to ensure it stays open
         yearListEl.focus();
       });
       yearDisplayBtn.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown') { e.preventDefault(); const first = yearListEl.querySelector('.year-item'); if(first) first.focus(); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); const first = yearListEl.querySelector('.year-item'); if (first) first.focus(); }
       });
 
       async function selectYear(year) {
@@ -408,7 +468,7 @@
           const raw = localStorage.getItem(cacheKey);
           if (raw) {
             const parsed = JSON.parse(raw);
-            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < 60*5)) {
+            if (parsed && parsed.ts && (Date.now() / 1000 - parsed.ts < 60 * 5)) {
               renderRaces(parsed.data);
               return;
             }
@@ -417,7 +477,7 @@
           if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
           const json = await resp.json();
           const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
-          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch(e){}
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data: races })); } catch (e) { }
           renderRaces(races);
         } catch (err) {
           console.error(err);
@@ -426,19 +486,18 @@
         }
       }
 
-      // helper: format date YYYY-MM-DD (or ISO) to DD-MM-YYYY
       function fmtDateDMY(iso) {
         if (!iso) return '';
         const d = new Date(iso);
         if (Number.isNaN(d.getTime())) {
           const parts = iso.split('-');
           if (parts.length >= 3) {
-            return `${parts[2].padStart(2,'0')}-${parts[1].padStart(2,'0')}-${parts[0]}`;
+            return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
           }
           return iso;
         }
-        const dd = String(d.getDate()).padStart(2,'0');
-        const mm = String(d.getMonth() + 1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
         const yyyy = d.getFullYear();
         return `${dd}-${mm}-${yyyy}`;
       }
@@ -475,7 +534,6 @@
           raceRow.appendChild(colName);
           raceRow.appendChild(colDate);
 
-          // when clicked, show results in popup modal
           raceRow.addEventListener('click', () => openResultsModal(selectedYear, round, race.raceName || '', race.date || ''));
           raceRow.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openResultsModal(selectedYear, round, race.raceName || '', race.date || ''); } });
 
@@ -483,7 +541,6 @@
         });
       }
 
-      // Modal functions
       function openModal() {
         modalOverlay.classList.add('open');
         modalOverlay.setAttribute('aria-hidden', 'false');
@@ -505,7 +562,7 @@
       });
 
       async function openResultsModal(year, round, raceName, raceDate) {
-        modalTitle.textContent = `${(raceName || 'Race').toUpperCase()} — ${fmtDateDMY(raceDate||'')}`;
+        modalTitle.textContent = `${(raceName || 'Race').toUpperCase()} — ${fmtDateDMY(raceDate || '')}`;
         modalBody.innerHTML = '<div class="loading">Loading results…</div>';
         openModal();
 
@@ -514,7 +571,7 @@
           const raw = localStorage.getItem(cacheKey);
           if (raw) {
             const parsed = JSON.parse(raw);
-            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < 60*5)) {
+            if (parsed && parsed.ts && (Date.now() / 1000 - parsed.ts < 60 * 5)) {
               populateResultsModal(parsed.data, year, round);
               return;
             }
@@ -525,7 +582,7 @@
           if (!resp.ok) throw new Error('Network response not ok: ' + resp.status);
           const json = await resp.json();
           const results = (json && json.MRData && json.MRData.RaceTable && Array.isArray(json.MRData.RaceTable.Races) && json.MRData.RaceTable.Races[0] && json.MRData.RaceTable.Races[0].Results) ? json.MRData.RaceTable.Races[0].Results : [];
-          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: results })); } catch(e){}
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data: results })); } catch (e) { }
           populateResultsModal(results, year, round);
         } catch (err) {
           console.error(err);
@@ -578,7 +635,6 @@
         modalBody.appendChild(table);
       }
 
-      // INITIALIZE
       renderYearList();
       selectedYear = YEAR_END;
       markActiveYear();
@@ -587,4 +643,5 @@
     })();
   </script>
 </body>
+
 </html>

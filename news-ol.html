@@ -1,45 +1,61 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NEWS - OL — THE F1 HUB</title>
-
+  <title>NEWS OL — THE F1 HUB</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
-    :root{
+    :root {
       --black: #000000;
-      --accent-red: #FF0000;
-      --gap: 20px;
-      --icon-w: 150px;
-      --icon-h: 75px;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
       --sidebar-w: 220px;
+      --gap: 22px;
       --mobile-break: 900px;
     }
 
-    /* Page shell (matching other pages) */
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
+    /* Page shell */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
       background: var(--black);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow:hidden;
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Light","Copperplate Gothic Bold", "Copperplate", serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: #ffffff;
+      color: var(--accent-cyan);
     }
 
-    /* Hide scrollbars (most browsers) */
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    /* Hide scrollbars */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
 
-    a { color: inherit; text-decoration: none; }
-    :focus { outline: none; }
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    /* App Layout */
     .app {
       position: absolute;
       top: 0;
@@ -55,115 +71,140 @@
       overflow: hidden;
     }
 
-    /* Sidebar (identical structure to other pages) */
+    /* Sidebar */
     .sidebar {
-      background: rgba(10,10,10,1);
+      background: transparent;
       border-radius: 12px;
       padding: 16px;
       height: 100%;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
-      border: 1px solid rgba(255,255,255,0.03);
+      border-right: 1px solid var(--border-color);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-    .menu { list-style: none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-    .menu a {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:10px;
-      border-radius:8px;
-      color:#fff;
-      font-weight:700;
-      font-size:0.98rem;
-      transition: transform .12s ease, background .12s ease, color .12s ease;
-    }
-    .menu a svg { width:18px; height:18px; flex:0 0 18px; fill:#fff; opacity:0.95; }
-    .menu a:hover, .menu a:focus {
-      background: rgba(255,255,255,0.03);
-      color: var(--accent-red);
-      transform: translateX(6px);
-    }
-    .menu a:hover svg, .menu a:focus svg { fill: var(--accent-red); }
 
-    /* Main content area */
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+    }
+
+    .menu a svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .menu a:hover,
+    .menu a:focus {
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent-cyan);
+      transform: translateX(10px);
+    }
+
+    .menu a:hover svg,
+    .menu a:focus svg {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Main Area */
     .main {
       height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: auto;
     }
 
     .center-shell {
-      width:100%;
-      /* fit 4 icons + 3 gaps */
-      max-width: calc(4 * var(--icon-w) + 3 * var(--gap));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px;
-      box-sizing: border-box;
+      width: 100%;
+      max-width: 1260px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Grid: 5 rows x 4 columns */
+    /* OL Grid */
     .ol-grid {
       display: grid;
-      grid-template-columns: repeat(4, var(--icon-w));
-      grid-auto-rows: auto;
-      gap: var(--gap);
+      grid-template-columns: repeat(4, 150px);
+      gap: 20px;
       justify-content: center;
-      align-items: start;
-      width: 100%;
+      align-items: center;
     }
 
     .ol-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: var(--icon-w);
-      box-sizing: border-box;
-    }
-
-    .ol-item a {
-      display:block;
-      width: var(--icon-w);
-      height: var(--icon-h);
+      display: inline-block;
       border-radius: 8px;
       overflow: hidden;
-      box-sizing: border-box;
-      background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      transition: transform .18s ease, box-shadow .14s ease;
-    }
-    .ol-item a:focus, .ol-item a:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 6px;
+      transition: all 0.3s ease;
+      will-change: transform, box-shadow;
+      text-align: center;
+
+      /* Faint cyan glow by default */
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
     }
 
     .ol-item img {
-      width: 100%;
-      height: 100%;
+      display: block;
+      width: 150px;
+      height: 75px;
       object-fit: contain;
-      display:block;
+      border: 0;
+      background: transparent;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+      margin: 0 auto;
     }
 
-    /* language label under each image */
     .ol-caption {
-      margin-top: 8px;
-      font-family: "Copperplate Gothic", "Copperplate", serif;
-      font-weight: 700; /* Copperplate Gothic Bold */
-      font-size: 0.95rem;
-      line-height: 1;
-      text-transform: none; /* show language in sentence/case as given */
-      color: #ffffff;
-      text-align: center;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    /* Home button */
+    /* Brighter glow on hover */
+    .ol-item:hover,
+    .ol-item:focus-within {
+      transform: translateY(-8px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+      z-index: 10;
+    }
+
+    .ol-item:hover img,
+    .ol-item:focus-within img {
+      transform: scale(1.05);
+    }
+
+    /* Home Button */
     .home-button {
       position: fixed;
       left: 62px;
@@ -171,22 +212,51 @@
       width: 46px;
       height: 46px;
       border-radius: 8px;
-      background: rgba(255,255,255,0.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 255, 255, 0.2);
       z-index: 200;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .home-button svg { width:22px; height:22px; fill:#fff; opacity:0.95; }
-    .home-button:focus { outline: 3px solid rgba(255,0,0,0.18); outline-offset: 3px; }
 
-    /* Responsive behavior: keep icon sizes but allow horizontal scroll on narrow screens */
+    .home-button svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+      transition: all 0.3s ease;
+    }
+
+    .home-button:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+    }
+
+    .home-button:hover svg {
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Mobile */
     @media (max-width: var(--mobile-break)) {
-      html,body { overflow:auto; -webkit-overflow-scrolling: touch; }
-      .app { grid-template-columns: 1fr; gap: 12px; padding:12px; top: 0; }
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+        top: 0;
+      }
+
       .sidebar {
         position: fixed;
         top: 0;
@@ -195,47 +265,60 @@
         max-width: 320px;
         height: 100vh;
         transform: translateX(-110%);
-        transition: transform .28s cubic-bezier(.2,.9,.2,1);
+        transition: transform .28s cubic-bezier(.2, .9, .2, 1);
         z-index: 140;
-        overflow:auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: auto;
+        background: #000;
+        border-right: 1px solid var(--border-color);
       }
-      .sidebar.open { transform: translateX(0); }
-      .center-shell { padding: 8px; }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        padding-bottom: 40px;
+        display: block;
+        height: auto;
+      }
+
       .ol-grid {
-        grid-auto-flow: row;
-        grid-template-columns: repeat(4, var(--icon-w));
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        width: 100%;
       }
-      .home-button { left: 58px; bottom: 14px; }
-    }
 
-    @media (max-width: 420px) {
-      .app { position: absolute; top: 0; left: 0; right: 0; bottom: auto; display: block; gap: 12px; padding: 10px; overflow: visible; }
-      .sidebar { position: static !important; transform: none !important; width: auto !important; height: auto !important; max-width: none !important; display:block !important; padding: 10px 12px; border-radius: 10px; background: rgba(10,10,10,0.96); box-shadow: 0 10px 30px rgba(0,0,0,0.6); overflow: visible; }
-      .main { margin-top: 10px; padding-bottom: 48px; display: block; height: auto !important; overflow: visible !important; }
-      .center-shell { max-width: 100%; }
-    }
-
-    @media (max-width: 360px) {
-      :root { --gap: 12px; }
-      .app { padding: 8px; }
+      .home-button {
+        left: 58px;
+        bottom: 14px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="app" role="application" aria-label="News - OL page with left navigation">
-    <!-- Sidebar navigation: same links and markup as other pages -->
+    <!-- Sidebar navigation -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
       <ul class="menu" role="list" aria-label="Sidebar links">
-        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z"/></svg><span>NEWS</span></a></li>
-        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z"/></svg><span>OPINIONS &amp; BLOGS</span></a></li>
-        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z"/></svg><span>EXPERIENCE</span></a></li>
-        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z"/></svg><span>TRACKS</span></a></li>
-        <li><a href="blogs.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/></svg><span>INFO</span></a></li>
-        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z"/></svg><span>NEWS - OL</span></a></li>
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" />
+            </svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" />
+            </svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" />
+            </svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+            </svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+            </svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" />
+            </svg><span>NEWS - OL</span></a></li>
       </ul>
     </nav>
 
@@ -260,7 +343,8 @@
 
           <!-- 2 -->
           <div class="ol-item">
-            <a href="https://www.formule1.nl/" target="_blank" rel="noopener noreferrer" aria-label="f1nl (opens in new tab)">
+            <a href="https://www.formule1.nl/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1nl (opens in new tab)">
               <img src="f1nl.png" alt="f1nl" width="150" height="75">
             </a>
             <div class="ol-caption">DUTCH</div>
@@ -268,7 +352,8 @@
 
           <!-- 3 -->
           <div class="ol-item">
-            <a href="https://www.f1maximaal.nl/formule-1" target="_blank" rel="noopener noreferrer" aria-label="f1mal (opens in new tab)">
+            <a href="https://www.f1maximaal.nl/formule-1" target="_blank" rel="noopener noreferrer"
+              aria-label="f1mal (opens in new tab)">
               <img src="f1mal.png" alt="f1mal" width="150" height="75">
             </a>
             <div class="ol-caption">DUTCH</div>
@@ -276,7 +361,8 @@
 
           <!-- 4 -->
           <div class="ol-item">
-            <a href="https://www.standf1.com/" target="_blank" rel="noopener noreferrer" aria-label="standf1 (opens in new tab)">
+            <a href="https://www.standf1.com/" target="_blank" rel="noopener noreferrer"
+              aria-label="standf1 (opens in new tab)">
               <img src="standf1.png" alt="standf1" width="150" height="75">
             </a>
             <div class="ol-caption">FRENCH</div>
@@ -284,7 +370,8 @@
 
           <!-- 5 -->
           <div class="ol-item">
-            <a href="https://www.f1actu.com/" target="_blank" rel="noopener noreferrer" aria-label="f1actu (opens in new tab)">
+            <a href="https://www.f1actu.com/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1actu (opens in new tab)">
               <img src="f1actu.png" alt="f1actu" width="150" height="75">
             </a>
             <div class="ol-caption">FRENCH</div>
@@ -292,7 +379,8 @@
 
           <!-- 6 -->
           <div class="ol-item">
-            <a href="https://www.auto-motor-und-sport.de/formel-1/" target="_blank" rel="noopener noreferrer" aria-label="amus (opens in new tab)">
+            <a href="https://www.auto-motor-und-sport.de/formel-1/" target="_blank" rel="noopener noreferrer"
+              aria-label="amus (opens in new tab)">
               <img src="amus.png" alt="amus" width="150" height="75">
             </a>
             <div class="ol-caption">GERMAN</div>
@@ -300,7 +388,8 @@
 
           <!-- 7 -->
           <div class="ol-item">
-            <a href="http://speedweek.com/formel1" target="_blank" rel="noopener noreferrer" aria-label="speedwk (opens in new tab)">
+            <a href="http://speedweek.com/formel1" target="_blank" rel="noopener noreferrer"
+              aria-label="speedwk (opens in new tab)">
               <img src="speedwk.png" alt="speedwk" width="150" height="75">
             </a>
             <div class="ol-caption">GERMAN</div>
@@ -308,7 +397,8 @@
 
           <!-- 8 -->
           <div class="ol-item">
-            <a href="https://www.formel1.de/" target="_blank" rel="noopener noreferrer" aria-label="f1de (opens in new tab)">
+            <a href="https://www.formel1.de/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1de (opens in new tab)">
               <img src="f1de.png" alt="f1de" width="150" height="75">
             </a>
             <div class="ol-caption">GERMAN</div>
@@ -316,7 +406,8 @@
 
           <!-- 9 -->
           <div class="ol-item">
-            <a href="https://formula.hu/f1" target="_blank" rel="noopener noreferrer" aria-label="f1hu (opens in new tab)">
+            <a href="https://formula.hu/f1" target="_blank" rel="noopener noreferrer"
+              aria-label="f1hu (opens in new tab)">
               <img src="f1hu.png" alt="f1hu" width="150" height="75">
             </a>
             <div class="ol-caption">HUNGARIAN</div>
@@ -324,7 +415,8 @@
 
           <!-- 10 -->
           <div class="ol-item">
-            <a href="https://f1vilag.hu/" target="_blank" rel="noopener noreferrer" aria-label="f1vihu (opens in new tab)">
+            <a href="https://f1vilag.hu/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1vihu (opens in new tab)">
               <img src="f1vihu.png" alt="f1vihu" width="150" height="75">
             </a>
             <div class="ol-caption">HUNGARIAN</div>
@@ -332,7 +424,8 @@
 
           <!-- 11 -->
           <div class="ol-item">
-            <a href="https://www.autosprint.it/formula1" target="_blank" rel="noopener noreferrer" aria-label="autsp (opens in new tab)">
+            <a href="https://www.autosprint.it/formula1" target="_blank" rel="noopener noreferrer"
+              aria-label="autsp (opens in new tab)">
               <img src="autsp.png" alt="autsp" width="150" height="75">
             </a>
             <div class="ol-caption">ITALIAN</div>
@@ -340,7 +433,8 @@
 
           <!-- 12 -->
           <div class="ol-item">
-            <a href="https://www.formulapassion.it/f1" target="_blank" rel="noopener noreferrer" aria-label="fpit (opens in new tab)">
+            <a href="https://www.formulapassion.it/f1" target="_blank" rel="noopener noreferrer"
+              aria-label="fpit (opens in new tab)">
               <img src="fpit.png" alt="fpit" width="150" height="75">
             </a>
             <div class="ol-caption">ITALIAN</div>
@@ -348,7 +442,8 @@
 
           <!-- 13 -->
           <div class="ol-item">
-            <a href="https://autoracer.it/" target="_blank" rel="noopener noreferrer" aria-label="autrit (opens in new tab)">
+            <a href="https://autoracer.it/" target="_blank" rel="noopener noreferrer"
+              aria-label="autrit (opens in new tab)">
               <img src="autrit.png" alt="autrit" width="150" height="75">
             </a>
             <div class="ol-caption">ITALIAN</div>
@@ -356,7 +451,8 @@
 
           <!-- 14 -->
           <div class="ol-item">
-            <a href="https://www.funoanalisitecnica.com/" target="_blank" rel="noopener noreferrer" aria-label="funca (opens in new tab)">
+            <a href="https://www.funoanalisitecnica.com/" target="_blank" rel="noopener noreferrer"
+              aria-label="funca (opens in new tab)">
               <img src="funca.png" alt="funca" width="150" height="75">
             </a>
             <div class="ol-caption">ITALIAN</div>
@@ -364,7 +460,8 @@
 
           <!-- 15 -->
           <div class="ol-item">
-            <a href="https://f1-gate.com/" target="_blank" rel="noopener noreferrer" aria-label="f1gate (opens in new tab)">
+            <a href="https://f1-gate.com/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1gate (opens in new tab)">
               <img src="f1gate.png" alt="f1gate" width="150" height="75">
             </a>
             <div class="ol-caption">JAPANESE</div>
@@ -372,7 +469,8 @@
 
           <!-- 16 -->
           <div class="ol-item">
-            <a href="https://www.cyrkf1.pl/" target="_blank" rel="noopener noreferrer" aria-label="cyrk (opens in new tab)">
+            <a href="https://www.cyrkf1.pl/" target="_blank" rel="noopener noreferrer"
+              aria-label="cyrk (opens in new tab)">
               <img src="cyrk.png" alt="cyrk" width="150" height="75">
             </a>
             <div class="ol-caption">POLISH</div>
@@ -380,7 +478,8 @@
 
           <!-- 17 -->
           <div class="ol-item">
-            <a href="https://www.grandepremio.com.br/f1/" target="_blank" rel="noopener noreferrer" aria-label="gpbr (opens in new tab)">
+            <a href="https://www.grandepremio.com.br/f1/" target="_blank" rel="noopener noreferrer"
+              aria-label="gpbr (opens in new tab)">
               <img src="gpbr.png" alt="gpbr" width="150" height="75">
             </a>
             <div class="ol-caption">PORTUGUESE</div>
@@ -388,7 +487,8 @@
 
           <!-- 18 -->
           <div class="ol-item">
-            <a href="https://www.f1mania.net/" target="_blank" rel="noopener noreferrer" aria-label="f1mnbr (opens in new tab)">
+            <a href="https://www.f1mania.net/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1mnbr (opens in new tab)">
               <img src="f1mnbr.png" alt="f1mnbr" width="150" height="75">
             </a>
             <div class="ol-caption">PORTUGUESE</div>
@@ -396,7 +496,8 @@
 
           <!-- 19 -->
           <div class="ol-item">
-            <a href="https://soymotor.com/f1" target="_blank" rel="noopener noreferrer" aria-label="soym (opens in new tab)">
+            <a href="https://soymotor.com/f1" target="_blank" rel="noopener noreferrer"
+              aria-label="soym (opens in new tab)">
               <img src="soym.png" alt="soym" width="150" height="75">
             </a>
             <div class="ol-caption">SPANISH</div>
@@ -404,7 +505,8 @@
 
           <!-- 20 -->
           <div class="ol-item">
-            <a href="https://www.f1latam.com/" target="_blank" rel="noopener noreferrer" aria-label="f1lat (opens in new tab)">
+            <a href="https://www.f1latam.com/" target="_blank" rel="noopener noreferrer"
+              aria-label="f1lat (opens in new tab)">
               <img src="f1lat.png" alt="f1lat" width="150" height="75">
             </a>
             <div class="ol-caption">SPANISH</div>
@@ -416,24 +518,24 @@
   </div>
 
   <script>
-    // Mobile sidebar toggle + accessibility helpers (same pattern as other pages)
-    (function(){
+    // Mobile sidebar toggle
+    (function () {
       const sidebar = document.getElementById('sidebar');
-      document.addEventListener('keydown', function(e){
-        if(e.key === 'Escape'){
-          if(sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
         }
       });
 
-      function syncState(){
+      function syncState() {
         const isPhone = window.matchMedia('(max-width:420px)').matches;
-        if(!isPhone){
-          if(sidebar) sidebar.classList.remove('open');
-          if(sidebar) sidebar.style.transform = '';
-          if(sidebar) sidebar.setAttribute('aria-hidden','false');
+        if (!isPhone) {
+          if (sidebar) sidebar.classList.remove('open');
+          if (sidebar) sidebar.style.transform = '';
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'hidden';
         } else {
-          if(sidebar) sidebar.setAttribute('aria-hidden','false');
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
           document.documentElement.style.overflow = 'auto';
         }
       }
@@ -445,4 +547,5 @@
     })();
   </script>
 </body>
+
 </html>

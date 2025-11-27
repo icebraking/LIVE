@@ -1,386 +1,542 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ICE BRAKERS — 2025 F1 SCHEDULE</title>
-
+  <title>SCHEDULE — THE F1 HUB</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
-    /* Basic look to match your other pages: pure black, white Copperplate, uppercase */
-    @supports (font-family: "Copperplate Gothic") {
-      :root { --main-font: "Copperplate Gothic","Copperplate","Copperplate Gothic Bold",serif; }
-    }
     :root {
-      --bg:#000;
-      --fg:#fff;
-      --muted: rgba(255,255,255,0.06);
-      --accent: #FF0000;
-      --card-radius: 12px;
-      --gap:16px;
-
-      /* Title sizing for fixed top title */
-      --title-height: 64px;
+      --black: #000000;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
+      --card-bg: rgba(0, 255, 255, 0.02);
+      --gap: 22px;
+      --mobile-break: 900px;
     }
-    html,body {
-      height:100%;
-      margin:0;
-      padding:0;
-      background:var(--bg);
-      color:var(--fg);
-      font-family: var(--main-font, "Copperplate Gothic", "Copperplate", serif);
-      text-transform: uppercase;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow:auto;
-    }
-    a { color: inherit; text-decoration: none; }
 
-    /* Fixed centered page title - pinned to the very top so it never moves when scrolling */
-    .page-title {
-      position: fixed;
-      top: 0; /* pinned to the top of the viewport */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999; /* high so content scrolls beneath it */
+    /* Page shell */
+    html,
+    body {
+      height: 100%;
       margin: 0;
-      padding: 14px 16px;
-      height: var(--title-height);
-      line-height: calc(var(--title-height) - 4px);
-      font-size: clamp(18px, 3.6vw, 28px);
-      font-weight: 800;
-      color: var(--fg);
-      pointer-events: none; /* non-interactive */
-      text-align: center;
-      letter-spacing: 0.6px;
-      background: rgba(0,0,0,1); /* solid background so it visually stays in place */
-      white-space: nowrap;
+      padding: 0;
+      background: var(--black);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+    }
+
+    /* Hide scrollbars */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    /* App Layout */
+    .app {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 22px;
+      padding: 22px;
       box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
+      align-items: stretch;
+      overflow: hidden;
     }
 
-    .wrap {
-      max-width:1100px;
-      /* leave room for the fixed title at top so content is not hidden under it */
-      margin: calc(1.2rem + var(--title-height)) auto 64px auto;
-      padding: 18px;
-      box-sizing:border-box;
+    /* Sidebar */
+    .sidebar {
+      background: transparent;
+      border-radius: 12px;
+      padding: 16px;
+      height: 100%;
+      border-right: 1px solid var(--border-color);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
-      border: 1px solid rgba(255,255,255,0.03);
-      border-radius: var(--card-radius);
-      padding: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* Table-like list to allow expandable rows easily */
-    .schedule {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      display:block;
+    .menu a {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+    }
+
+    .menu a svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .menu a:hover,
+    .menu a:focus {
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent-cyan);
+      transform: translateX(10px);
+    }
+
+    .menu a:hover svg,
+    .menu a:focus svg {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Main Area */
+    .main {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .schedule-header {
+      flex: 0 0 auto;
+      padding: 0 20px 20px 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .schedule-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px 40px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .row {
       display: grid;
-      grid-template-columns: 1fr 220px;
-      gap: 12px;
+      grid-template-columns: 50px 1fr 120px 100px;
       align-items: center;
-      padding: 18px;
-      border-radius: 10px;
-      background: transparent;
-      transition: background .15s, transform .12s;
-      cursor: default; /* changed to default since rows no longer expand */
-      user-select: none;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.03);
-    }
-    .row:hover, .row:focus {
-      background: rgba(255,255,255,0.02);
-      transform: translateY(-2px);
-    }
-
-    .left {
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .track {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--fg);
-    }
-    .place {
-      font-size: 0.88rem;
-      color: rgba(255,255,255,0.78);
-      font-weight:700;
-    }
-
-    .right {
-      text-align: right;
-      font-weight:700;
-    }
-    .period {
-      font-size: 0.98rem;
-      color: var(--fg);
-    }
-
-    /* Expanded details CSS left in place but not used (no JS will toggle it) */
-    .details {
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height .28s cubic-bezier(.2,.9,.2,1), padding .18s;
-      background: rgba(255,255,255,0.01);
-      margin-bottom: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.02);
-    }
-    .details.open {
-      padding: 12px;
-    }
-
-    .sessions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-    .session {
-      padding: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-      font-weight:700;
-      font-size: 0.95rem;
-    }
-    .session .name { color: var(--fg); font-size: 0.88rem; }
-
-    .loading, .error {
-      margin: 18px 0;
-      padding: 18px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-      color: var(--fg);
-      font-weight:700;
+      padding: 12px 16px;
+      transition: all 0.3s ease;
     }
 
-    /* Home button in-flow (not fixed) placed at the bottom-left of the content */
-    .home-wrap {
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      transform: translateX(5px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      border-color: var(--accent-cyan);
+    }
+
+    .round {
+      font-weight: bold;
+      opacity: 0.7;
+    }
+
+    .race-name {
+      font-weight: bold;
+      font-size: 1.1rem;
       display: flex;
-      justify-content: flex-start;
-      margin-top: 1cm; /* space below content */
-      padding-left: 4px;
+      align-items: center;
+      gap: 10px;
     }
-    .home-btn {
-      display: inline-flex;
+
+    .flag {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .race-date {
+      text-align: right;
+      opacity: 0.9;
+    }
+
+    .race-time {
+      text-align: right;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .sprint-badge {
+      display: inline-block;
+      background: var(--accent-cyan);
+      color: var(--black);
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+
+    /* Home Button */
+    .home-button {
+      position: fixed;
+      left: 62px;
+      bottom: 12px;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 52px;
-      height: 52px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      color: #FFFFFF;
-      text-decoration: none;
-      border: 0;
-      transition: transform .12s ease, background .12s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      z-index: 200;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .home-btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.05); }
-    .home-btn svg { width: 24px; height: 24px; fill: currentColor; }
 
-    /* Accessible focus styles */
-    .row:focus { outline: 3px solid rgba(255,0,0,0.12); outline-offset: 4px; }
-    button.expand-btn { background: transparent; border: none; color: inherit; font: inherit; cursor: pointer; padding:0; margin:0; display:block; width:100%; text-align:inherit; }
-
-    /* Responsive */
-    @media (max-width:720px) {
-      .row { grid-template-columns: 1fr 160px; padding:14px; }
-      .right { text-align: right; }
+    .home-button svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+      transition: all 0.3s ease;
     }
-    @media (max-width:420px) {
-      .wrap { margin-top: calc(1rem + var(--title-height)); padding: 12px; }
-      .row { grid-template-columns: 1fr; text-align: left; padding:14px; }
-      .right { text-align: left; margin-top:8px; }
-      .sessions { grid-template-columns: 1fr; }
+
+    .home-button:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+    }
+
+    .home-button:hover svg {
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+        top: 0;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 78%;
+        max-width: 320px;
+        height: 100vh;
+        transform: translateX(-110%);
+        transition: transform .28s cubic-bezier(.2, .9, .2, 1);
+        z-index: 140;
+        overflow: auto;
+        background: #000;
+        border-right: 1px solid var(--border-color);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        padding-bottom: 40px;
+        display: block;
+        height: auto;
+      }
+
+      .row {
+        grid-template-columns: 40px 1fr;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .race-date,
+      .race-time {
+        display: none;
+      }
+
+      /* Simplified for mobile */
+      .home-button {
+        left: 58px;
+        bottom: 14px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <!-- Fixed centered page title -->
-  <h1 class="page-title">2025 F1 SCHEDULE</h1>
+  <div class="app" role="application" aria-label="Schedule page with left navigation">
+    <!-- Sidebar navigation -->
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" />
+            </svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" />
+            </svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" />
+            </svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+            </svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+            </svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" />
+            </svg><span>NEWS - OL</span></a></li>
+      </ul>
+    </nav>
 
-  <div class="wrap">
-    <div id="status" class="loading card">Loading 2025 schedule…</div>
+    <!-- Home icon -->
+    <a class="home-button" href="index.html" aria-label="Home" title="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+      </svg>
+    </a>
 
-    <div id="list" class="card" aria-live="polite" style="display:none;">
-      <div id="schedule" class="schedule" role="list"></div>
-    </div>
+    <!-- Main: Schedule List -->
+    <main class="main" role="main" aria-label="Schedule content">
+      <div class="schedule-header">2025 SEASON SCHEDULE</div>
 
-    <!-- Home button in normal flow; it moves with the page (not fixed) and links to index.html -->
-    <div class="home-wrap">
-      <a href="index.html" class="home-btn" aria-label="Home">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
-        </svg>
-      </a>
-    </div>
+      <div class="schedule-list" id="scheduleList">
+        <!-- Will be populated by JS or static content. Assuming static for now based on previous view -->
+        <div class="row">
+          <div class="round">01</div>
+          <div class="race-name"><img src="aus.png" class="flag" alt="AUS"> AUSTRALIAN GP</div>
+          <div class="race-date">MAR 16</div>
+          <div class="race-time">05:00</div>
+        </div>
+        <div class="row">
+          <div class="round">02</div>
+          <div class="race-name"><img src="chn.png" class="flag" alt="CHN"> CHINESE GP <span
+              class="sprint-badge">S</span></div>
+          <div class="race-date">MAR 23</div>
+          <div class="race-time">08:00</div>
+        </div>
+        <div class="row">
+          <div class="round">03</div>
+          <div class="race-name"><img src="jpn.png" class="flag" alt="JPN"> JAPANESE GP</div>
+          <div class="race-date">APR 06</div>
+          <div class="race-time">06:00</div>
+        </div>
+        <div class="row">
+          <div class="round">04</div>
+          <div class="race-name"><img src="bah.png" class="flag" alt="BAH"> BAHRAIN GP</div>
+          <div class="race-date">APR 13</div>
+          <div class="race-time">15:00</div>
+        </div>
+        <div class="row">
+          <div class="round">05</div>
+          <div class="race-name"><img src="sar.png" class="flag" alt="KSA"> SAUDI ARABIAN GP</div>
+          <div class="race-date">APR 20</div>
+          <div class="race-time">17:00</div>
+        </div>
+        <div class="row">
+          <div class="round">06</div>
+          <div class="race-name"><img src="mim.png" class="flag" alt="USA"> MIAMI GP <span class="sprint-badge">S</span>
+          </div>
+          <div class="race-date">MAY 04</div>
+          <div class="race-time">20:00</div>
+        </div>
+        <div class="row">
+          <div class="round">07</div>
+          <div class="race-name"><img src="ity.png" class="flag" alt="ITA"> EMILIA ROMAGNA GP</div>
+          <div class="race-date">MAY 18</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">08</div>
+          <div class="race-name"><img src="mon.png" class="flag" alt="MCO"> MONACO GP</div>
+          <div class="race-date">MAY 25</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">09</div>
+          <div class="race-name"><img src="cat.png" class="flag" alt="ESP"> SPANISH GP</div>
+          <div class="race-date">JUN 01</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">10</div>
+          <div class="race-name"><img src="can.png" class="flag" alt="CAN"> CANADIAN GP</div>
+          <div class="race-date">JUN 15</div>
+          <div class="race-time">19:00</div>
+        </div>
+        <div class="row">
+          <div class="round">11</div>
+          <div class="race-name"><img src="atr.png" class="flag" alt="AUT"> AUSTRIAN GP <span
+              class="sprint-badge">S</span></div>
+          <div class="race-date">JUN 29</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">12</div>
+          <div class="race-name"><img src="eng.png" class="flag" alt="GBR"> BRITISH GP</div>
+          <div class="race-date">JUL 06</div>
+          <div class="race-time">15:00</div>
+        </div>
+        <div class="row">
+          <div class="round">13</div>
+          <div class="race-name"><img src="bel.png" class="flag" alt="BEL"> BELGIAN GP <span
+              class="sprint-badge">S</span></div>
+          <div class="race-date">JUL 27</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">14</div>
+          <div class="race-name"><img src="hun.png" class="flag" alt="HUN"> HUNGARIAN GP</div>
+          <div class="race-date">AUG 03</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">15</div>
+          <div class="race-name"><img src="nel.png" class="flag" alt="NED"> DUTCH GP</div>
+          <div class="race-date">AUG 31</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">16</div>
+          <div class="race-name"><img src="ity.png" class="flag" alt="ITA"> ITALIAN GP</div>
+          <div class="race-date">SEP 07</div>
+          <div class="race-time">14:00</div>
+        </div>
+        <div class="row">
+          <div class="round">17</div>
+          <div class="race-name"><img src="abn.png" class="flag" alt="AZE"> AZERBAIJAN GP</div>
+          <div class="race-date">SEP 21</div>
+          <div class="race-time">12:00</div>
+        </div>
+        <div class="row">
+          <div class="round">18</div>
+          <div class="race-name"><img src="sgp.png" class="flag" alt="SGP"> SINGAPORE GP</div>
+          <div class="race-date">OCT 05</div>
+          <div class="race-time">13:00</div>
+        </div>
+        <div class="row">
+          <div class="round">19</div>
+          <div class="race-name"><img src="aut.png" class="flag" alt="USA"> UNITED STATES GP <span
+              class="sprint-badge">S</span></div>
+          <div class="race-date">OCT 19</div>
+          <div class="race-time">20:00</div>
+        </div>
+        <div class="row">
+          <div class="round">20</div>
+          <div class="race-name"><img src="mex.png" class="flag" alt="MEX"> MEXICO CITY GP</div>
+          <div class="race-date">OCT 26</div>
+          <div class="race-time">20:00</div>
+        </div>
+        <div class="row">
+          <div class="round">21</div>
+          <div class="race-name"><img src="brl.png" class="flag" alt="BRA"> SAO PAULO GP <span
+              class="sprint-badge">S</span></div>
+          <div class="race-date">NOV 09</div>
+          <div class="race-time">17:00</div>
+        </div>
+        <div class="row">
+          <div class="round">22</div>
+          <div class="race-name"><img src="veg.png" class="flag" alt="USA"> LAS VEGAS GP</div>
+          <div class="race-date">NOV 22</div>
+          <div class="race-time">06:00</div>
+        </div>
+        <div class="row">
+          <div class="round">23</div>
+          <div class="race-name"><img src="qtr.png" class="flag" alt="QAT"> QATAR GP <span class="sprint-badge">S</span>
+          </div>
+          <div class="race-date">NOV 30</div>
+          <div class="race-time">17:00</div>
+        </div>
+        <div class="row">
+          <div class="round">24</div>
+          <div class="race-name"><img src="uae.png" class="flag" alt="UAE"> ABU DHABI GP</div>
+          <div class="race-date">DEC 07</div>
+          <div class="race-time">13:00</div>
+        </div>
+      </div>
+    </main>
   </div>
 
   <script>
-    (function(){
-      // Primary endpoint (HTTPS) — jolpi proxy for Ergast calendar
-      const PRIMARY_API = 'https://api.jolpi.ca/ergast/f1/current.json';
-      // Fallback: AllOrigins proxy to fetch Ergast raw URL (helps around CORS if the primary is unavailable)
-      const FALLBACK_PROXY = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://ergast.com/api/f1/current.json');
+    // Mobile sidebar toggle
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          if (sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
+        }
+      });
 
-      const statusEl = document.getElementById('status');
-      const listWrap = document.getElementById('list');
-      const scheduleEl = document.getElementById('schedule');
-
-      function fmtDateShort(iso) {
-        try {
-          if (!iso) return 'TBA';
-          const d = new Date(iso);
-          if (Number.isNaN(d.getTime())) return 'TBA';
-          const month = d.toLocaleString(undefined, { month: 'short' }).toUpperCase();
-          const day = d.getDate();
-          return `${month} ${day}`;
-        } catch (e) { return 'TBA'; }
-      }
-
-      function fmtDateRangeSingle(startISO, endISO) {
-        try {
-          if (!startISO || !endISO) return 'TBA';
-          const s = new Date(startISO);
-          const e = new Date(endISO);
-          if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) return 'TBA';
-          if (s.getFullYear() === e.getFullYear() && s.getMonth() === e.getMonth() && s.getDate() === e.getDate()) {
-            return fmtDateShort(startISO);
-          }
-          const sShort = fmtDateShort(startISO);
-          const eShort = fmtDateShort(endISO);
-          return `${sShort} - ${eShort}`;
-        } catch (e) {
-          return 'TBA';
+      function syncState() {
+        const isPhone = window.matchMedia('(max-width:900px)').matches;
+        if (!isPhone) {
+          if (sidebar) sidebar.classList.remove('open');
+          if (sidebar) sidebar.style.transform = '';
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
+          document.documentElement.style.overflow = 'auto';
         }
       }
 
-      function createRow(meeting, idx) {
-        const trackName = meeting.raceName || 'Unknown Track';
-        const place = (meeting.Circuit && (meeting.Circuit.Location && (meeting.Circuit.Location.locality || meeting.Circuit.Location.country))) || '';
-        const startDate = meeting.date || meeting.raceDate || null;
-        const endDate = startDate;
-        const period = fmtDateRangeSingle(startDate, endDate);
-
-        const container = document.createElement('div');
-        container.className = 'row';
-        container.tabIndex = -1; // not interactive anymore
-        container.setAttribute('role','listitem');
-        container.dataset.index = idx;
-
-        const left = document.createElement('div');
-        left.className = 'left';
-        const t = document.createElement('div');
-        t.className = 'track';
-        t.textContent = (trackName || '').toUpperCase();
-        const p = document.createElement('div');
-        p.className = 'place';
-        p.textContent = (place || '').toUpperCase();
-        left.appendChild(t); left.appendChild(p);
-
-        const right = document.createElement('div');
-        right.className = 'right';
-        const per = document.createElement('div');
-        per.className = 'period';
-        per.textContent = (period || '').toUpperCase();
-        right.appendChild(per);
-
-        container.appendChild(left); container.appendChild(right);
-
-        // Note: expansion/details have been removed per request — no click/keyboard handlers are attached.
-
-        return container;
-      }
-
-      function renderRaces(races) {
-        scheduleEl.innerHTML = '';
-        if (!Array.isArray(races) || !races.length) {
-          statusEl.className = 'error card';
-          statusEl.textContent = 'No races found in the API response';
-          listWrap.style.display = 'none';
-          return;
-        }
-        statusEl.style.display = 'none';
-        listWrap.style.display = 'block';
-        races.forEach((r, idx) => {
-          const container = createRow(r, idx);
-          scheduleEl.appendChild(container);
-        });
-      }
-
-      const CACHE_KEY = 'ergast_current_2025_calendar_v1';
-      const CACHE_TTL = 60 * 5; // 5 minutes
-
-      async function fetchJson(url, opts = {}) {
-        const res = await fetch(url, Object.assign({ method: 'GET', mode: 'cors' }, opts));
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      }
-
-      async function load() {
-        try {
-          // try cache first
-          const raw = localStorage.getItem(CACHE_KEY);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && parsed.ts && (Date.now()/1000 - parsed.ts < CACHE_TTL)) {
-              renderRaces(parsed.data);
-              return;
-            }
-          }
-
-          statusEl.className = 'loading card';
-          statusEl.textContent = 'Fetching calendar (primary)...';
-
-          // Primary attempt - secure jolpi proxy (HTTPS). This should work in most deployments.
-          try {
-            const json = await fetchJson(PRIMARY_API);
-            const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
-            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch (e) {}
-            renderRaces(races);
-            return;
-          } catch (primaryErr) {
-            console.warn('Primary fetch failed:', primaryErr);
-            // continue to fallback
-          }
-
-          // Fallback attempt - AllOrigins proxy fetch of the official Ergast http URL.
-          statusEl.className = 'loading card';
-          statusEl.textContent = 'Primary failed; attempting fallback proxy...';
-
-          try {
-            const json = await fetchJson(FALLBACK_PROXY);
-            const races = (json && json.MRData && json.MRData.RaceTable && json.MRData.RaceTable.Races) ? json.MRData.RaceTable.Races : [];
-            try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Math.floor(Date.now()/1000), data: races })); } catch (e) {}
-            renderRaces(races);
-            return;
-          } catch (fallbackErr) {
-            console.warn('Fallback fetch failed:', fallbackErr);
-            throw new Error('Failed to fetch calendar (primary and fallback failed). Check network or CORS.');
-          }
-
-        } catch (err) {
-          console.error(err);
-          statusEl.className = 'error card';
-          // Show a clearer message advising likely causes (network, CORS, or proxy down).
-          statusEl.textContent = 'Failed to load calendar — ' + (err && err.message ? err.message : 'network error');
-          listWrap.style.display = 'none';
-        }
-      }
-
-      load();
+      window.addEventListener('resize', syncState);
+      window.addEventListener('orientationchange', syncState);
+      window.addEventListener('load', syncState);
+      syncState();
     })();
   </script>
 </body>
+
 </html>
