@@ -398,7 +398,7 @@
       const modalCloseBtn = document.getElementById('modalClose');
 
       const years = [];
-      for (let y = YEAR_START; y <= YEAR_END; y++) years.push(y);
+      for (let y = YEAR_END; y >= YEAR_START; y--) years.push(y);
 
       function renderYearList() {
         yearListEl.innerHTML = '';
@@ -457,6 +457,9 @@
       async function selectYear(year) {
         if (!year) return;
         selectedYear = year;
+        // Collapse dropdown by removing focus
+        if (document.activeElement) document.activeElement.blur();
+
         markActiveYear();
         statusEl.className = 'loading card';
         statusEl.textContent = `Loading races for ${selectedYear}…`;
