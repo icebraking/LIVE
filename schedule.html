@@ -312,15 +312,30 @@
         display: none;
       }
 
-      /* Home button moved to bottom */
+      /* Home button moved to bottom - Centered and Scrollable */
       .home-button {
         position: relative;
         left: auto;
-        bottom: auto;
         right: auto;
+        bottom: auto;
+        top: auto;
         margin: 20px auto;
         order: 2;
         transform: none;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: none;
+      }
+
+      .home-button:hover {
+        background: rgba(0, 255, 255, 0.1);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        border-color: var(--accent-cyan);
       }
     }
   </style>
