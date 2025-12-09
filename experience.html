@@ -136,6 +136,42 @@
       overflow: auto;
     }
 
+    /* Table/Tray Container */
+    .table {
+      width: 100%;
+      max-width: 1260px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 18px;
+      align-items: center;
+      justify-items: center;
+      overflow: visible;
+    }
+
+    .row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      user-select: none;
+      overflow: visible;
+      justify-content: center;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
     /* Icons Grid */
     .icons-grid {
       display: grid;
@@ -265,6 +301,16 @@
         height: auto;
       }
 
+      .table {
+        gap: 12px;
+        grid-auto-rows: minmax(80px, 1fr);
+      }
+
+      .row {
+        padding: 18px 20px;
+        border-radius: 10px;
+      }
+
       .icons-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
@@ -273,6 +319,19 @@
       .home-button {
         left: 58px;
         bottom: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -314,20 +373,24 @@
 
     <!-- Main: 2 rows x 3 columns grid -->
     <main class="main" role="main" aria-label="Experience content">
-      <div class="icons-grid">
-        <div class="icon"><a href="https://gpdestinations.com/" target="_blank"><img src="gpd.png"
-              alt="GP Destinations"></a></div>
-        <div class="icon"><a href="https://f1experiences.com/blog/" target="_blank"><img src="f1exp.png"
-              alt="F1 Experiences"></a></div>
-        <div class="icon"><a href="https://www.kymillman.com/f1-diaries/" target="_blank"><img src="kym.png"
-              alt="Ky Millman"></a></div>
-        <div class="icon"><a href="https://f1exhibition.com/press/" target="_blank"><img src="f1exb.png"
-              alt="F1 Exhibition"></a></div>
-        <div class="icon"><a href="https://www.thef1spectator.com/blog/" target="_blank"><img src="f1spec.png"
-              alt="F1 Spectator"></a></div>
-        <div class="icon"><a href="https://www.cmcmotorsports.com/" target="_blank"><img src="cmc.png"
-              alt="CMC Motorsports"></a></div>
-      </div>
+      <section class="table" role="region" aria-label="Experience">
+        <div class="row" role="group" aria-label="Experience tray">
+          <div class="icons-grid">
+            <div class="icon"><a href="https://gpdestinations.com/" target="_blank"><img src="gpd.png"
+                  alt="GP Destinations"></a></div>
+            <div class="icon"><a href="https://f1experiences.com/blog/" target="_blank"><img src="f1exp.png"
+                  alt="F1 Experiences"></a></div>
+            <div class="icon"><a href="https://www.kymillman.com/f1-diaries/" target="_blank"><img src="kym.png"
+                  alt="Ky Millman"></a></div>
+            <div class="icon"><a href="https://f1exhibition.com/press/" target="_blank"><img src="f1exb.png"
+                  alt="F1 Exhibition"></a></div>
+            <div class="icon"><a href="https://www.thef1spectator.com/blog/" target="_blank"><img src="f1spec.png"
+                  alt="F1 Spectator"></a></div>
+            <div class="icon"><a href="https://www.cmcmotorsports.com/" target="_blank"><img src="cmc.png"
+                  alt="CMC Motorsports"></a></div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 

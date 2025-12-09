@@ -136,13 +136,40 @@
       overflow: auto;
     }
 
-    .center-shell {
+    /* Table/Tray Container */
+    .table {
       width: 100%;
       max-width: 1260px;
       height: 100%;
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 18px;
+      align-items: center;
+      justify-items: center;
+      overflow: visible;
+    }
+
+    .row {
+      position: relative;
       display: flex;
       align-items: center;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      user-select: none;
+      overflow: visible;
       justify-content: center;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
     }
 
     /* Blogs Grid */
@@ -274,6 +301,16 @@
         height: auto;
       }
 
+      .table {
+        gap: 12px;
+        grid-auto-rows: minmax(80px, 1fr);
+      }
+
+      .row {
+        padding: 18px 20px;
+        border-radius: 10px;
+      }
+
       .blogs-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
@@ -282,6 +319,19 @@
       .home-button {
         left: 58px;
         bottom: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -323,88 +373,90 @@
 
     <!-- Main: 2 rows x 5 columns of blog icons -->
     <main class="main" role="main" aria-label="Blogs content">
-      <div class="center-shell" role="region" aria-label="Blog icons">
-        <div class="blogs-grid" aria-hidden="false">
-          <!-- 1 -->
-          <div class="blog-item">
-            <a href="https://adamcooperf1.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="Adam Cooper (opens in new tab)">
-              <img src="adamcooper.png" alt="Adam Cooper" width="150" height="75">
-            </a>
-          </div>
+      <section class="table" role="region" aria-label="Blogs">
+        <div class="row" role="group" aria-label="Blogs tray">
+          <div class="blogs-grid" aria-hidden="false">
+            <!-- 1 -->
+            <div class="blog-item">
+              <a href="https://adamcooperf1.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="Adam Cooper (opens in new tab)">
+                <img src="adamcooper.png" alt="Adam Cooper" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 2 -->
-          <div class="blog-item">
-            <a href="https://3legs4wheels.com/category/podcasts/" target="_blank" rel="noopener noreferrer"
-              aria-label="3legs4wheels Podcasts (opens in new tab)">
-              <img src="3l4w.png" alt="3legs4wheels Podcasts" width="150" height="75">
-            </a>
-          </div>
+            <!-- 2 -->
+            <div class="blog-item">
+              <a href="https://3legs4wheels.com/category/podcasts/" target="_blank" rel="noopener noreferrer"
+                aria-label="3legs4wheels Podcasts (opens in new tab)">
+                <img src="3l4w.png" alt="3legs4wheels Podcasts" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 3 -->
-          <div class="blog-item">
-            <a href="https://wtf1.com/" target="_blank" rel="noopener noreferrer" aria-label="WTF1 (opens in new tab)">
-              <img src="wtf1.png" alt="WTF1" width="150" height="75">
-            </a>
-          </div>
+            <!-- 3 -->
+            <div class="blog-item">
+              <a href="https://wtf1.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="WTF1 (opens in new tab)">
+                <img src="wtf1.png" alt="WTF1" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 4 -->
-          <div class="blog-item">
-            <a href="https://joesaward.wordpress.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="Joes Award Wordpress (opens in new tab)">
-              <img src="jswp.png" alt="Joes Award Wordpress" width="150" height="75">
-            </a>
-          </div>
+            <!-- 4 -->
+            <div class="blog-item">
+              <a href="https://joesaward.wordpress.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="Joes Award Wordpress (opens in new tab)">
+                <img src="jswp.png" alt="Joes Award Wordpress" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 5 -->
-          <div class="blog-item">
-            <a href="https://www.lightsoutblog.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="Lights Out Blog (opens in new tab)">
-              <img src="lightsout.png" alt="Lights Out Blog" width="150" height="75">
-            </a>
-          </div>
+            <!-- 5 -->
+            <div class="blog-item">
+              <a href="https://www.lightsoutblog.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="Lights Out Blog (opens in new tab)">
+                <img src="lightsout.png" alt="Lights Out Blog" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 6 -->
-          <div class="blog-item">
-            <a href="https://www.soumilarora.com/category/sports/formula-1/" target="_blank" rel="noopener noreferrer"
-              aria-label="Soumi Larora — Formula 1 (opens in new tab)">
-              <img src="sa.png" alt="Soumi Larora — Formula 1" width="150" height="75">
-            </a>
-          </div>
+            <!-- 6 -->
+            <div class="blog-item">
+              <a href="https://www.soumilarora.com/category/sports/formula-1/" target="_blank" rel="noopener noreferrer"
+                aria-label="Soumi Larora — Formula 1 (opens in new tab)">
+                <img src="sa.png" alt="Soumi Larora — Formula 1" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 7 -->
-          <div class="blog-item">
-            <a href="https://destinationformula1.com/blog/" target="_blank" rel="noopener noreferrer"
-              aria-label="Destination Formula 1 (opens in new tab)">
-              <img src="df1.png" alt="Destination Formula 1" width="150" height="75">
-            </a>
-          </div>
+            <!-- 7 -->
+            <div class="blog-item">
+              <a href="https://destinationformula1.com/blog/" target="_blank" rel="noopener noreferrer"
+                aria-label="Destination Formula 1 (opens in new tab)">
+                <img src="df1.png" alt="Destination Formula 1" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 8 -->
-          <div class="blog-item">
-            <a href="https://lewisf1.blogspot.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="Lewis F1 Blog (opens in new tab)">
-              <img src="af1b.png" alt="Lewis F1 Blog" width="150" height="75">
-            </a>
-          </div>
+            <!-- 8 -->
+            <div class="blog-item">
+              <a href="https://lewisf1.blogspot.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="Lewis F1 Blog (opens in new tab)">
+                <img src="af1b.png" alt="Lewis F1 Blog" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 9 -->
-          <div class="blog-item">
-            <a href="https://f1-analysis.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="F1 Analysis (opens in new tab)">
-              <img src="f1a.png" alt="F1 Analysis" width="150" height="75">
-            </a>
-          </div>
+            <!-- 9 -->
+            <div class="blog-item">
+              <a href="https://f1-analysis.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="F1 Analysis (opens in new tab)">
+                <img src="f1a.png" alt="F1 Analysis" width="150" height="75">
+              </a>
+            </div>
 
-          <!-- 10 -->
-          <div class="blog-item">
-            <a href="https://formula1news.co.uk/" target="_blank" rel="noopener noreferrer"
-              aria-label="Formula1News.co.uk (opens in new tab)">
-              <img src="f1ncouk.png" alt="Formula1News.co.uk" width="150" height="75">
-            </a>
+            <!-- 10 -->
+            <div class="blog-item">
+              <a href="https://formula1news.co.uk/" target="_blank" rel="noopener noreferrer"
+                aria-label="Formula1News.co.uk (opens in new tab)">
+                <img src="f1ncouk.png" alt="Formula1News.co.uk" width="150" height="75">
+              </a>
+            </div>
           </div>
         </div>
-      </div>
     </main>
   </div>
 

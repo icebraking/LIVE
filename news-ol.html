@@ -145,6 +145,42 @@
       justify-content: center;
     }
 
+    /* Table/Tray Container */
+    .table {
+      width: 100%;
+      max-width: 1260px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 18px;
+      align-items: center;
+      justify-items: center;
+      overflow: visible;
+    }
+
+    .row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      user-select: none;
+      overflow: visible;
+      justify-content: center;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
     /* OL Grid */
     .ol-grid {
       display: grid;
@@ -282,6 +318,16 @@
         height: auto;
       }
 
+      .table {
+        gap: 12px;
+        grid-auto-rows: minmax(80px, 1fr);
+      }
+
+      .row {
+        padding: 18px 20px;
+        border-radius: 10px;
+      }
+
       .ol-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
@@ -290,6 +336,19 @@
       .home-button {
         left: 58px;
         bottom: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -331,189 +390,191 @@
 
     <!-- Main: 5 rows x 4 columns grid -->
     <main class="main" role="main" aria-label="News - OL content">
-      <div class="center-shell" role="region" aria-label="Old language news icons">
-        <div class="ol-grid" aria-hidden="false">
-          <!-- 1 -->
-          <div class="ol-item">
-            <a href="https://bmf1.dk/" target="_blank" rel="noopener noreferrer" aria-label="bmf1 (opens in new tab)">
-              <img src="bmf1.png" alt="bmf1" width="150" height="75">
-            </a>
-            <div class="ol-caption">DANISH</div>
-          </div>
+      <section class="table" role="region" aria-label="News OL">
+        <div class="row" role="group" aria-label="News OL tray">
+          <div class="ol-grid" aria-hidden="false">
+            <!-- 1 -->
+            <div class="ol-item">
+              <a href="https://bmf1.dk/" target="_blank" rel="noopener noreferrer" aria-label="bmf1 (opens in new tab)">
+                <img src="bmf1.png" alt="bmf1" width="150" height="75">
+              </a>
+              <div class="ol-caption">DANISH</div>
+            </div>
 
-          <!-- 2 -->
-          <div class="ol-item">
-            <a href="https://www.formule1.nl/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1nl (opens in new tab)">
-              <img src="f1nl.png" alt="f1nl" width="150" height="75">
-            </a>
-            <div class="ol-caption">DUTCH</div>
-          </div>
+            <!-- 2 -->
+            <div class="ol-item">
+              <a href="https://www.formule1.nl/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1nl (opens in new tab)">
+                <img src="f1nl.png" alt="f1nl" width="150" height="75">
+              </a>
+              <div class="ol-caption">DUTCH</div>
+            </div>
 
-          <!-- 3 -->
-          <div class="ol-item">
-            <a href="https://www.f1maximaal.nl/formule-1" target="_blank" rel="noopener noreferrer"
-              aria-label="f1mal (opens in new tab)">
-              <img src="f1mal.png" alt="f1mal" width="150" height="75">
-            </a>
-            <div class="ol-caption">DUTCH</div>
-          </div>
+            <!-- 3 -->
+            <div class="ol-item">
+              <a href="https://www.f1maximaal.nl/formule-1" target="_blank" rel="noopener noreferrer"
+                aria-label="f1mal (opens in new tab)">
+                <img src="f1mal.png" alt="f1mal" width="150" height="75">
+              </a>
+              <div class="ol-caption">DUTCH</div>
+            </div>
 
-          <!-- 4 -->
-          <div class="ol-item">
-            <a href="https://www.standf1.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="standf1 (opens in new tab)">
-              <img src="standf1.png" alt="standf1" width="150" height="75">
-            </a>
-            <div class="ol-caption">FRENCH</div>
-          </div>
+            <!-- 4 -->
+            <div class="ol-item">
+              <a href="https://www.standf1.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="standf1 (opens in new tab)">
+                <img src="standf1.png" alt="standf1" width="150" height="75">
+              </a>
+              <div class="ol-caption">FRENCH</div>
+            </div>
 
-          <!-- 5 -->
-          <div class="ol-item">
-            <a href="https://www.f1actu.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1actu (opens in new tab)">
-              <img src="f1actu.png" alt="f1actu" width="150" height="75">
-            </a>
-            <div class="ol-caption">FRENCH</div>
-          </div>
+            <!-- 5 -->
+            <div class="ol-item">
+              <a href="https://www.f1actu.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1actu (opens in new tab)">
+                <img src="f1actu.png" alt="f1actu" width="150" height="75">
+              </a>
+              <div class="ol-caption">FRENCH</div>
+            </div>
 
-          <!-- 6 -->
-          <div class="ol-item">
-            <a href="https://www.auto-motor-und-sport.de/formel-1/" target="_blank" rel="noopener noreferrer"
-              aria-label="amus (opens in new tab)">
-              <img src="amus.png" alt="amus" width="150" height="75">
-            </a>
-            <div class="ol-caption">GERMAN</div>
-          </div>
+            <!-- 6 -->
+            <div class="ol-item">
+              <a href="https://www.auto-motor-und-sport.de/formel-1/" target="_blank" rel="noopener noreferrer"
+                aria-label="amus (opens in new tab)">
+                <img src="amus.png" alt="amus" width="150" height="75">
+              </a>
+              <div class="ol-caption">GERMAN</div>
+            </div>
 
-          <!-- 7 -->
-          <div class="ol-item">
-            <a href="http://speedweek.com/formel1" target="_blank" rel="noopener noreferrer"
-              aria-label="speedwk (opens in new tab)">
-              <img src="speedwk.png" alt="speedwk" width="150" height="75">
-            </a>
-            <div class="ol-caption">GERMAN</div>
-          </div>
+            <!-- 7 -->
+            <div class="ol-item">
+              <a href="http://speedweek.com/formel1" target="_blank" rel="noopener noreferrer"
+                aria-label="speedwk (opens in new tab)">
+                <img src="speedwk.png" alt="speedwk" width="150" height="75">
+              </a>
+              <div class="ol-caption">GERMAN</div>
+            </div>
 
-          <!-- 8 -->
-          <div class="ol-item">
-            <a href="https://www.formel1.de/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1de (opens in new tab)">
-              <img src="f1de.png" alt="f1de" width="150" height="75">
-            </a>
-            <div class="ol-caption">GERMAN</div>
-          </div>
+            <!-- 8 -->
+            <div class="ol-item">
+              <a href="https://www.formel1.de/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1de (opens in new tab)">
+                <img src="f1de.png" alt="f1de" width="150" height="75">
+              </a>
+              <div class="ol-caption">GERMAN</div>
+            </div>
 
-          <!-- 9 -->
-          <div class="ol-item">
-            <a href="https://formula.hu/f1" target="_blank" rel="noopener noreferrer"
-              aria-label="f1hu (opens in new tab)">
-              <img src="f1hu.png" alt="f1hu" width="150" height="75">
-            </a>
-            <div class="ol-caption">HUNGARIAN</div>
-          </div>
+            <!-- 9 -->
+            <div class="ol-item">
+              <a href="https://formula.hu/f1" target="_blank" rel="noopener noreferrer"
+                aria-label="f1hu (opens in new tab)">
+                <img src="f1hu.png" alt="f1hu" width="150" height="75">
+              </a>
+              <div class="ol-caption">HUNGARIAN</div>
+            </div>
 
-          <!-- 10 -->
-          <div class="ol-item">
-            <a href="https://f1vilag.hu/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1vihu (opens in new tab)">
-              <img src="f1vihu.png" alt="f1vihu" width="150" height="75">
-            </a>
-            <div class="ol-caption">HUNGARIAN</div>
-          </div>
+            <!-- 10 -->
+            <div class="ol-item">
+              <a href="https://f1vilag.hu/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1vihu (opens in new tab)">
+                <img src="f1vihu.png" alt="f1vihu" width="150" height="75">
+              </a>
+              <div class="ol-caption">HUNGARIAN</div>
+            </div>
 
-          <!-- 11 -->
-          <div class="ol-item">
-            <a href="https://www.autosprint.it/formula1" target="_blank" rel="noopener noreferrer"
-              aria-label="autsp (opens in new tab)">
-              <img src="autsp.png" alt="autsp" width="150" height="75">
-            </a>
-            <div class="ol-caption">ITALIAN</div>
-          </div>
+            <!-- 11 -->
+            <div class="ol-item">
+              <a href="https://www.autosprint.it/formula1" target="_blank" rel="noopener noreferrer"
+                aria-label="autsp (opens in new tab)">
+                <img src="autsp.png" alt="autsp" width="150" height="75">
+              </a>
+              <div class="ol-caption">ITALIAN</div>
+            </div>
 
-          <!-- 12 -->
-          <div class="ol-item">
-            <a href="https://www.formulapassion.it/f1" target="_blank" rel="noopener noreferrer"
-              aria-label="fpit (opens in new tab)">
-              <img src="fpit.png" alt="fpit" width="150" height="75">
-            </a>
-            <div class="ol-caption">ITALIAN</div>
-          </div>
+            <!-- 12 -->
+            <div class="ol-item">
+              <a href="https://www.formulapassion.it/f1" target="_blank" rel="noopener noreferrer"
+                aria-label="fpit (opens in new tab)">
+                <img src="fpit.png" alt="fpit" width="150" height="75">
+              </a>
+              <div class="ol-caption">ITALIAN</div>
+            </div>
 
-          <!-- 13 -->
-          <div class="ol-item">
-            <a href="https://autoracer.it/" target="_blank" rel="noopener noreferrer"
-              aria-label="autrit (opens in new tab)">
-              <img src="autrit.png" alt="autrit" width="150" height="75">
-            </a>
-            <div class="ol-caption">ITALIAN</div>
-          </div>
+            <!-- 13 -->
+            <div class="ol-item">
+              <a href="https://autoracer.it/" target="_blank" rel="noopener noreferrer"
+                aria-label="autrit (opens in new tab)">
+                <img src="autrit.png" alt="autrit" width="150" height="75">
+              </a>
+              <div class="ol-caption">ITALIAN</div>
+            </div>
 
-          <!-- 14 -->
-          <div class="ol-item">
-            <a href="https://www.funoanalisitecnica.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="funca (opens in new tab)">
-              <img src="funca.png" alt="funca" width="150" height="75">
-            </a>
-            <div class="ol-caption">ITALIAN</div>
-          </div>
+            <!-- 14 -->
+            <div class="ol-item">
+              <a href="https://www.funoanalisitecnica.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="funca (opens in new tab)">
+                <img src="funca.png" alt="funca" width="150" height="75">
+              </a>
+              <div class="ol-caption">ITALIAN</div>
+            </div>
 
-          <!-- 15 -->
-          <div class="ol-item">
-            <a href="https://f1-gate.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1gate (opens in new tab)">
-              <img src="f1gate.png" alt="f1gate" width="150" height="75">
-            </a>
-            <div class="ol-caption">JAPANESE</div>
-          </div>
+            <!-- 15 -->
+            <div class="ol-item">
+              <a href="https://f1-gate.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1gate (opens in new tab)">
+                <img src="f1gate.png" alt="f1gate" width="150" height="75">
+              </a>
+              <div class="ol-caption">JAPANESE</div>
+            </div>
 
-          <!-- 16 -->
-          <div class="ol-item">
-            <a href="https://www.cyrkf1.pl/" target="_blank" rel="noopener noreferrer"
-              aria-label="cyrk (opens in new tab)">
-              <img src="cyrk.png" alt="cyrk" width="150" height="75">
-            </a>
-            <div class="ol-caption">POLISH</div>
-          </div>
+            <!-- 16 -->
+            <div class="ol-item">
+              <a href="https://www.cyrkf1.pl/" target="_blank" rel="noopener noreferrer"
+                aria-label="cyrk (opens in new tab)">
+                <img src="cyrk.png" alt="cyrk" width="150" height="75">
+              </a>
+              <div class="ol-caption">POLISH</div>
+            </div>
 
-          <!-- 17 -->
-          <div class="ol-item">
-            <a href="https://www.grandepremio.com.br/f1/" target="_blank" rel="noopener noreferrer"
-              aria-label="gpbr (opens in new tab)">
-              <img src="gpbr.png" alt="gpbr" width="150" height="75">
-            </a>
-            <div class="ol-caption">PORTUGUESE</div>
-          </div>
+            <!-- 17 -->
+            <div class="ol-item">
+              <a href="https://www.grandepremio.com.br/f1/" target="_blank" rel="noopener noreferrer"
+                aria-label="gpbr (opens in new tab)">
+                <img src="gpbr.png" alt="gpbr" width="150" height="75">
+              </a>
+              <div class="ol-caption">PORTUGUESE</div>
+            </div>
 
-          <!-- 18 -->
-          <div class="ol-item">
-            <a href="https://www.f1mania.net/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1mnbr (opens in new tab)">
-              <img src="f1mnbr.png" alt="f1mnbr" width="150" height="75">
-            </a>
-            <div class="ol-caption">PORTUGUESE</div>
-          </div>
+            <!-- 18 -->
+            <div class="ol-item">
+              <a href="https://www.f1mania.net/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1mnbr (opens in new tab)">
+                <img src="f1mnbr.png" alt="f1mnbr" width="150" height="75">
+              </a>
+              <div class="ol-caption">PORTUGUESE</div>
+            </div>
 
-          <!-- 19 -->
-          <div class="ol-item">
-            <a href="https://soymotor.com/f1" target="_blank" rel="noopener noreferrer"
-              aria-label="soym (opens in new tab)">
-              <img src="soym.png" alt="soym" width="150" height="75">
-            </a>
-            <div class="ol-caption">SPANISH</div>
-          </div>
+            <!-- 19 -->
+            <div class="ol-item">
+              <a href="https://soymotor.com/f1" target="_blank" rel="noopener noreferrer"
+                aria-label="soym (opens in new tab)">
+                <img src="soym.png" alt="soym" width="150" height="75">
+              </a>
+              <div class="ol-caption">SPANISH</div>
+            </div>
 
-          <!-- 20 -->
-          <div class="ol-item">
-            <a href="https://www.f1latam.com/" target="_blank" rel="noopener noreferrer"
-              aria-label="f1lat (opens in new tab)">
-              <img src="f1lat.png" alt="f1lat" width="150" height="75">
-            </a>
-            <div class="ol-caption">SPANISH</div>
-          </div>
+            <!-- 20 -->
+            <div class="ol-item">
+              <a href="https://www.f1latam.com/" target="_blank" rel="noopener noreferrer"
+                aria-label="f1lat (opens in new tab)">
+                <img src="f1lat.png" alt="f1lat" width="150" height="75">
+              </a>
+              <div class="ol-caption">SPANISH</div>
+            </div>
 
+          </div>
         </div>
-      </div>
+      </section>
     </main>
   </div>
 

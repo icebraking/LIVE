@@ -136,6 +136,42 @@
       overflow: auto;
     }
 
+    /* Table/Tray Container */
+    .table {
+      width: 100%;
+      max-width: 1260px;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 18px;
+      align-items: center;
+      justify-items: center;
+      overflow: visible;
+    }
+
+    .row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      user-select: none;
+      overflow: visible;
+      justify-content: center;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
     /* Info Grid */
     .info-grid {
       display: grid;
@@ -265,6 +301,16 @@
         height: auto;
       }
 
+      .table {
+        gap: 12px;
+        grid-auto-rows: minmax(80px, 1fr);
+      }
+
+      .row {
+        padding: 18px 20px;
+        border-radius: 10px;
+      }
+
       .info-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
@@ -273,6 +319,19 @@
       .home-button {
         left: 58px;
         bottom: 14px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -314,20 +373,24 @@
 
     <!-- Main: 1 row x 6 columns grid -->
     <main class="main" role="main" aria-label="Info content">
-      <div class="info-grid">
-        <div class="info-item"><a href="https://www.driverdb.com/" target="_blank"><img src="ddb.png"
-              alt="DriverDB"></a></div>
-        <div class="info-item"><a href="https://las-motorsport.com/" target="_blank"><img src="lasmsp.png"
-              alt="LAS Motorsport"></a></div>
-        <div class="info-item"><a href="https://www.f1technical.net/" target="_blank"><img src="f1techgp.png"
-              alt="F1Technical"></a></div>
-        <div class="info-item"><a href="https://www.formulaonehistory.com/" target="_blank"><img src="f1hist.png"
-              alt="Formula One History"></a></div>
-        <div class="info-item"><a href="https://liquipedia.net/formula1/Main_Page" target="_blank"><img src="liqf1.png"
-              alt="Liquipedia F1"></a></div>
-        <div class="info-item"><a href="https://www.statsf1.com/en/default.aspx" target="_blank"><img src="statsf1.png"
-              alt="Stats F1"></a></div>
-      </div>
+      <section class="table" role="region" aria-label="Info">
+        <div class="row" role="group" aria-label="Info tray">
+          <div class="info-grid">
+            <div class="info-item"><a href="https://www.driverdb.com/" target="_blank"><img src="ddb.png"
+                  alt="DriverDB"></a></div>
+            <div class="info-item"><a href="https://las-motorsport.com/" target="_blank"><img src="lasmsp.png"
+                  alt="LAS Motorsport"></a></div>
+            <div class="info-item"><a href="https://www.f1technical.net/" target="_blank"><img src="f1techgp.png"
+                  alt="F1Technical"></a></div>
+            <div class="info-item"><a href="https://www.formulaonehistory.com/" target="_blank"><img src="f1hist.png"
+                  alt="Formula One History"></a></div>
+            <div class="info-item"><a href="https://liquipedia.net/formula1/Main_Page" target="_blank"><img
+                  src="liqf1.png" alt="Liquipedia F1"></a></div>
+            <div class="info-item"><a href="https://www.statsf1.com/en/default.aspx" target="_blank"><img
+                  src="statsf1.png" alt="Stats F1"></a></div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
