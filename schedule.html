@@ -296,9 +296,17 @@
 
       .main {
         padding-bottom: 20px;
-        display: block;
+        display: flex;
+        flex-direction: column;
         height: auto;
+        overflow: visible;
         order: 1;
+      }
+
+      .schedule-list {
+        flex: 1 0 auto;
+        overflow: visible;
+        height: auto;
       }
 
       .row {
@@ -314,11 +322,7 @@
 
       /* Home button moved to bottom - Centered and Scrollable */
       .home-button {
-        position: relative;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        top: auto;
+        position: static !important;
         margin: 20px auto;
         order: 2;
         transform: none;
@@ -330,6 +334,7 @@
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(0, 255, 255, 0.2);
         box-shadow: none;
+        flex-shrink: 0;
       }
 
       .home-button:hover {
