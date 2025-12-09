@@ -259,6 +259,8 @@
       body {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
+        height: auto;
+        min-height: 100%;
       }
 
       .app {
@@ -266,7 +268,8 @@
         height: auto;
         bottom: auto;
         overflow: visible;
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 12px;
         padding: 12px;
         top: 0;
@@ -292,9 +295,10 @@
       }
 
       .main {
-        padding-bottom: 40px;
+        padding-bottom: 20px;
         display: block;
         height: auto;
+        order: 1;
       }
 
       .row {
@@ -308,10 +312,15 @@
         display: none;
       }
 
-      /* Simplified for mobile */
+      /* Home button moved to bottom */
       .home-button {
-        left: 58px;
-        bottom: 14px;
+        position: relative;
+        left: auto;
+        bottom: auto;
+        right: auto;
+        margin: 20px auto;
+        order: 2;
+        transform: none;
       }
     }
   </style>
