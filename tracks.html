@@ -148,7 +148,73 @@
       max-width: 1260px;
     }
 
-    /* Tracks Grid */
+    /* Table/Tray Container */
+    .table {
+      width: 100%;
+      height: auto;
+      /* Adjusted for tracks layout */
+      display: grid;
+      grid-template-rows: 1fr;
+      gap: 18px;
+      align-items: center;
+      justify-items: center;
+      overflow: visible;
+    }
+
+    .row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      user-select: none;
+      overflow: visible;
+      justify-content: center;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .row:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
+    /* Container for top slot + remaining grid */
+    .icons-wrapper {
+      display: grid;
+      grid-template-columns: repeat(6, 150px);
+      grid-auto-rows: auto;
+      gap: 12px;
+      justify-content: center;
+      align-items: start;
+      /* width: calc(6 * 150px + 5 * 12px); */
+      /* can be explicit or implicit */
+      max-width: 100%;
+      box-sizing: content-box;
+      will-change: transform;
+    }
+
+    .top-slot {
+      grid-column: 1 / -1;
+      justify-self: center;
+      margin-bottom: 8px;
+      /* Optional spacing */
+    }
+
+    .grid24 {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(6, 150px);
+      gap: 20px;
+      justify-content: center;
+    }
+
+    /* Tracks Grid (keeping for mobile fallback logic if needed, but we'll switch HTML to use grid24) */
     .tracks-grid {
       display: grid;
       grid-template-columns: repeat(6, 150px);
@@ -291,9 +357,19 @@
         height: auto;
       }
 
-      .tracks-grid {
+      .icons-wrapper,
+      .grid24 {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
+        display: grid;
+        justify-content: center;
+      }
+
+      .top-slot {
+        grid-column: 1 / -1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
 
       .home-button {
@@ -302,8 +378,21 @@
       }
     }
 
+    @media (max-width: 420px) {
+      .table {
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .row {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+      }
+    }
+
     @media (max-width: 1200px) {
-      .tracks-grid {
+      .grid24 {
         grid-template-columns: repeat(4, 150px);
       }
     }
@@ -347,67 +436,79 @@
     <!-- Main: Tracks grid -->
     <main class="main" role="main" aria-label="Tracks content">
       <div class="center-shell">
-        <div style="display:flex; justify-content:center; width:100%;">
-          <a href="https://tickets.formula1.com/en" target="_blank"><img src="f1tick.png" alt="F1 Tickets" width="150"
-              height="75"></a>
-        </div>
 
-        <div class="tracks-grid">
-          <div class="track-item"><a href="https://www.grandprix.com.au/" target="_blank"><img src="aus.png"
-                alt="Australia"></a></div>
-          <div class="track-item"><a href="https://www.formula1shanghai.com/" target="_blank"><img src="chn.png"
-                alt="China"></a></div>
-          <div class="track-item"><a href="https://www.suzukacircuit.jp/eng/" target="_blank"><img src="jpn.png"
-                alt="Japan"></a></div>
-          <div class="track-item"><a href="https://www.bahraingp.com/" target="_blank"><img src="bah.png"
-                alt="Bahrain"></a></div>
-          <div class="track-item"><a href="https://saudiarabiangp.com/en" target="_blank"><img src="sar.png"
-                alt="Saudi Arabia"></a></div>
-          <div class="track-item"><a href="https://f1miamigp.com/" target="_blank"><img src="mim.png" alt="Miami"></a>
-          </div>
 
-          <div class="track-item"><a href="https://gpcanada.ca/en/" target="_blank"><img src="can.png" alt="Canada"></a>
-          </div>
-          <div class="track-item"><a href="https://monaco-grandprix.com/en/" target="_blank"><img src="mon.png"
-                alt="Monaco"></a></div>
-          <div class="track-item"><a href="https://www.circuitcat.com/en/" target="_blank"><img src="cat.png"
-                alt="Spain"></a></div>
-          <div class="track-item"><a href="https://www.redbullring.com/en/" target="_blank"><img src="atr.png"
-                alt="Austria"></a></div>
-          <div class="track-item"><a href="https://www.silverstone.co.uk/" target="_blank"><img src="eng.png"
-                alt="UK"></a></div>
-          <div class="track-item"><a href="https://www.spagrandprix.com/en/" target="_blank"><img src="bel.png"
-                alt="Belgium"></a></div>
+        <section class="table" role="region" aria-label="Tracks">
+          <div class="row" role="group" aria-label="Tracks tray">
+            <div class="icons-wrapper">
+              <div class="top-slot">
+                <div class="track-item"><a href="https://tickets.formula1.com/en" target="_blank"><img src="f1tick.png"
+                      alt="F1 Tickets"></a></div>
+              </div>
 
-          <div class="track-item"><a href="https://hungaroring.hu/en" target="_blank"><img src="hun.png"
-                alt="Hungary"></a></div>
-          <div class="track-item"><a href="https://www.dutchgp.com/en/" target="_blank"><img src="nel.png"
-                alt="Netherlands"></a></div>
-          <div class="track-item"><a href="https://www.monzanet.it/en/" target="_blank"><img src="ity.png"
-                alt="Italy"></a></div>
-          <div class="track-item"><a href="https://www.madring.com/en" target="_blank"><img src="esp.png"
-                alt="Madrid"></a></div>
-          <div class="track-item"><a href="https://www.bakucitycircuit.com/" target="_blank"><img src="abn.png"
-                alt="Azerbaijan"></a></div>
-          <div class="track-item"><a href="https://singaporegp.sg/en/" target="_blank"><img src="sgp.png"
-                alt="Singapore"></a></div>
+              <div class="grid24">
+                <div class="track-item"><a href="https://www.grandprix.com.au/" target="_blank"><img src="aus.png"
+                      alt="Australia"></a></div>
+                <div class="track-item"><a href="https://www.formula1shanghai.com/" target="_blank"><img src="chn.png"
+                      alt="China"></a></div>
+                <div class="track-item"><a href="https://www.suzukacircuit.jp/eng/" target="_blank"><img src="jpn.png"
+                      alt="Japan"></a></div>
+                <div class="track-item"><a href="https://www.bahraingp.com/" target="_blank"><img src="bah.png"
+                      alt="Bahrain"></a></div>
+                <div class="track-item"><a href="https://saudiarabiangp.com/en" target="_blank"><img src="sar.png"
+                      alt="Saudi Arabia"></a></div>
+                <div class="track-item"><a href="https://f1miamigp.com/" target="_blank"><img src="mim.png"
+                      alt="Miami"></a>
+                </div>
 
-          <div class="track-item"><a href="https://circuitoftheamericas.com/" target="_blank"><img src="aut.png"
-                alt="Austin"></a></div>
-          <div class="track-item"><a href="https://www.mexicogp.mx/" target="_blank"><img src="mex.png"
-                alt="Mexico"></a></div>
-          <div class="track-item"><a href="https://f1saopaulo.com.br/en/" target="_blank"><img src="brl.png"
-                alt="Brazil"></a></div>
-          <div class="track-item"><a href="https://www.f1lasvegasgp.com/" target="_blank"><img src="veg.png"
-                alt="Las Vegas"></a></div>
-          <div class="track-item"><a href="https://www.lcsc.qa/" target="_blank"><img src="qtr.png" alt="Qatar"></a>
-          </div>
-          <div class="track-item"><a href="https://www.abudhabigp.com/en/" target="_blank"><img src="uae.png"
-                alt="Abu Dhabi"></a></div>
-        </div>
+                <div class="track-item"><a href="https://gpcanada.ca/en/" target="_blank"><img src="can.png"
+                      alt="Canada"></a>
+                </div>
+                <div class="track-item"><a href="https://monaco-grandprix.com/en/" target="_blank"><img src="mon.png"
+                      alt="Monaco"></a></div>
+                <div class="track-item"><a href="https://www.circuitcat.com/en/" target="_blank"><img src="cat.png"
+                      alt="Spain"></a></div>
+                <div class="track-item"><a href="https://www.redbullring.com/en/" target="_blank"><img src="atr.png"
+                      alt="Austria"></a></div>
+                <div class="track-item"><a href="https://www.silverstone.co.uk/" target="_blank"><img src="eng.png"
+                      alt="UK"></a></div>
+                <div class="track-item"><a href="https://www.spagrandprix.com/en/" target="_blank"><img src="bel.png"
+                      alt="Belgium"></a></div>
+
+                <div class="track-item"><a href="https://hungaroring.hu/en" target="_blank"><img src="hun.png"
+                      alt="Hungary"></a></div>
+                <div class="track-item"><a href="https://www.dutchgp.com/en/" target="_blank"><img src="nel.png"
+                      alt="Netherlands"></a></div>
+                <div class="track-item"><a href="https://www.monzanet.it/en/" target="_blank"><img src="ity.png"
+                      alt="Italy"></a></div>
+                <div class="track-item"><a href="https://www.madring.com/en" target="_blank"><img src="esp.png"
+                      alt="Madrid"></a></div>
+                <div class="track-item"><a href="https://www.bakucitycircuit.com/" target="_blank"><img src="abn.png"
+                      alt="Azerbaijan"></a></div>
+                <div class="track-item"><a href="https://singaporegp.sg/en/" target="_blank"><img src="sgp.png"
+                      alt="Singapore"></a></div>
+
+                <div class="track-item"><a href="https://circuitoftheamericas.com/" target="_blank"><img src="aut.png"
+                      alt="Austin"></a></div>
+                <div class="track-item"><a href="https://www.mexicogp.mx/" target="_blank"><img src="mex.png"
+                      alt="Mexico"></a></div>
+                <div class="track-item"><a href="https://f1saopaulo.com.br/en/" target="_blank"><img src="brl.png"
+                      alt="Brazil"></a></div>
+                <div class="track-item"><a href="https://www.f1lasvegasgp.com/" target="_blank"><img src="veg.png"
+                      alt="Las Vegas"></a></div>
+                <div class="track-item"><a href="https://www.lcsc.qa/" target="_blank"><img src="qtr.png"
+                      alt="Qatar"></a>
+                </div>
+                <div class="track-item"><a href="https://www.abudhabigp.com/en/" target="_blank"><img src="uae.png"
+                      alt="Abu Dhabi"></a></div>
+              </div> <!-- .grid24 -->
+            </div> <!-- .icons-wrapper -->
+          </div> <!-- .row -->
+        </section>
 
         <div class="disclaimer-footer">
-          *The Chinese GP does not currently have a separate official event website run by the local organiser. Please
+          *The Chinese GP does not currently have a separate official event website run by the local organiser.
+          Please
           visit
           the official F1 <a href="https://tickets.formula1.com/en/f1-3182-china" target="_blank">website</a> for
           booking
