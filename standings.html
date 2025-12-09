@@ -1,593 +1,476 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>F1 Standings</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STANDINGS — THE F1 HUB</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="favicon.png">
+
   <style>
-    :root{
-      --bg: #000;
-      --muted: rgba(255,255,255,0.08);
-      --muted-2: rgba(255,255,255,0.03);
-      --accent: #fff;
-      --accent-strong: rgba(255,255,255,0.95);
-      --gap: 20px;
-      --max-width: 1100px;
-      --year-col-w: 160px;
-      --tabs-col-w: 160px;
-      --year-item-h: 48px;
-      --radius: 10px;
-      --shadow: 0 10px 30px rgba(0,0,0,0.6);
-
-      /* unified selected styling for both tab and year */
-      --selected-bg: rgba(255,255,255,0.14);
-      --selected-glow: 0 12px 36px rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.6);
+    :root {
+      --black: #000000;
+      --accent-cyan: #00FFFF;
+      --primary-glow: rgba(0, 255, 255, 0.5);
+      --border-color: rgba(0, 255, 255, 0.2);
+      --card-bg: rgba(0, 255, 255, 0.02);
+      --gap: 22px;
     }
 
-    /* Page */
-    html,body{
-      height:100%;
-      margin:0;
-      padding:0;
-      background: var(--bg);
-      color: var(--accent);
-      font-family: "Copperplate Gothic","Copperplate","Copperplate Gothic Bold","Copperplate Gothic Light", serif;
-      font-weight:700;
-      text-transform:uppercase;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      letter-spacing:0.02em;
-      box-sizing:border-box;
+    /* Page shell */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--black);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
     }
-    *, *::before, *::after { box-sizing: inherit; }
 
-    /* Visually hide global scrollbars except where shown */
-    * { scrollbar-width: none; -ms-overflow-style: none; }
-    *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    /* Hide scrollbars */
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
 
-    a { color: inherit; text-decoration: none; }
-    :focus { outline: none; }
+    *::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
 
-    /* Page layout */
-    .page {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap: var(--gap);
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus {
+      outline: none;
+    }
+
+    /* Layout */
+    .top-center {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .wrap {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow-y: auto;
       padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    /* Controls row sits above the table; centered, symmetric */
-    .controls-row {
-      width:100%;
-      max-width: var(--max-width);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 24px;
-      padding: 8px;
+    /* Year Select */
+    .year-select {
+      position: relative;
+      width: 200px;
     }
 
-    /* Year column (left) */
-    .year-column {
-      width: var(--year-col-w);
-      min-width: var(--year-col-w);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      align-items:stretch;
+    .year-display {
+      background: var(--black);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      transition: all 0.3s ease;
     }
-    .year-label{
-      font-size:0.8rem;
-      color: rgba(255,255,255,0.85);
-      letter-spacing:0.08em;
-      text-align:center;
+
+    .year-display:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      background: rgba(0, 255, 255, 0.1);
     }
+
     .year-list {
-      height: calc(var(--year-item-h) * 3); /* show 3 at a time */
-      overflow-y:auto;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-      border-radius: var(--radius);
-      padding:6px;
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: var(--shadow);
-      scroll-behavior: smooth; /* smooth centering */
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--black);
+      border: 1px solid var(--border-color);
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      z-index: 200;
+      border-radius: 8px;
+      margin-top: 5px;
     }
-    /* show scrollbar for year list */
-    .year-list::-webkit-scrollbar { width:10px; }
-    .year-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius:8px; }
-    .year-list::-webkit-scrollbar-track { background: transparent; }
+
+    .year-select:focus-within .year-list {
+      display: block;
+    }
 
     .year-item {
-      height: var(--year-item-h);
-      line-height: var(--year-item-h);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:8px;
-      margin: 4px 0;
-      color: rgba(255,255,255,0.9);
-      cursor:pointer;
-      transition: transform .08s ease, background .12s ease, color .12s ease;
-      user-select: none;
-      font-size: 0.95rem;
-      text-align:center;
-      background: transparent;
-      /* ensure year text looks bold as requested */
-      font-family: "Copperplate Gothic Bold","Copperplate Gothic","Copperplate", serif;
-      font-weight: 800;
-    }
-    .year-item:hover { transform: translateY(-3px); background: rgba(255,255,255,0.02); color: var(--accent-strong); }
-    .year-item.selected {
-      /* use unified selected look */
-      background: var(--selected-bg);
-      color: var(--accent-strong);
-      box-shadow: var(--selected-glow);
-    }
-    .year-item:focus-visible { outline: 3px solid rgba(255,255,255,0.12); outline-offset:3px; border-radius:6px; }
-
-    /* Tabs column (right) */
-    .tabs-column {
-      width: var(--tabs-col-w);
-      min-width: var(--tabs-col-w);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:stretch;
-    }
-    .tab {
-      padding: 10px 12px;
-      background: var(--muted-2);
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.03);
-      cursor:pointer;
-      transition: transform .08s ease, background .12s ease, box-shadow .12s ease;
-      text-align:center;
-      font-size:0.95rem;
-      /* ensure tab label is pure white and Copperplate Gothic Bold */
-      color: #ffffff;
-      font-family: "Copperplate Gothic Bold","Copperplate Gothic","Copperplate", serif;
-      font-weight: 800;
-    }
-    .tab:hover { transform: translateY(-3px); background: rgba(255,255,255,0.04); }
-    /* stronger brighter grey glow and brighter background when selected - use unified selected look */
-    .tab.active {
-      background: var(--selected-bg);
-      box-shadow: var(--selected-glow);
-      color: #ffffff; /* keep label white */
-      transform: translateY(-4px);
-    }
-    .tab:focus-visible { outline: 3px solid rgba(255,255,255,0.18); outline-offset:3px; border-radius:8px; }
-
-    /* Main content area */
-    main {
-      width:100%;
-      max-width: var(--max-width);
       padding: 8px;
-      box-sizing:border-box;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
     }
 
-    .table-container {
-      width:100%;
-      overflow:auto;
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,0.03);
-      padding: 10px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+    .year-item:hover,
+    .year-item.active {
+      background: var(--accent-cyan);
+      color: var(--black);
     }
 
-    table {
-      width:100%;
-      border-collapse: separate;
-      border-spacing:0;
-      min-width: 520px; /* increased to accommodate WINS column */
-      font-size: 1.02rem;
-      color:var(--accent);
-      text-transform:uppercase;
+    /* Tabs for Standings */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
     }
-    thead { position: sticky; top:0; background:rgba(255,255,255,0.02); }
-    th,td{
-      padding: 10px 12px;
-      text-align:left;
-      white-space:nowrap;
-      font-weight:700;
-      color:var(--accent);
-    }
-    tbody tr:nth-child(odd) { background: rgba(255,255,255,0.012); }
-    tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
-    tbody tr:hover { background: rgba(255,255,255,0.04); }
 
-    .spinner, .error-message {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height: 120px;
-      padding: 18px;
-      font-size:1.1rem;
-      border-radius:10px;
-      background: rgba(255,255,255,0.015);
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .spinner::after{
-      content:'';
-      display:inline-block;
-      width:28px;height:28px;border:4px solid rgba(255,255,255,0.12);border-top-color:transparent;border-radius:50%;margin-left:12px;animation: spin 1s linear infinite;
-    }
-    @keyframes spin {100%{transform:rotate(360deg)}}
-
-    .team-link-table { color:var(--accent); text-decoration:underline; }
-    .team-link-table:hover { color:var(--accent-strong); }
-
-    /* notice for pre-1958 constructors */
-    .constructors-notice {
-      font-family: "Copperplate Gothic Bold","Copperplate Gothic","Copperplate", serif;
-      font-weight: 800;
-      text-transform: none; /* keep sentence case */
-      color: #ffffff;
+    .tab-btn {
       background: transparent;
-      padding: 12px 8px;
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 8px 20px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
       border-radius: 8px;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      background: var(--accent-cyan);
+      color: var(--black);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      width: 100%;
+    }
+
+    .standings-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .standings-table th {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 255, 255, 0.1);
+      padding: 12px;
+      text-align: left;
+      font-size: 0.9rem;
+      border-bottom: 2px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .standings-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .standings-table tr:hover {
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    .loading,
+    .error {
+      padding: 20px;
+      text-align: center;
       font-size: 1rem;
-      line-height: 1.2;
+      color: var(--accent-cyan);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--card-bg);
     }
 
-    /* Footer home button */
-    .home-wrap{ margin-top:18px; padding-left:6px; }
-    .home-btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:48px; height:48px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.03);
+    .error {
+      color: #ff5555;
+      border-color: rgba(255, 60, 60, 0.3);
     }
-    .home-btn:hover{ transform:translateY(-3px); background:rgba(255,255,255,0.04); }
-    .home-btn:focus-visible{ outline:3px solid rgba(255,255,255,0.12); outline-offset:4px; border-radius:8px; }
 
-    /* Responsive: stack controls on small screens */
-    @media (max-width: 880px){
-      .controls-row { flex-direction:row; align-items:flex-start; justify-content:space-between; gap:12px; }
-      .year-column, .tabs-column { width: 140px; min-width:140px; }
-      main { margin-top: 6px; }
+    /* Home Button */
+    .home-inflow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      margin: 20px auto;
+      transition: all 0.3s ease;
     }
-    @media (max-width: 660px){
-      .controls-row { flex-direction:column; align-items:center; gap:12px; }
-      .year-column, .tabs-column { width: 100%; min-width: auto; display:flex; align-items:center; justify-content:center; }
-      .year-list { width: 80%; display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; height: calc(40px * 1.2); }
-      .year-item { min-width: 72px; height:40px; line-height:40px; margin:0 6px; }
-      .tabs-column { flex-direction:row; gap:8px; }
-      .tabs-column .tab{ width:auto; padding:8px 12px; }
-      main { padding: 0 12px; }
+
+    .home-inflow svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .home-inflow:hover {
+      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      border-color: var(--accent-cyan);
+      transform: scale(1.05);
+    }
+
+    @media (max-width:420px) {
+      .wrap {
+        padding: 12px;
+        top: 70px;
+      }
+
+      .year-select {
+        width: 100%;
+        max-width: 200px;
+      }
+
+      .standings-table th,
+      .standings-table td {
+        padding: 8px 4px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <!-- Controls row above the table -->
-    <div class="controls-row" role="region" aria-label="Controls">
-      <!-- Year selector (left) -->
-      <div class="year-column" aria-label="Season year selector">
-        <div class="year-label">Year</div>
-        <div id="yearList" class="year-list" role="listbox" tabindex="0" aria-label="Choose year"></div>
+  <div class="top-center">
+    <div class="year-select" id="yearSelect" aria-label="Select year">
+      <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false"
+        aria-haspopup="listbox">
+        <span id="selectedYearLabel">2025</span>
       </div>
+      <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
+    </div>
+  </div>
 
-      <!-- (Empty center to keep symmetry; table sits below) -->
-      <div style="flex:1"></div>
-
-      <!-- Tabs (right) -->
-      <div class="tabs-column" role="tablist" aria-label="Standings tabs">
-        <button id="tabDrivers" class="tab" role="tab" aria-selected="true">DRIVERS</button>
-        <button id="tabConstructors" class="tab" role="tab" aria-selected="false">CONSTRUCTORS</button>
-      </div>
+  <div class="wrap" id="pageWrap">
+    <div class="tabs">
+      <button class="tab-btn active" id="btnDrivers">DRIVERS</button>
+      <button class="tab-btn" id="btnConstructors">CONSTRUCTORS</button>
     </div>
 
-    <!-- Main content: table below controls -->
-    <main>
-      <div id="content">
-        <div class="spinner" id="loading">LOADING STANDINGS...</div>
-      </div>
+    <div class="content-area" id="contentArea">
+      <div class="loading">Select a year to view standings.</div>
+    </div>
 
-      <div class="home-wrap">
-        <a href="index.html" class="home-btn" aria-label="Home" title="Home">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-            <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z"/>
-          </svg>
-        </a>
-      </div>
-    </main>
+    <a href="index.html" class="home-inflow" aria-label="Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+      </svg>
+    </a>
   </div>
 
   <script>
-    // API base and cache TTL
-    const API_BASE = 'https://api.jolpi.ca/ergast/f1/';
-    const CACHE_TTL = 300; // 5 minutes
+    (function () {
+      const API_BASE = 'https://api.jolpi.ca/ergast/f1';
+      const YEAR_START = 1950;
+      const YEAR_END = 2025;
 
-    // DOM
-    const yearListEl = document.getElementById('yearList');
-    const content = document.getElementById('content');
-    const tabDrivers = document.getElementById('tabDrivers');
-    const tabConstructors = document.getElementById('tabConstructors');
+      let selectedYear = 2025;
+      let mode = 'drivers'; // 'drivers' or 'constructors'
 
-    // state
-    const firstYear = 1950;
-    const currentYear = (new Date()).getFullYear(); // e.g., 2025
-    let selectedYear = currentYear;
-    let activeTab = 'drivers';
+      const btnDrivers = document.getElementById('btnDrivers');
+      const btnConstructors = document.getElementById('btnConstructors');
+      const selectedYearLabel = document.getElementById('selectedYearLabel');
+      const yearList = document.getElementById('yearList');
+      const contentArea = document.getElementById('contentArea');
 
-    // team links map
-    const constructorTeamLinks = {
-      "McLaren": "https://www.icebraking.com/McLaren/mclaren.html",
-      "Mercedes": "https://www.icebraking.com/Mercedes/mercedes.html",
-      "Ferrari": "https://www.icebraking.com/Ferrari/ferrari.html",
-      "Red Bull Racing": "https://www.icebraking.com/RedBullRacing/redbullracing.html",
-      "Williams": "https://www.icebraking.com/Williams/williams.html",
-      "Racing Bulls": "https://www.icebraking.com/RacingBulls/racingbulls.html",
-      "Kick Sauber": "https://www.icebraking.com/KickSauber/kicksauber.html",
-      "Haas F1 Team": "https://www.icebraking.com/HaasF1Team/haasf1team.html",
-      "Alpine": "https://www.icebraking.com/Alpine/alpine.html",
-      "RED BULL RACING": "https://www.icebraking.com/RedBullRacing/redbullracing.html",
-      "RACING BULLS": "https://www.icebraking.com/RacingBulls/racingbulls.html",
-      "KICK SAUBER": "https://www.icebraking.com/KickSauber/kicksauber.html",
-      "ALPINE": "https://www.icebraking.com/Alpine/alpine.html"
-    };
+      // Setup Year List (Descending)
+      for (let y = YEAR_END; y >= YEAR_START; y--) {
+        const item = document.createElement('div');
+        item.className = 'year-item';
+        item.textContent = y;
+        item.tabIndex = 0;
+        item.addEventListener('click', () => {
+          selectedYear = y;
+          selectedYearLabel.textContent = y;
+          // Collapse dropdown
+          if (document.activeElement) document.activeElement.blur();
 
-    // caching helpers
-    function cacheKey(type, year){ return `f1_${type}_standings_${year}`; }
-    function getCache(type, year){
-      try{
-        const item = localStorage.getItem(cacheKey(type, year));
-        if(!item) return null;
-        const {data, ts} = JSON.parse(item);
-        if(Date.now()/1000 - ts > CACHE_TTL) return null;
-        return data;
-      }catch{ return null; }
-    }
-    function setCache(type, year, data){
-      try{ localStorage.setItem(cacheKey(type, year), JSON.stringify({ data, ts: Math.floor(Date.now()/1000) })); }catch{}
-    }
-
-    // helpers
-    function renameTeam(name){
-      if (!name) return '';
-      const upper = String(name).toUpperCase();
-
-      // Case-insensitive rule: if fetched name contains "KICK" and "SAUBER", display "SAUBER".
-      if (upper.indexOf('KICK') !== -1 && upper.indexOf('SAUBER') !== -1) {
-        return 'SAUBER';
-      }
-
-      // Preserve existing renames for other teams (case-insensitive where appropriate)
-      if (upper === 'RED BULL' || upper === 'RED BULL RACING') return 'RED BULL RACING';
-      if (upper === 'RB F1 TEAM') return 'RACING BULLS';
-      if (upper === 'ALPINE F1 TEAM' || upper === 'ALPINE') return 'ALPINE';
-      // default: return uppercase team name
-      return upper;
-    }
-
-    function showLoading(msg='LOADING STANDINGS...'){
-      content.innerHTML = `<div class="spinner">${msg}</div>`;
-    }
-    function showError(msg='UNABLE TO LOAD STANDINGS'){
-      content.innerHTML = `<div class="error-message">${msg}</div>`;
-    }
-
-    function renderTable(type, items){
-      let html = '';
-      if(type === 'drivers'){
-        // only render links when selectedYear is 2025
-        const allowLinks = (Number(selectedYear) === 2025);
-        html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>TEAM</th><th>POINTS</th><th>WINS</th></tr></thead><tbody>`;
-        for(const item of items){
-          // driver-name based team overrides (case-insensitive) per your request
-          const driverLower = (item.name || '').toLowerCase();
-          let teamName;
-          if (driverLower === 'yuki tsunoda') {
-            const y = Number(selectedYear);
-            if (y === 2024) teamName = 'RACING BULLS';
-            else if (y === 2023 || y === 2022 || y === 2021) teamName = 'ALPHATAURI';
-            else teamName = 'RED BULL RACING';
-          } else if (driverLower === 'liam lawson') {
-            teamName = 'RACING BULLS';
-          } else {
-            teamName = renameTeam(item.team);
-          }
-
-          // Resolve link. If SAUBER display name and year 2025, link to KickSauber URL.
-          let teamLink = constructorTeamLinks[teamName] || constructorTeamLinks[item.team] || constructorTeamLinks[(item.team || '')];
-          if (teamName === 'SAUBER' && Number(selectedYear) === 2025) {
-            teamLink = constructorTeamLinks['Kick Sauber'] || constructorTeamLinks['KICK SAUBER'] || constructorTeamLinks['Sauber'] || teamLink;
-          }
-          // Also ensure ASTON MARTIN in 2025 links to specified AstonMartin URL
-          if (teamName === 'ASTON MARTIN' && Number(selectedYear) === 2025) {
-            teamLink = 'https://www.icebraking.com/AstonMartin/astonmartin.html';
-          }
-
-          const teamCell = (allowLinks && teamLink)
-            ? `<a class="team-link-table" href="${teamLink}" target="_blank" rel="noopener">${teamName}</a>`
-            : teamName;
-
-          const winsDisplay = (typeof item.wins !== 'undefined') ? item.wins : 0;
-
-          html += `<tr><td>${item.position}</td><td>${(item.name||'').toUpperCase()}</td><td>${teamCell}</td><td>${item.points}</td><td>${winsDisplay}</td></tr>`;
-        }
-        html += `</tbody></table></div>`;
-      } else {
-        // constructors - links allowed only for year 2025
-        const allowLinks = (Number(selectedYear) === 2025);
-
-        html += `<div class="table-container"><table><thead><tr><th>POSITION</th><th>NAME</th><th>POINTS</th></tr></thead><tbody>`;
-        for(const item of items){
-          const displayName = renameTeam(item.name);
-
-          // Resolve link. If SAUBER display name and year 2025, link to KickSauber URL.
-          let link = constructorTeamLinks[displayName] || constructorTeamLinks[item.name] || constructorTeamLinks[(item.name || '')];
-          if (displayName === 'SAUBER' && Number(selectedYear) === 2025) {
-            link = constructorTeamLinks['Kick Sauber'] || constructorTeamLinks['KICK SAUBER'] || constructorTeamLinks['Sauber'] || link;
-          }
-          // Ensure ASTON MARTIN in 2025 links to specified AstonMartin URL
-          if (displayName === 'ASTON MARTIN' && Number(selectedYear) === 2025) {
-            link = 'https://www.icebraking.com/AstonMartin/astonmartin.html';
-          }
-
-          const nameCell = (allowLinks && link)
-            ? `<a class="team-link-table" href="${link}" target="_blank" rel="noopener">${displayName}</a>`
-            : displayName;
-          html += `<tr><td>${item.position}</td><td>${nameCell}</td><td>${item.points}</td></tr>`;
-        }
-        html += `</tbody></table></div>`;
-      }
-      content.innerHTML = html;
-    }
-
-    function renderConstructorsIntro() {
-      // Show the requested informational message (Copperplate Gothic Bold, sentence case)
-      content.innerHTML = `<div class="constructors-notice">The FIA Formula 1 World Championship officially introduced the Constructors' Championship (with its own separate standings and title) starting in 1958.</div>`;
-    }
-
-    function parseDrivers(json){
-      try{
-        const lists = json?.MRData?.StandingsTable?.StandingsLists;
-        if(!lists || !lists.length) return [];
-        const drivers = lists[0]?.DriverStandings || [];
-        return drivers.map(d => ({
-          position: d.positionText || d.position || '-',
-          name: `${d.Driver.givenName} ${d.Driver.familyName}`,
-          team: d.Constructors[0]?.name || '',
-          points: d.points,
-          wins: d.wins || 0
-        }));
-      }catch{ return []; }
-    }
-    function parseConstructors(json){
-      try{
-        const lists = json?.MRData?.StandingsTable?.StandingsLists;
-        if(!lists || !lists.length) return [];
-        const constructors = lists[0]?.ConstructorStandings || [];
-        return constructors.map(c => ({
-          position: c.positionText || c.position || '-',
-          name: c.Constructor?.name || '-',
-          points: c.points
-        }));
-      }catch{ return []; }
-    }
-
-    async function fetchStandings(type, year){
-      const cached = getCache(type, year);
-      if(cached) return cached;
-      showLoading();
-      try{
-        const endpoint = type === 'drivers' ? 'driverStandings.json' : 'constructorStandings.json';
-        const url = `${API_BASE}${year}/${endpoint}`;
-        const resp = await fetch(url);
-        if(!resp.ok) throw new Error('Network error');
-        const json = await resp.json();
-        const items = type === 'drivers' ? parseDrivers(json) : parseConstructors(json);
-        if(!items.length) throw new Error('No data');
-        setCache(type, year, items);
-        return items;
-      }catch(err){
-        console.error(err);
-        showError();
-        return null;
-      }
-    }
-
-    // Build year list (descending)
-    function buildYearList(){
-      const frag = document.createDocumentFragment();
-      for(let y = currentYear; y >= firstYear; y--){
-        const div = document.createElement('div');
-        div.className = 'year-item';
-        div.setAttribute('role','option');
-        div.setAttribute('data-year', String(y));
-        div.tabIndex = 0;
-        div.textContent = String(y);
-        div.addEventListener('click', ()=> selectYear(y, true));
-        div.addEventListener('keydown', (e)=>{
-          if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectYear(y, true); }
-          if(e.key === 'ArrowUp') { e.preventDefault(); focusYearOffset(-1); }
-          if(e.key === 'ArrowDown') { e.preventDefault(); focusYearOffset(1); }
+          markActiveYear();
+          loadStandings();
         });
-        frag.appendChild(div);
-      }
-      yearListEl.appendChild(frag);
-    }
-    function focusYearOffset(offset){
-      const items = Array.from(yearListEl.querySelectorAll('.year-item'));
-      const idx = items.findIndex(i => i.classList.contains('selected'));
-      let target = idx + offset;
-      if(target < 0) target = 0;
-      if(target >= items.length) target = items.length -1;
-      items[target].focus();
-    }
-
-    function selectYear(year, shouldFetch = true){
-      selectedYear = year;
-      const items = Array.from(yearListEl.querySelectorAll('.year-item'));
-      items.forEach(it => it.classList.toggle('selected', Number(it.getAttribute('data-year')) === year));
-      const selectedEl = yearListEl.querySelector(`.year-item[data-year="${year}"]`);
-      if(selectedEl){
-        // center the selected element within the visible area (adjacent years above and below)
-        // Prefer native scrollIntoView with 'center' block for reliable centering.
-        try {
-          if (typeof selectedEl.scrollIntoView === 'function') {
-            // Use smooth center scrolling when supported by the browser
-            selectedEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-          } else {
-            // Fallback: compute scrollTop so element is centered
-            const container = yearListEl;
-            const containerHeight = container.clientHeight;
-            const elOffsetTop = selectedEl.offsetTop;
-            const elHeight = selectedEl.offsetHeight;
-            const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
-            container.scrollTop = Math.max(0, Math.round(scrollTo));
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            item.click();
           }
-        } catch (e) {
-          // In case some browsers throw for options, fallback to manual calculation
-          const container = yearListEl;
-          const containerHeight = container.clientHeight;
-          const elOffsetTop = selectedEl.offsetTop;
-          const elHeight = selectedEl.offsetHeight;
-          const scrollTo = elOffsetTop - (containerHeight / 2) + (elHeight / 2);
-          container.scrollTop = Math.max(0, Math.round(scrollTo));
+        });
+        yearList.appendChild(item);
+      }
+
+      function markActiveYear() {
+        const items = yearList.querySelectorAll('.year-item');
+        items.forEach(it => {
+          if (parseInt(it.textContent) === selectedYear) {
+            it.classList.add('active');
+          } else {
+            it.classList.remove('active');
+          }
+        });
+      }
+
+      // Tabs
+      btnDrivers.addEventListener('click', () => {
+        if (mode === 'drivers') return;
+        mode = 'drivers';
+        btnDrivers.classList.add('active');
+        btnConstructors.classList.remove('active');
+        loadStandings();
+      });
+
+      btnConstructors.addEventListener('click', () => {
+        if (mode === 'constructors') return;
+        mode = 'constructors';
+        btnConstructors.classList.add('active');
+        btnDrivers.classList.remove('active');
+        loadStandings();
+      });
+
+      async function loadStandings() {
+        contentArea.innerHTML = `<div class="loading">Loading ${mode} standings for ${selectedYear}…</div>`;
+
+        try {
+          const endpoint = mode === 'drivers' ? 'driverStandings' : 'constructorStandings';
+          const url = `${API_BASE}/${selectedYear}/${endpoint}.json`;
+
+          // Simple caching logic similar to results.html logic
+          const cacheKey = `ergast_standings_${mode}_${selectedYear}`;
+          const raw = localStorage.getItem(cacheKey);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            // 5 min cache
+            if (parsed && parsed.ts && (Date.now() / 1000 - parsed.ts < 60 * 5)) {
+              renderData(parsed.data);
+              return;
+            }
+          }
+
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error('Failed to fetch data');
+          const json = await resp.json();
+
+          const list = (json.MRData && json.MRData.StandingsTable && json.MRData.StandingsTable.StandingsLists)
+            ? json.MRData.StandingsTable.StandingsLists[0]
+            : null;
+
+          // Cache it
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data: list })); } catch (e) { }
+
+          renderData(list);
+
+        } catch (err) {
+          console.error(err);
+          contentArea.innerHTML = `<div class="error">Error loading data. Please try again later.</div>`;
         }
       }
-      if(shouldFetch) loadForCurrentState();
-    }
 
-    function setActiveTab(tab){
-      activeTab = tab;
-      tabDrivers.classList.toggle('active', tab === 'drivers');
-      tabConstructors.classList.toggle('active', tab === 'constructors');
-      tabDrivers.setAttribute('aria-selected', tab === 'drivers' ? 'true' : 'false');
-      tabConstructors.setAttribute('aria-selected', tab === 'constructors' ? 'true' : 'false');
+      function renderData(list) {
+        if (!list) {
+          contentArea.innerHTML = `<div class="loading">No standings available for ${selectedYear}.</div>`;
+          return;
+        }
 
-      loadForCurrentState();
-    }
-
-    async function loadForCurrentState(){
-      // Special rule: if constructors tab selected AND year <= 1957, don't call API.
-      if (activeTab === 'constructors' && Number(selectedYear) <= 1957) {
-        renderConstructorsIntro();
-        return;
+        const items = mode === 'drivers' ? list.DriverStandings : list.ConstructorStandings;
+        renderTable(items);
       }
 
-      showLoading();
-      const items = await fetchStandings(activeTab, selectedYear);
-      if(!items || !items.length) { showError(); return; }
-      renderTable(activeTab, items);
-    }
+      function renderTable(items) {
+        if (!items || items.length === 0) {
+          contentArea.innerHTML = `<div class="loading">No data found.</div>`;
+          return;
+        }
 
-    tabDrivers.addEventListener('click', ()=> { if(activeTab !== 'drivers') setActiveTab('drivers'); });
-    tabConstructors.addEventListener('click', ()=> { if(activeTab !== 'constructors') setActiveTab('constructors'); });
+        const table = document.createElement('table');
+        table.className = 'standings-table';
 
-    // initial
-    function init(){
-      buildYearList();
-      // highlight and center current year
-      selectYear(currentYear, false); // highlight current year without fetching twice
-      setActiveTab('drivers'); // will call loadForCurrentState
-      setTimeout(()=> loadForCurrentState(), 50);
-    }
-    window.addEventListener('DOMContentLoaded', init);
+        if (mode === 'drivers') {
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th>POS</th>
+                <th>DRIVER</th>
+                <th>CONSTRUCTOR</th>
+                <th>WINS</th>
+                <th>PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(item => `
+                <tr>
+                  <td>${item.position}</td>
+                  <td>${item.Driver.givenName} ${item.Driver.familyName}</td>
+                  <td>${item.Constructors.map(c => c.name).join(', ')}</td>
+                  <td>${item.wins}</td>
+                  <td>${item.points}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          `;
+        } else {
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th>POS</th>
+                <th>CONSTRUCTOR</th>
+                <th>WINS</th>
+                <th>PTS</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${items.map(item => `
+                <tr>
+                  <td>${item.position}</td>
+                  <td>${item.Constructor.name}</td>
+                  <td>${item.wins}</td>
+                  <td>${item.points}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          `;
+        }
+
+        contentArea.innerHTML = '';
+        contentArea.appendChild(table);
+      }
+
+      // Initial Load
+      markActiveYear();
+      loadStandings();
+
+    })();
   </script>
 </body>
+
 </html>
