@@ -506,6 +506,19 @@
         padding: 8px;
       }
     }
+
+    /* Futuristic Styling for BMC Widget Message */
+    .bmc-futuristic-bubble {
+      background: rgba(10, 10, 10, 0.95) !important;
+      color: var(--accent-cyan) !important;
+      border: 1px solid var(--accent-cyan) !important;
+      font-family: inherit !important;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1) !important;
+      border-radius: 8px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+      backdrop-filter: blur(5px);
+    }
   </style>
 </head>
 
@@ -652,8 +665,38 @@
       window.addEventListener('orientationchange', syncState);
       window.addEventListener('load', syncState);
       syncState();
+
+      // Observer to detect and style the Buy Me A Coffee widget message bubble
+      const bmcObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && node.textContent.includes('Thank you for ICE Braking')) {
+              node.classList.add('bmc-futuristic-bubble');
+            }
+            // Check children if node is a container
+            if (node.nodeType === 1 && node.hasChildNodes()) {
+              const bmcText = Array.from(node.querySelectorAll('*')).find(el => el.textContent.includes('Thank you for ICE Braking'));
+              if (bmcText) {
+                // The message is usually a direct div, but let's find the container bubble
+                // The widget structure is a bit dynamic, so we target the closest block
+                let bubble = bmcText;
+                while (bubble && bubble.style.position !== 'fixed' && bubble !== document.body) {
+                  bubble = bubble.parentElement;
+                }
+                if (bubble && bubble !== document.body) bubble.classList.add('bmc-futuristic-bubble');
+              }
+            }
+          });
+        });
+      });
+
+      bmcObserver.observe(document.body, { childList: true, subtree: true });
     })();
   </script>
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+    data-id="icebraking" data-description="Support me on Buy me a coffee!"
+    data-message="Thank you for ICE Braking :)" data-color="#00FFFF"
+    data-position="left" data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>
