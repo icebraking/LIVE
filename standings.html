@@ -16,6 +16,7 @@
       --border-color: rgba(0, 255, 255, 0.2);
       --card-bg: rgba(0, 255, 255, 0.02);
       --gap: 22px;
+      --mobile-break: 900px;
     }
 
     /* Page shell */
@@ -54,36 +55,104 @@
       outline: none;
     }
 
-    /* Layout */
-    .top-center {
+    /* App Layout */
+    .app {
       position: absolute;
-      top: 20px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .wrap {
-      position: absolute;
-      top: 80px;
+      top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      overflow-y: auto;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 22px;
+      padding: 22px;
+      box-sizing: border-box;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: transparent;
+      border-radius: 12px;
+      padding: 16px;
+      height: 100%;
+      border-right: 1px solid var(--border-color);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 10px;
+    }
+
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 8px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      font-size: 0.98rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+    }
+
+    .menu a svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      fill: var(--accent-cyan);
+      opacity: 0.95;
+    }
+
+    .menu a:hover,
+    .menu a:focus {
+      background: transparent;
+      text-shadow: 0 0 10px var(--accent-cyan);
+      transform: translateX(10px);
+    }
+
+    .menu a:hover svg,
+    .menu a:focus svg {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    .menu a.active {
+      background: rgba(0, 255, 255, 0.1);
+      text-shadow: 0 0 10px var(--accent-cyan);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+
+    /* Main Area */
+    .main {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
     }
 
     /* Year Select */
+    .top-center {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
     .year-select {
       position: relative;
       width: 200px;
+      z-index: 100;
     }
 
     .year-display {
@@ -141,7 +210,7 @@
       display: flex;
       justify-content: center;
       gap: 15px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     .tab-btn {
@@ -165,9 +234,12 @@
     }
 
     /* Content Area */
-    .content-area {
+    .content-area-scroll {
       flex: 1;
       width: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     .standings-table {
@@ -216,37 +288,93 @@
     }
 
     /* Home Button */
-    .home-inflow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .home-button {
+      position: fixed;
+      left: 62px;
+      bottom: 12px;
       width: 46px;
       height: 46px;
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(0, 255, 255, 0.2);
-      margin: 20px auto;
+      z-index: 200;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .home-inflow svg {
+    .home-button svg {
       width: 22px;
       height: 22px;
       fill: var(--accent-cyan);
       opacity: 0.95;
+      transition: all 0.3s ease;
     }
 
-    .home-inflow:hover {
+    .home-button:hover {
       background: rgba(0, 255, 255, 0.1);
       box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
       border-color: var(--accent-cyan);
-      transform: scale(1.05);
     }
 
-    @media (max-width:420px) {
-      .wrap {
+    .home-button:hover svg {
+      filter: drop-shadow(0 0 5px var(--accent-cyan));
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+
+      html,
+      body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        height: auto;
+        min-height: 100%;
+      }
+
+      .app {
+        position: relative;
+        height: auto;
+        bottom: auto;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         padding: 12px;
-        top: 70px;
+        top: 0;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 78%;
+        max-width: 320px;
+        height: 100vh;
+        transform: translateX(-110%);
+        transition: transform .28s cubic-bezier(.2, .9, .2, 1);
+        z-index: 140;
+        overflow: auto;
+        background: #000;
+        border-right: 1px solid var(--border-color);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        padding-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .top-center {
+        position: static;
+        margin-top: 10px;
       }
 
       .year-select {
@@ -264,31 +392,60 @@
 </head>
 
 <body>
-  <div class="top-center">
-    <div class="year-select" id="yearSelect" aria-label="Select year">
-      <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false"
-        aria-haspopup="listbox">
-        <span id="selectedYearLabel">2026</span>
+  <div class="app" role="application" aria-label="Standings page with left navigation">
+    <!-- Sidebar navigation -->
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" />
+            </svg><span>NEWS</span></a></li>
+        <li><a href="blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" />
+            </svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24"
+              aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" />
+            </svg><span>EXPERIENCE</span></a></li>
+        <li><a href="tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" />
+            </svg><span>TRACKS</span></a></li>
+        <li><a href="info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
+            </svg><span>INFO</span></a></li>
+        <li><a href="news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" />
+            </svg><span>NEWS - OL</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main" id="mainContent" role="main" aria-label="Standings content">
+      <div class="top-center">
+        <div class="year-select" id="yearSelect" aria-label="Select year">
+          <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false"
+            aria-haspopup="listbox">
+            <span id="selectedYearLabel">2026</span>
+          </div>
+          <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
+        </div>
       </div>
-      <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
-    </div>
-  </div>
 
-  <div class="wrap" id="pageWrap">
-    <div class="tabs">
-      <button class="tab-btn active" id="btnDrivers">DRIVERS</button>
-      <button class="tab-btn" id="btnConstructors">CONSTRUCTORS</button>
-    </div>
+      <div class="tabs">
+        <button class="tab-btn active" id="btnDrivers">DRIVERS</button>
+        <button class="tab-btn" id="btnConstructors">CONSTRUCTORS</button>
+      </div>
 
-    <div class="content-area" id="contentArea">
-      <div class="loading">Select a year to view standings.</div>
-    </div>
+      <div class="content-area-scroll" id="contentArea">
+        <div class="loading">Select a year to view standings.</div>
+      </div>
 
-    <a href="index.html" class="home-inflow" aria-label="Home">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
-      </svg>
-    </a>
+      <!-- Home icon (Now child of Main) -->
+      <a class="home-button" href="index.html" aria-label="Home" title="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+        </svg>
+      </a>
+    </main>
   </div>
 
   <script>
@@ -298,223 +455,266 @@
       const YEAR_END = 2026;
 
       let selectedYear = 2026;
-      let mode = 'drivers'; // 'drivers' or 'constructors'
+      let mode = 'drivers'; // drivers | constructors
 
+      const yearListEl = document.getElementById('yearList');
+      const yearDisplayBtn = document.getElementById('yearDisplay');
+      const selectedYearLabel = document.getElementById('selectedYearLabel');
+      const contentArea = document.getElementById('contentArea');
       const btnDrivers = document.getElementById('btnDrivers');
       const btnConstructors = document.getElementById('btnConstructors');
-      const selectedYearLabel = document.getElementById('selectedYearLabel');
-      const yearList = document.getElementById('yearList');
-      const contentArea = document.getElementById('contentArea');
 
-      // Setup Year List (Descending)
-      for (let y = YEAR_END; y >= YEAR_START; y--) {
-        const item = document.createElement('div');
-        item.className = 'year-item';
-        item.textContent = y;
-        item.tabIndex = 0;
-        item.addEventListener('click', () => {
-          selectedYear = y;
-          selectedYearLabel.textContent = y;
-          // Collapse dropdown
-          if (document.activeElement) document.activeElement.blur();
-
-          markActiveYear();
-          loadStandings();
-        });
-        item.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            item.click();
+      // Mobile sidebar toggle - Matching schedule.html behavior
+      (function () {
+        const sidebar = document.getElementById('sidebar');
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            if (sidebar && sidebar.classList.contains('open')) sidebar.classList.remove('open');
           }
         });
-        yearList.appendChild(item);
+
+        function syncState() {
+          const isPhone = window.matchMedia('(max-width:900px)').matches;
+          if (!isPhone) {
+            if (sidebar) sidebar.classList.remove('open');
+            if (sidebar) sidebar.style.transform = '';
+            if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
+            document.documentElement.style.overflow = 'hidden';
+          } else {
+            if (sidebar) sidebar.setAttribute('aria-hidden', 'false');
+            document.documentElement.style.overflow = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', syncState);
+        window.addEventListener('orientationchange', syncState);
+        window.addEventListener('load', syncState);
+        syncState();
+      })();
+
+      // Generate years
+      const years = [];
+      for (let y = YEAR_END; y >= YEAR_START; y--) years.push(y);
+
+      function renderYearList() {
+        yearListEl.innerHTML = '';
+        years.forEach(y => {
+          const item = document.createElement('div');
+          item.className = 'year-item';
+          item.setAttribute('role', 'option');
+          item.tabIndex = 0;
+          item.dataset.year = y;
+          item.textContent = y;
+          item.addEventListener('click', () => selectYear(Number(y)));
+          item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectYear(Number(y)); }
+          });
+          yearListEl.appendChild(item);
+        });
       }
 
       function markActiveYear() {
-        const items = yearList.querySelectorAll('.year-item');
-        items.forEach(it => {
-          if (parseInt(it.textContent) === selectedYear) {
-            it.classList.add('active');
-          } else {
-            it.classList.remove('active');
-          }
-        });
+        const items = yearListEl.querySelectorAll('.year-item');
+        items.forEach(it => it.classList.toggle('active', Number(it.dataset.year) === selectedYear));
+        selectedYearLabel.textContent = selectedYear;
       }
 
-      // Tabs
+      yearDisplayBtn.addEventListener('click', () => {
+        yearListEl.focus();
+      });
+
+      function selectYear(y) {
+        selectedYear = y;
+        if (document.activeElement) document.activeElement.blur();
+        markActiveYear();
+        loadStandings();
+      }
+
       btnDrivers.addEventListener('click', () => {
         if (mode === 'drivers') return;
         mode = 'drivers';
-        btnDrivers.classList.add('active');
-        btnConstructors.classList.remove('active');
+        updateTabs();
         loadStandings();
       });
 
       btnConstructors.addEventListener('click', () => {
         if (mode === 'constructors') return;
         mode = 'constructors';
-        btnConstructors.classList.add('active');
-        btnDrivers.classList.remove('active');
+        updateTabs();
         loadStandings();
       });
+
+      function updateTabs() {
+        if (mode === 'drivers') {
+          btnDrivers.classList.add('active');
+          btnConstructors.classList.remove('active');
+        } else {
+          btnDrivers.classList.remove('active');
+          btnConstructors.classList.add('active');
+        }
+      }
+
+      // 2026 Drivers Hardcode mapping not needed anymore as per instruction, using API but showing "-" for constructor if missing.
+      // Logic for pre-loading lists if standings are empty:
+      // If fetching standings returns empty list, we fetch the full list of drivers/constructors for that year and show them with 0 points.
 
       async function loadStandings() {
         contentArea.innerHTML = `<div class="loading">Loading ${mode} standings for ${selectedYear}…</div>`;
 
         try {
+          // Attempt to fetch Standings first
           const endpoint = mode === 'drivers' ? 'driverStandings' : 'constructorStandings';
-          // Try standard standings endpoint first
-          const url = `${API_BASE}/${selectedYear}/${endpoint}.json`;
+          // Cache key
+          const cacheKey = `ergast_${mode}_${selectedYear}_v2`;
 
-          // Simple caching logic
-          const cacheKey = `ergast_standings_${mode}_${selectedYear}`;
+          let data = null;
           const raw = localStorage.getItem(cacheKey);
           if (raw) {
             const parsed = JSON.parse(raw);
-            // 5 min cache
-            if (parsed && parsed.ts && (Date.now() / 1000 - parsed.ts < 60 * 5)) {
-              renderData(parsed.data);
-              return;
+            if (parsed && parsed.ts && (Date.now() / 1000 - parsed.ts < 60 * 10)) { // 10 min cache
+              data = parsed.data;
             }
           }
 
-          const resp = await fetch(url);
-          if (!resp.ok) throw new Error('Failed to fetch data');
-          const json = await resp.json();
+          if (!data) {
+            const url = `${API_BASE}/${selectedYear}/${endpoint}.json?limit=100`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('Network error: ' + resp.status);
+            const json = await resp.json();
+            data = json;
+            try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data })); } catch (e) { }
+          }
 
-          let list = (json.MRData && json.MRData.StandingsTable && json.MRData.StandingsTable.StandingsLists)
-            ? json.MRData.StandingsTable.StandingsLists[0]
-            : null;
+          let list = null;
+          if (data && data.MRData && data.MRData.StandingsTable && data.MRData.StandingsTable.StandingsLists && data.MRData.StandingsTable.StandingsLists.length > 0) {
+            list = data.MRData.StandingsTable.StandingsLists[0];
+          }
 
-          // If list is empty (season hasn't started) and it's 2026 or later, fetch full list
+          // If no standings data found, check if it's the current/future season (like 2026) -> fetch raw list
           if ((!list || (mode === 'drivers' && (!list.DriverStandings || list.DriverStandings.length === 0)) || (mode === 'constructors' && (!list.ConstructorStandings || list.ConstructorStandings.length === 0))) && selectedYear >= 2026) {
             const listUrl = mode === 'drivers'
-              ? `${API_BASE}/${selectedYear}/drivers.json`
-              : `${API_BASE}/${selectedYear}/constructors.json`;
+              ? `${API_BASE}/${selectedYear}/drivers.json?limit=100`
+              : `${API_BASE}/${selectedYear}/constructors.json?limit=100`;
 
-            const listResp = await fetch(listUrl);
-            if (listResp.ok) {
-              const listJson = await listResp.json();
-              if (mode === 'drivers' && listJson.MRData.DriverTable.Drivers.length > 0) {
-                // Sort Drivers Alphabetically by Surname
-                const drivers = listJson.MRData.DriverTable.Drivers.sort((a, b) => a.familyName.localeCompare(b.familyName));
-
-                // 2026 Driver-Team Map (inferred) removed
-
-                // Construct fake standings list
-                list = {
-                  season: selectedYear,
-                  DriverStandings: drivers.map((d, i) => ({
-                    position: i + 1, // temporary pos
-                    points: 0,
-                    wins: 0,
-                    Driver: d,
-                    Constructors: [{ name: "-" }]
-                  }))
-                };
-              } else if (mode === 'constructors' && listJson.MRData.ConstructorTable.Constructors.length > 0) {
-                // Sort Constructors Alphabetically by Name
-                const constructors = listJson.MRData.ConstructorTable.Constructors.sort((a, b) => a.name.localeCompare(b.name));
-                // Construct fake standings list
-                list = {
-                  season: selectedYear,
-                  ConstructorStandings: constructors.map((c, i) => ({
-                    position: i + 1,
-                    points: 0,
-                    wins: 0,
-                    Constructor: c
-                  }))
-                };
+            const r2 = await fetch(listUrl);
+            if (r2.ok) {
+              const j2 = await r2.json();
+              if (mode === 'drivers') {
+                // Create fake standing objects
+                const rawDrivers = j2.MRData.DriverTable.Drivers || [];
+                const fakeStandings = rawDrivers.map(d => ({
+                  position: '-',
+                  points: '0',
+                  wins: '0',
+                  Driver: d,
+                  Constructors: [] // Empty constructors for now
+                }));
+                renderTable(fakeStandings);
+                return;
+              } else {
+                const rawCons = j2.MRData.ConstructorTable.Constructors || [];
+                const fakeStandings = rawCons.map(c => ({
+                  position: '-',
+                  points: '0',
+                  wins: '0',
+                  Constructor: c
+                }));
+                renderTable(fakeStandings);
+                return;
               }
             }
           }
 
-          // Cache it
-          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data: list })); } catch (e) { }
-
-          renderData(list);
+          if (mode === 'drivers') {
+            const drivers = (list && list.DriverStandings) ? list.DriverStandings : [];
+            renderTable(drivers);
+          } else {
+            const cons = (list && list.ConstructorStandings) ? list.ConstructorStandings : [];
+            renderTable(cons);
+          }
 
         } catch (err) {
           console.error(err);
-          contentArea.innerHTML = `<div class="error">Error loading data. Please try again later.</div>`;
+          contentArea.innerHTML = `<div class="error">Failed to load data.<br>${err.message}</div>`;
         }
-      }
-
-      function renderData(list) {
-        if (!list) {
-          contentArea.innerHTML = `<div class="loading">No standings available for ${selectedYear}.</div>`;
-          return;
-        }
-
-        const items = mode === 'drivers' ? list.DriverStandings : list.ConstructorStandings;
-        renderTable(items);
       }
 
       function renderTable(items) {
         if (!items || items.length === 0) {
-          contentArea.innerHTML = `<div class="loading">No data found.</div>`;
+          contentArea.innerHTML = `<div class="loading">No data available for ${selectedYear}.</div>`;
           return;
         }
 
         const table = document.createElement('table');
         table.className = 'standings-table';
 
+        // Header
+        const thead = document.createElement('thead');
         if (mode === 'drivers') {
-          table.innerHTML = `
-            <thead>
-              <tr>
-                <th>POS</th>
-                <th>DRIVER</th>
-                <th>CONSTRUCTOR</th>
-                <th>WINS</th>
-                <th>PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${items.map(item => `
-                <tr>
-                  <td>${item.points == 0 ? '-' : item.position}</td>
-                  <td>${item.Driver.givenName} ${item.Driver.familyName}</td>
-                  <td>${item.Constructors.map(c => c.name).join(', ')}</td>
-                  <td>${item.wins}</td>
-                  <td>${item.points}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          `;
+          thead.innerHTML = `<tr>
+            <th>POS</th>
+            <th>DRIVER</th>
+            <th>CONSTRUCTOR</th>
+            <th>PTS</th>
+            <th>WINS</th>
+          </tr>`;
         } else {
-          table.innerHTML = `
-            <thead>
-              <tr>
-                <th>POS</th>
-                <th>CONSTRUCTOR</th>
-                <th>WINS</th>
-                <th>PTS</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${items.map(item => `
-                <tr>
-                  <td>${item.points == 0 ? '-' : item.position}</td>
-                  <td>${item.Constructor.name}</td>
-                  <td>${item.wins}</td>
-                  <td>${item.points}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          `;
+          thead.innerHTML = `<tr>
+            <th>POS</th>
+            <th>CONSTRUCTOR</th>
+            <th>PTS</th>
+            <th>WINS</th>
+          </tr>`;
         }
+        table.appendChild(thead);
 
+        const tbody = document.createElement('tbody');
+        items.forEach(item => {
+          const tr = document.createElement('tr');
+
+          if (mode === 'drivers') {
+            const pos = item.positionText || item.position;
+            const dName = (item.Driver.givenName + ' ' + item.Driver.familyName).toUpperCase();
+            // Constructor might be array or empty
+            let cName = '-';
+            if (item.Constructors && item.Constructors.length > 0) {
+              cName = item.Constructors[0].name.toUpperCase();
+            }
+            const pts = item.points;
+            const wins = item.wins;
+
+            tr.innerHTML = `
+               <td>${pos}</td>
+               <td>${dName}</td>
+               <td>${cName}</td>
+               <td>${pts}</td>
+               <td>${wins}</td>
+             `;
+          } else {
+            const pos = item.positionText || item.position;
+            const cName = item.Constructor.name.toUpperCase();
+            const pts = item.points;
+            const wins = item.wins;
+
+            tr.innerHTML = `
+               <td>${pos}</td>
+               <td>${cName}</td>
+               <td>${pts}</td>
+               <td>${wins}</td>
+             `;
+          }
+          tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
         contentArea.innerHTML = '';
         contentArea.appendChild(table);
       }
 
-      // Initial Load
-      markActiveYear();
-      loadStandings();
+      // Initialize
+      renderYearList();
+      selectYear(selectedYear); // Loads standings inclusive
 
     })();
   </script>
 </body>
-
-</html>
