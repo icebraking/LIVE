@@ -268,7 +268,7 @@
     <div class="year-select" id="yearSelect" aria-label="Select year">
       <div class="year-display" id="yearDisplay" role="button" tabindex="0" aria-expanded="false"
         aria-haspopup="listbox">
-        <span id="selectedYearLabel">2025</span>
+        <span id="selectedYearLabel">2026</span>
       </div>
       <div class="year-list" id="yearList" role="listbox" tabindex="0" aria-label="Years list"></div>
     </div>
@@ -295,9 +295,9 @@
     (function () {
       const API_BASE = 'https://api.jolpi.ca/ergast/f1';
       const YEAR_START = 1950;
-      const YEAR_END = 2025;
+      const YEAR_END = 2026;
 
-      let selectedYear = 2025;
+      let selectedYear = 2026;
       let mode = 'drivers'; // 'drivers' or 'constructors'
 
       const btnDrivers = document.getElementById('btnDrivers');
@@ -363,9 +363,10 @@
 
         try {
           const endpoint = mode === 'drivers' ? 'driverStandings' : 'constructorStandings';
+          // Try standard standings endpoint first
           const url = `${API_BASE}/${selectedYear}/${endpoint}.json`;
 
-          // Simple caching logic similar to results.html logic
+          // Simple caching logic
           const cacheKey = `ergast_standings_${mode}_${selectedYear}`;
           const raw = localStorage.getItem(cacheKey);
           if (raw) {
@@ -381,9 +382,52 @@
           if (!resp.ok) throw new Error('Failed to fetch data');
           const json = await resp.json();
 
-          const list = (json.MRData && json.MRData.StandingsTable && json.MRData.StandingsTable.StandingsLists)
+          let list = (json.MRData && json.MRData.StandingsTable && json.MRData.StandingsTable.StandingsLists)
             ? json.MRData.StandingsTable.StandingsLists[0]
             : null;
+
+          // If list is empty (season hasn't started) and it's 2026 or later, fetch full list
+          if ((!list || (mode === 'drivers' && (!list.DriverStandings || list.DriverStandings.length === 0)) || (mode === 'constructors' && (!list.ConstructorStandings || list.ConstructorStandings.length === 0))) && selectedYear >= 2026) {
+            const listUrl = mode === 'drivers'
+              ? `${API_BASE}/${selectedYear}/drivers.json`
+              : `${API_BASE}/${selectedYear}/constructors.json`;
+
+            const listResp = await fetch(listUrl);
+            if (listResp.ok) {
+              const listJson = await listResp.json();
+              if (mode === 'drivers' && listJson.MRData.DriverTable.Drivers.length > 0) {
+                // Sort Drivers Alphabetically by Surname
+                const drivers = listJson.MRData.DriverTable.Drivers.sort((a, b) => a.familyName.localeCompare(b.familyName));
+
+                // 2026 Driver-Team Map (inferred) removed
+
+                // Construct fake standings list
+                list = {
+                  season: selectedYear,
+                  DriverStandings: drivers.map((d, i) => ({
+                    position: i + 1, // temporary pos
+                    points: 0,
+                    wins: 0,
+                    Driver: d,
+                    Constructors: [{ name: "-" }]
+                  }))
+                };
+              } else if (mode === 'constructors' && listJson.MRData.ConstructorTable.Constructors.length > 0) {
+                // Sort Constructors Alphabetically by Name
+                const constructors = listJson.MRData.ConstructorTable.Constructors.sort((a, b) => a.name.localeCompare(b.name));
+                // Construct fake standings list
+                list = {
+                  season: selectedYear,
+                  ConstructorStandings: constructors.map((c, i) => ({
+                    position: i + 1,
+                    points: 0,
+                    wins: 0,
+                    Constructor: c
+                  }))
+                };
+              }
+            }
+          }
 
           // Cache it
           try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Math.floor(Date.now() / 1000), data: list })); } catch (e) { }
@@ -429,7 +473,7 @@
             <tbody>
               ${items.map(item => `
                 <tr>
-                  <td>${item.position}</td>
+                  <td>${item.points == 0 ? '-' : item.position}</td>
                   <td>${item.Driver.givenName} ${item.Driver.familyName}</td>
                   <td>${item.Constructors.map(c => c.name).join(', ')}</td>
                   <td>${item.wins}</td>
@@ -451,7 +495,7 @@
             <tbody>
               ${items.map(item => `
                 <tr>
-                  <td>${item.position}</td>
+                  <td>${item.points == 0 ? '-' : item.position}</td>
                   <td>${item.Constructor.name}</td>
                   <td>${item.wins}</td>
                   <td>${item.points}</td>
