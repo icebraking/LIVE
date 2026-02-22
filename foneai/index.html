@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FONEAI - THE SUPER PITSTOP 4 F1 I-C-E BRAKING</title>
+
+    <!-- Favicon: primary (relative) and fallback (local file path) -->
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="shortcut icon" type="image/png" href="../favicon.png">
+
+    <style>
+        :root {
+            --black: #000000;
+            --accent-cyan: #00FFFF;
+            --primary-glow: rgba(0, 255, 255, 0.5);
+            --border-color: rgba(0, 255, 255, 0.2);
+            --sidebar-w: 220px;
+            --gap: 22px;
+            --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
+            --header-h: 160px;
+            --headline-top-offset: 12px;
+            --mobile-break: 900px;
+        }
+
+        /*
+      UNIVERSAL COPPERPLATE GOTHIC
+      Primary font set to Copperplate-family with fallbacks. Text uppercase.
+    */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--black);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+            /* desktop: keep no page scrolling; mobile override below */
+            font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+        }
+
+        /* Hide scrollbars (most browsers) */
+        * {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            box-sizing: border-box;
+        }
+
+        *::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        /* Fixed headline: bold, same size as main labels */
+        .floating-title {
+            position: fixed;
+            top: var(--headline-top-offset);
+            left: 0;
+            right: 0;
+            height: calc(var(--header-h) - var(--headline-top-offset));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 80;
+            pointer-events: none;
+            /* header text not interactive */
+            font-weight: 800;
+            color: var(--accent-cyan);
+            font-size: var(--main-label-size);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: 3px;
+            line-height: 1;
+            text-align: center;
+            padding: 0 12px;
+            text-shadow: 0 0 10px var(--primary-glow);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Hamburger button inside header (hidden on desktop) */
+        .hamburger {
+            position: fixed;
+            left: 16px;
+            top: calc(var(--headline-top-offset) + 8px);
+            z-index: 100;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            display: none;
+            /* shown on mobile via media query */
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            color: #fff;
+            cursor: pointer;
+            pointer-events: auto;
+            /* ensure it's clickable */
+        }
+
+        .hamburger:focus {
+            outline: 3px solid rgba(0, 255, 255, 0.18);
+            outline-offset: 3px
+        }
+
+        .hamburger .bar {
+            width: 18px;
+            height: 2px;
+            background: #fff;
+            box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
+            display: block;
+        }
+
+        /* App positioned under header */
+        .app {
+            position: absolute;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            grid-template-columns: var(--sidebar-w) 1fr;
+            gap: var(--gap);
+            padding: var(--gap);
+            box-sizing: border-box;
+            align-items: stretch;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: transparent;
+            border-radius: 12px;
+            padding: 16px;
+            height: 100%;
+            /* box-shadow: 0 14px 40px rgba(0,0,0,0.85); */
+            border-right: 1px solid var(--border-color);
+            overflow: hidden;
+            /* desktop: no scroll */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 0.98rem;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+        }
+
+        .menu a svg {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+            fill: var(--accent-cyan);
+            opacity: 0.95;
+        }
+
+        .menu a:hover,
+        .menu a:focus {
+            background: transparent;
+            text-shadow: 0 0 10px var(--accent-cyan);
+            transform: translateX(10px);
+        }
+
+        .menu a:hover svg,
+        .menu a:focus svg {
+            fill: var(--accent-cyan);
+            filter: drop-shadow(0 0 5px var(--accent-cyan));
+        }
+
+        /* Main content */
+        .main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* FONEAI Chat Interface Custom Styling */
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .chat-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin: 0;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 15px var(--primary-glow);
+            letter-spacing: 4px;
+        }
+
+        .chat-header p {
+            font-size: 1rem;
+            color: rgba(0, 255, 255, 0.7);
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .input-wrapper:focus-within {
+            transform: translateY(-2px);
+        }
+
+        #question-input {
+            width: 100%;
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem 4rem 1.5rem 1.5rem;
+            font-family: "Bookman Old Style", Bookman, serif;
+            font-size: 18px;
+            color: var(--accent-cyan);
+            outline: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            text-transform: none;
+            /* Changed: allow lowercase */
+        }
+
+        #question-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px var(--primary-glow), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        #question-input::placeholder {
+            color: rgba(0, 255, 255, 0.4);
+        }
+
+        #submit-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 2px solid var(--accent-cyan);
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        #submit-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        #submit-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        #submit-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent-cyan);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--accent-cyan);
+            animation: fadeIn 0.4s ease;
+            text-shadow: 0 0 5px var(--primary-glow);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 255, 255, 0.1);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat History Area */
+        .chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 10px 15px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-history::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-history::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            max-width: 85%;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            line-height: 1.5;
+            font-size: 18px;
+            font-family: "Bookman Old Style", Bookman, serif;
+            animation: fadeIn 0.3s ease;
+            text-transform: none;
+            /* Allow lowercase */
+            word-wrap: break-word;
+        }
+
+        .message p {
+            margin: 0;
+            padding-bottom: 0.5rem;
+        }
+
+        .message p:last-child {
+            padding-bottom: 0;
+        }
+
+        .message.user-message {
+            align-self: flex-end;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-bottom-right-radius: 4px;
+            color: var(--accent-cyan);
+        }
+
+        .message.ai-message {
+            align-self: flex-start;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-cyan);
+            border-bottom-left-radius: 4px;
+            color: var(--accent-cyan);
+        }
+
+        .message.error-message {
+            border-left-color: #ff3333;
+            color: #ffaaaa;
+        }
+
+
+        /* Mobile styles */
+        @media (max-width: var(--mobile-break)) {
+
+            /* allow vertical scrolling on small devices */
+            html,
+            body {
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* show hamburger */
+            .hamburger {
+                display: flex;
+            }
+
+            /* app becomes single column; sidebar hidden by default (off-canvas) */
+            .app {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 12px;
+                top: var(--header-h);
+            }
+
+            .sidebar {
+                position: fixed;
+                top: var(--header-h);
+                left: 0;
+                width: 78%;
+                max-width: 320px;
+                height: calc(100vh - var(--header-h));
+                transform: translateX(-110%);
+                transition: transform .28s cubic-bezier(.2, .9, .2, 1);
+                z-index: 140;
+                overflow: auto;
+                /* allow sidebar scrolling if many links */
+                -webkit-overflow-scrolling: touch;
+                background: #000;
+                /* ensure background on mobile */
+                border-right: 1px solid var(--border-color);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            /* scrim overlay when sidebar open */
+            .scrim {
+                display: block;
+                position: fixed;
+                inset: var(--header-h) 0 0 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 130;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .18s ease;
+            }
+
+            .scrim.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* main content reduced width and spacing */
+            .main {
+                padding-bottom: 40px;
+                height: auto;
+                min-height: calc(100vh - var(--header-h));
+            }
+
+            /* shrink header sizing on small screens */
+            :root {
+                --header-h: 96px;
+                --headline-top-offset: 8px;
+            }
+
+            .floating-title {
+                font-size: var(--main-label-size);
+                padding: 0 10px;
+            }
+
+            .chat-header h2 {
+                font-size: 2rem;
+            }
+
+            #question-input {
+                font-size: 1rem;
+                padding-left: 1rem;
+            }
+        }
+
+        /* Smartphone-specific layout */
+        @media (max-width: 420px) {
+
+            /* allow vertical scrolling on phones */
+            html,
+            body {
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* ensure hamburger hidden because nav is shown in-flow as vertical left nav */
+            .hamburger {
+                display: none !important;
+            }
+
+            /* Position the app so the sidebar appears directly below the headline (same top as desktop)
+         and allow it to expand beyond the viewport so the browser can scroll. */
+            .app {
+                position: absolute;
+                top: var(--header-h);
+                left: 0;
+                right: 0;
+                bottom: auto;
+                /* allow content to grow vertically */
+                display: block;
+                gap: 12px;
+                padding: 10px;
+                overflow: visible;
+                /* allow children to extend and be visible (so page scroll works) */
+            }
+
+            /* Make the sidebar appear as a vertical stacked menu (left/vertical style in flow) */
+            .sidebar {
+                position: static !important;
+                transform: none !important;
+                width: auto !important;
+                height: auto !important;
+                max-width: none !important;
+                display: block !important;
+                padding: 10px 12px;
+                border-radius: 10px;
+                background: rgba(10, 10, 10, 0.96);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+                overflow: visible;
+                border: 1px solid var(--border-color);
+            }
+
+            /* Menu becomes a vertical list (left navigation style) */
+            .menu {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+
+            .menu a {
+                padding: 10px 12px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 1rem;
+            }
+
+            /* Ensure scrim is hidden since nav is in-flow */
+            .scrim {
+                display: none !important;
+            }
+
+            /* Place the main area */
+            .main {
+                margin-top: 10px;
+                padding-bottom: 48px;
+                display: block;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            /* small-screen header tweaks */
+            :root {
+                --header-h: 84px;
+                --headline-top-offset: 6px;
+            }
+
+            .floating-title {
+                font-size: clamp(14px, 8vw, 20px);
+            }
+        }
+
+        /* small screens */
+        @media (max-width: 360px) {
+            .menu a {
+                padding: 8px 10px;
+                font-size: 0.95rem;
+            }
+
+            .app {
+                padding: 8px;
+            }
+        }
+
+        /* Home Button */
+        .home-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 0 15px var(--primary-glow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.1);
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 25px var(--accent-cyan);
+        }
+
+        .home-btn svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--accent-cyan);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app" role="application" aria-label="THE SUPER PITSTOP 4 F1 I-C-E BRAKING"
+        style="grid-template-columns: 1fr; top: 0;">
+        <!-- Main Content Area -->
+        <main class="main" role="main" aria-label="Primary actions" style="height: 100vh;">
+            <div class="chat-container">
+
+                <div class="chat-header">
+                    <h2>FONE<span style="color: #FF10F0; text-shadow: 0 0 15px rgba(255, 16, 240, 0.6);">AI</span></h2>
+                </div>
+
+                <div class="chat-history" id="chat-history">
+                    <!-- Chat messages will be injected here -->
+                </div>
+
+                <div class="loading-state hidden" id="loading-indicator" style="margin-bottom: 10px;">
+                    <div class="spinner"></div>
+                    <p style="text-transform: uppercase;">ANALYZING TELEMETRY...</p>
+                </div>
+
+                <div class="input-wrapper">
+                    <input type="text" id="question-input" value="ASK ME ANYTHING F1 RELATED" autocomplete="off">
+                    <button id="submit-btn" aria-label="Ask Question">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <a href="https://www.icebraking.com" class="home-btn" aria-label="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+        </svg>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
