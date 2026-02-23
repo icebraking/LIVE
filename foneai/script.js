@@ -106,16 +106,31 @@ document.addEventListener('DOMContentLoaded', () => {
             // Try parsing as JSON first
             const data = JSON.parse(rawText);
 
-            // n8n returns a JSON object. We try to grab the AI's answer from common keys.
-            answerText = data.text || data.response || data.answer || data.output || data.chatInput;
+            // Handle potential array response from n8n
+            const obj = Array.isArray(data) && data.length > 0 ? data[0] : data;
 
-            // If the specific key wasn't found, display the whole JSON so we can read it
+            // n8n returns a JSON object. We try to grab the AI's answer from common keys.
+            answerText = obj.text || obj.response || obj.answer || obj.output || obj.chatInput || obj.message;
+
+            // If the specific key wasn't found, try to extract any valid string value
             if (!answerText) {
                 // Strip out formatting if it's the exact 'myField' default snippet
-                if (data.myField === "value") {
+                if (obj.myField === "value") {
                     answerText = "Connection successful, but the n8n 'Respond to Webhook' node is currently set to return the default { myField: 'value' }. <br><br><b>Fix in n8n:</b> Open your 'Respond to Webhook' node and change the 'Respond With' parameter to output the AI Agent's text instead.";
+                } else if (typeof obj === 'string') {
+                    answerText = obj;
+                } else if (typeof obj === 'object' && obj !== null) {
+                    for (const key of Object.keys(obj)) {
+                        if (typeof obj[key] === 'string' && obj[key].trim().length > 0) {
+                            answerText = obj[key];
+                            break;
+                        }
+                    }
+                    if (!answerText) {
+                        answerText = JSON.stringify(obj, null, 2);
+                    }
                 } else {
-                    answerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+                    answerText = String(obj);
                 }
             }
         } catch (e) {
@@ -139,6 +154,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function appendMessage(text, role) {
+        let finalHtml = '';
+
+        if (role === 'ai') {
+            let cleanText = typeof text === 'string' ? text : String(text);
+
+            // Basic Markdown Parsing for display
+            // 1. Headers (### Title -> <h3>Title</h3>)
+            cleanText = cleanText.replace(/^(#{1,6})\s+(.*)$/gm, (match, hashes, content) => {
+                const level = hashes.length;
+                return `<h${level}>${content}</h${level}>`;
+            });
+
+            // 2. Bold (**text** -> <strong>text</strong>)
+            cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // 3. Italic (*text* -> <em>text</em>)
+            cleanText = cleanText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // 4. Tables
+            // Simple approach: look for lines with | and construct HTML tables
+            if (cleanText.includes('|')) {
+                const lines = cleanText.split('\n');
+                let inTable = false;
+                let tableHtml = [];
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith('|') && line.endsWith('|')) {
+                        if (!inTable) {
+                            inTable = true;
+                            tableHtml.push('<table style="width:100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; border: 1px solid var(--accent-cyan);">');
+                        }
+
+                        // Check if it's a separator line like |---|---|
+                        if (line.match(/^\|[-:\| ]+\|$/)) {
+                            continue;
+                        }
+
+                        const cells = line.split('|').slice(1, -1).map(c => c.trim());
+                        let rowHtml = '<tr>';
+                        cells.forEach(cell => {
+                            // If first row in table, make it a th
+                            const tag = tableHtml.length === 1 ? 'th' : 'td';
+                            rowHtml += `<${tag} style="padding: 8px; border: 1px solid var(--accent-cyan); text-align: left;">${cell}</${tag}>`;
+                        });
+                        rowHtml += '</tr>';
+                        tableHtml.push(rowHtml);
+                    } else {
+                        if (inTable) {
+                            inTable = false;
+                            tableHtml.push('</table>');
+                        }
+                        tableHtml.push(line);
+                    }
+                }
+                if (inTable) {
+                    tableHtml.push('</table>');
+                }
+                cleanText = tableHtml.join('\n');
+            }
+
+            // 5. Lists (- Item -> <ul><li>Item</li></ul>)
+            cleanText = cleanText.replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>');
+            // Wrap loose li elements in uls
+            cleanText = cleanText.replace(/(<li>.*<\/li>(\n<li>.*<\/li>)*)/g, '<ul style="padding-left: 20px;">$1</ul>');
+
+            // 6. Line breaks
+            // Fix newlines that aren't inside HTML tags
+            const blocks = cleanText.split('\n\n');
+            finalHtml = blocks.map(block => {
+                if (block.startsWith('<h') || block.startsWith('<table') || block.startsWith('<ul')) {
+                    return block; // Don't wrap structural blocks in p tags
+                } else {
+                    return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+                }
+            }).join('');
+
+        } else {
+            // For user messages, just do basic HTML escaping and line breaks
+            let cleanText = typeof text === 'string' ? text : String(text);
+            finalHtml = `<p>${cleanText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`;
+        }
+
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('message');
 
@@ -150,9 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             msgDiv.classList.add('ai-message');
         }
 
-        // Simple HTML formatting for linebreaks from n8n
-        const formattedText = text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
-        msgDiv.innerHTML = `<p>${formattedText}</p>`;
+        msgDiv.innerHTML = finalHtml;
 
         chatHistory.appendChild(msgDiv);
         chatHistory.scrollTop = chatHistory.scrollHeight;
