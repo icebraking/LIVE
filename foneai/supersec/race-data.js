@@ -30,7 +30,7 @@ const raceConfig = {
 async function fetchOpenF1Data(raceId) {
     const tableBody = document.getElementById("driver-table-body");
     const raceInfoBox = document.getElementById("race-info");
-    tableBody.innerHTML = "<tr><td colspan='8' class='loading'>LOADING TELEMETRY...</td></tr>";
+    tableBody.innerHTML = "<tr><td colspan='9' class='loading'>LOADING TELEMETRY...</td></tr>";
 
     try {
         // 1. Fetch 2025 meetings
@@ -52,7 +52,7 @@ async function fetchOpenF1Data(raceId) {
         }
 
         if (!meeting) {
-            tableBody.innerHTML = "<tr><td colspan='8' class='loading'>RACE DATA NOT YET AVAILABLE FOR 2025</td></tr>";
+            tableBody.innerHTML = "<tr><td colspan='9' class='loading'>RACE DATA NOT YET AVAILABLE FOR 2025</td></tr>";
             return;
         }
 
@@ -64,7 +64,7 @@ async function fetchOpenF1Data(raceId) {
         const qualySession = sessions.find(s => s.session_name && s.session_name.toLowerCase().includes("qualifying"));
 
         if (!qualySession) {
-            tableBody.innerHTML = "<tr><td colspan='8' class='loading'>QUALIFYING SESSION NOT YET AVAILABLE</td></tr>";
+            tableBody.innerHTML = "<tr><td colspan='9' class='loading'>QUALIFYING SESSION NOT YET AVAILABLE</td></tr>";
             raceInfoBox.innerHTML = `<div>CIRCUIT: ${meeting.circuit_short_name.toUpperCase()}</div><div>SESSION: NA</div>`;
             return;
         }
@@ -81,6 +81,16 @@ async function fetchOpenF1Data(raceId) {
         // 4. Fetch drivers
         const driversRes = await fetch(`https://api.openf1.org/v1/drivers?session_key=${sessionKey}`);
         const drivers = await driversRes.json();
+
+        // Fetch qualifying positions separately as requested
+        const posRes = await fetch(`https://api.openf1.org/v1/position?session_key=${sessionKey}`);
+        const positions = await posRes.json();
+
+        const latestPos = new Map();
+        for (const p of positions) {
+            latestPos.set(p.driver_number, p.position);
+        }
+
         const driverMap = new Map();
         for (const d of drivers) {
             driverMap.set(d.driver_number, {
@@ -90,7 +100,8 @@ async function fetchOpenF1Data(raceId) {
                 color: d.team_colour,
                 s1: Infinity,
                 s2: Infinity,
-                s3: Infinity
+                s3: Infinity,
+                qualyPos: latestPos.get(d.driver_number) || "NA"
             });
         }
 
@@ -140,7 +151,8 @@ async function fetchOpenF1Data(raceId) {
                 <td>${sl++}</td>
                 <td style="text-align: left;"><span style="border-left: 4px solid #${drv.color || 'FFFFFF'}; padding-left: 8px;">${(drv.name || "NA").toUpperCase()}</span></td>
                 <td>${drv.number || "NA"}</td>
-                <td>${(drv.team || "NA").toUpperCase()}</td>
+                <td style="text-align: left;">${(drv.team || "NA").toUpperCase()}</td>
+                <td>${drv.qualyPos}</td>
                 <td>${formatTime(drv.s1)}</td>
                 <td>${formatTime(drv.s2)}</td>
                 <td>${formatTime(drv.s3)}</td>
@@ -151,7 +163,7 @@ async function fetchOpenF1Data(raceId) {
 
     } catch (err) {
         console.error(err);
-        tableBody.innerHTML = "<tr><td colspan='8' class='loading'>ERROR FETCHING TELEMETRY. RETRY LATER.</td></tr>";
+        tableBody.innerHTML = "<tr><td colspan='9' class='loading'>ERROR FETCHING TELEMETRY. RETRY LATER.</td></tr>";
     }
 }
 
