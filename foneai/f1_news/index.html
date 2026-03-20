@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FONEAI - Latest F1 News</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .news-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: absolute;
+            top: var(--header-h);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--gap);
+            padding-bottom: 80px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .news-item {
+            background: rgba(0, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .news-item:hover {
+            background: rgba(0, 255, 255, 0.08);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .news-title {
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--primary-glow);
+            margin: 0;
+            line-height: 1.4;
+            font-family: inherit;
+            letter-spacing: 2px;
+            flex: 1;
+        }
+
+        .news-title a {
+            text-decoration: none;
+            color: inherit;
+            transition: text-shadow 0.3s ease;
+        }
+
+        .news-title a:hover {
+            text-decoration: none;
+            text-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        .news-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            min-width: 160px;
+        }
+
+        .news-source {
+            font-size: 0.8rem;
+            color: var(--black);
+            background: var(--accent-cyan);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px var(--primary-glow);
+            text-transform: uppercase;
+        }
+
+        .news-time {
+            color: rgba(255, 255, 255, 0.6);
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            text-transform: none;
+        }
+
+        .news-content {
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #d0d0d0;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        /* Container for the feed from n8n */
+        #news-feed {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Custom scrollbar for news list */
+        .news-container::-webkit-scrollbar {
+            display: block;
+            width: 8px;
+        }
+        
+        .news-container::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        
+        .news-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        
+        .news-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .news-header {
+                flex-direction: column;
+            }
+            .news-meta {
+                align-items: flex-start;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="floating-title">
+        LATEST F1 NEWS
+    </header>
+
+    <main class="news-container">
+        <!-- N8n can target this exact element to add or replace news items -->
+        <div id="news-feed">
+            <div class="news-content" style="text-align: center; padding: 40px; color: var(--accent-cyan); text-transform: uppercase;">
+                Loading Latest News...
+            </div>
+        </div>
+    </main>
+
+    <!-- Back to Dashboard -->
+    <a class="home-button" href="../index.html" aria-label="Back to Dashboard" title="Back to Dashboard">
+        <!-- Back Arrow SVG -->
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+        </svg>
+    </a>
+
+    <script>
+        // Dynamically load news from a JSON file generated by n8n
+        async function loadNews() {
+            const feedContainer = document.getElementById('news-feed');
+            
+            try {
+                // Add a cache-busting query parameter so it always fetches the latest file
+                const response = await fetch('news.txt?t=' + new Date().getTime());
+                
+                if (!response.ok) {
+                    throw new Error('News file not found');
+                }
+                
+                const newsText = await response.text();
+                
+                if (!newsText || newsText.trim() === '') {
+                    feedContainer.innerHTML = '<div class="news-content" style="text-align: center; padding: 40px;">No news items available currently.</div>';
+                    return;
+                }
+
+                // Clear the loading text
+                feedContainer.innerHTML = '';
+                
+                // Build the HTML for the text message
+                const article = document.createElement('article');
+                article.className = 'news-item';
+                
+                article.innerHTML = `
+                    <div class="news-header">
+                        <h2 class="news-title" style="flex: auto; font-size: 1.2rem;">
+                            <!-- We don't have a title, so we just show an LATEST UPDATE header -->
+                            LATEST UPDATE
+                        </h2>
+                        <div class="news-meta" style="flex-direction: row; justify-content: flex-end; align-items: center; width: auto; margin:0;">
+                            <span class="news-source">AI AGENT</span>
+                        </div>
+                    </div>
+                    <!-- Make sure whitespace formatting from n8n is preserved -->
+                    <div class="news-content" style="white-space: pre-wrap; margin-top: 10px;">${newsText}</div>
+                `;
+                
+                feedContainer.appendChild(article);
+                
+            } catch (error) {
+                console.error("Error loading news: ", error);
+                feedContainer.innerHTML = '<div class="news-content" style="text-align: center; padding: 40px; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px;">WAITING FOR LATEST NEWS...</div>';
+            }
+        }
+
+        // Load news on page load
+        document.addEventListener('DOMContentLoaded', loadNews);
+        
+        // Optionally auto-refresh every 5 minutes (300000 ms) so the dashboard is always live
+        setInterval(loadNews, 300000);
+    </script>
+</body>
+</html>
