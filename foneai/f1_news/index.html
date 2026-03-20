@@ -6,21 +6,96 @@
     <title>FONEAI - Latest F1 News</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        .news-container {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
+        .page-wrapper {
             position: absolute;
-            top: var(--header-h);
+            top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            padding: var(--gap);
-            padding-bottom: 80px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            align-items: center;
+        }
+
+        .header-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 0 20px 0;
+            z-index: 10;
+        }
+
+        .page-title {
+            font-weight: 800;
+            color: var(--accent-cyan);
+            font-size: var(--main-label-size);
+            text-shadow: 0 0 10px var(--primary-glow);
+            letter-spacing: 3px;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* Recharge Button */
+        .recharge-btn {
+            margin-top: 15px;
+            background-color: var(--accent-cyan);
+            color: var(--black);
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: 800;
+            font-family: inherit;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .recharge-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+        }
+
+        /* Glowing Cyan Thunder Bolt SVG inside button */
+        .recharge-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--accent-cyan);
+            filter: drop-shadow(0 0 5px var(--black));
+            stroke: var(--black);
+            stroke-width: 1px;
+            transition: all 0.3s ease;
+        }
+
+        /* Active/Loading State -> Red background, White Font */
+        .recharge-btn.loading {
+            background-color: #ff0000;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            pointer-events: none; /* Prevent double clicks while loading */
+        }
+
+        .recharge-btn.loading svg {
+            fill: #ffffff;
+            stroke: none;
+            filter: drop-shadow(0 0 5px #ffffff);
+        }
+
+        /* Layout for the exact 2cm margins */
+        .content-area {
+            /* Full width minus 2cm on each side (4cm total) */
+            width: calc(100% - 4cm);
+            margin: 0 2cm;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px;
         }
 
         .news-item {
@@ -28,206 +103,183 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            transition: all 0.4s ease;
         }
 
         .news-item:hover {
-            background: rgba(0, 255, 255, 0.08);
+            background: rgba(0, 255, 255, 0.05);
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .news-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .news-title {
-            font-size: 1.4rem;
-            color: var(--accent-cyan);
-            font-weight: bold;
-            text-shadow: 0 0 5px var(--primary-glow);
-            margin: 0;
-            line-height: 1.4;
-            font-family: inherit;
-            letter-spacing: 2px;
-            flex: 1;
-        }
-
-        .news-title a {
-            text-decoration: none;
-            color: inherit;
-            transition: text-shadow 0.3s ease;
-        }
-
-        .news-title a:hover {
-            text-decoration: none;
-            text-shadow: 0 0 15px var(--accent-cyan);
-        }
-
-        .news-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 8px;
-            min-width: 160px;
-        }
-
-        .news-source {
-            font-size: 0.8rem;
-            color: var(--black);
-            background: var(--accent-cyan);
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px var(--primary-glow);
-            text-transform: uppercase;
-        }
-
-        .news-time {
-            color: rgba(255, 255, 255, 0.6);
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            text-transform: none;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
         }
 
         .news-content {
             font-family: system-ui, -apple-system, sans-serif;
-            color: #d0d0d0;
+            color: #e0e0e0;
             line-height: 1.6;
-            font-size: 1.05rem;
-            text-transform: none;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
             letter-spacing: normal;
+            text-transform: none;
         }
 
-        /* Container for the feed from n8n */
-        #news-feed {
-            width: 100%;
+        /* Back Arrow Fixed in Left Margin */
+        .fixed-back-btn {
+            position: fixed;
+            bottom: 20px; /* Placed at the bottom */
+            /* Placed completely within the left 2cm margin */
+            left: 0.5cm; 
+            width: 1cm;
+            height: 1cm;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        /* Custom scrollbar for news list */
-        .news-container::-webkit-scrollbar {
-            display: block;
-            width: 8px;
+        .fixed-back-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--accent-cyan);
+            opacity: 0.95;
+            transition: all 0.3s ease;
         }
-        
-        .news-container::-webkit-scrollbar-track {
-            background: rgba(0, 255, 255, 0.02);
-            border-radius: 4px;
-        }
-        
-        .news-container::-webkit-scrollbar-thumb {
+
+        .fixed-back-btn:hover {
             background: rgba(0, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-        
-        .news-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            border-color: var(--accent-cyan);
+            transform: scale(1.1);
         }
 
-        @media (max-width: 768px) {
-            .news-header {
-                flex-direction: column;
-            }
-            .news-meta {
-                align-items: flex-start;
-                flex-direction: row;
-                justify-content: space-between;
-                width: 100%;
-                margin-top: 8px;
-            }
+        .fixed-back-btn:hover svg {
+            filter: drop-shadow(0 0 8px var(--accent-cyan));
         }
+        
     </style>
 </head>
 <body>
-    <header class="floating-title">
-        LATEST F1 NEWS
-    </header>
 
-    <main class="news-container">
-        <!-- N8n can target this exact element to add or replace news items -->
-        <div id="news-feed">
-            <div class="news-content" style="text-align: center; padding: 40px; color: var(--accent-cyan); text-transform: uppercase;">
-                Loading Latest News...
-            </div>
-        </div>
-    </main>
-
-    <!-- Back to Dashboard -->
-    <a class="home-button" href="../index.html" aria-label="Back to Dashboard" title="Back to Dashboard">
-        <!-- Back Arrow SVG -->
+    <!-- Fixed Back Arrow strictly in Left Margin (0.5cm) -->
+    <a class="fixed-back-btn" href="../index.html" aria-label="Back to Dashboard" title="Back to Dashboard">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
         </svg>
     </a>
 
-    <script>
-        // Dynamically load news from a JSON file generated by n8n
-        async function loadNews() {
-            const feedContainer = document.getElementById('news-feed');
+    <div class="page-wrapper">
+        <header class="header-section">
+            <h1 class="page-title">LATEST F1 NEWS</h1>
             
+            <!-- Recharge Button -->
+            <button id="btn-recharge" class="recharge-btn">
+                <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                RECHARGE
+                <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </button>
+        </header>
+
+        <main class="content-area" id="news-feed">
+            <div class="news-item">
+                <div class="news-content" style="text-align: center; color: var(--accent-cyan); text-transform: uppercase;">
+                    LOADING LATEST NEWS...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION: SET YOUR WEBHOOK URL HERE
+        // ==========================================
+        // Replace this string with your n8n Production Webhook URL
+        const N8N_WEBHOOK_URL = 'https://anoop6611.app.n8n.cloud/webhook/f1-news';
+        // ==========================================
+
+        const feedContainer = document.getElementById('news-feed');
+        const btnRecharge = document.getElementById('btn-recharge');
+
+        // Function 1: Initial Load reads from the static news.txt file generated by n8n
+        async function loadInitialNews() {
             try {
-                // Add a cache-busting query parameter so it always fetches the latest file
+                // cache-busting timestamp
                 const response = await fetch('news.txt?t=' + new Date().getTime());
-                
-                if (!response.ok) {
-                    throw new Error('News file not found');
-                }
+                if (!response.ok) throw new Error('news.txt not found');
                 
                 const newsText = await response.text();
-                
-                if (!newsText || newsText.trim() === '') {
-                    feedContainer.innerHTML = '<div class="news-content" style="text-align: center; padding: 40px;">No news items available currently.</div>';
-                    return;
-                }
-
-                // Clear the loading text
-                feedContainer.innerHTML = '';
-                
-                // Build the HTML for the text message
-                const article = document.createElement('article');
-                article.className = 'news-item';
-                
-                article.innerHTML = `
-                    <div class="news-header">
-                        <h2 class="news-title" style="flex: auto; font-size: 1.2rem;">
-                            <!-- We don't have a title, so we just show an LATEST UPDATE header -->
-                            LATEST UPDATE
-                        </h2>
-                        <div class="news-meta" style="flex-direction: row; justify-content: flex-end; align-items: center; width: auto; margin:0;">
-                            <span class="news-source">AI AGENT</span>
-                        </div>
-                    </div>
-                    <!-- Make sure whitespace formatting from n8n is preserved -->
-                    <div class="news-content" style="white-space: pre-wrap; margin-top: 10px;">${newsText}</div>
-                `;
-                
-                feedContainer.appendChild(article);
+                displayContent(newsText);
                 
             } catch (error) {
-                console.error("Error loading news: ", error);
-                feedContainer.innerHTML = '<div class="news-content" style="text-align: center; padding: 40px; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 2px;">WAITING FOR LATEST NEWS...</div>';
+                console.error("Error loading news.txt: ", error);
+                displayContent("WAITING FOR LATEST NEWS...", true);
             }
         }
 
-        // Load news on page load
-        document.addEventListener('DOMContentLoaded', loadNews);
-        
-        // Optionally auto-refresh every 5 minutes (300000 ms) so the dashboard is always live
-        setInterval(loadNews, 300000);
+        // Display utility to render text inside the margin-box
+        function displayContent(text, isCenteredAlert = false) {
+            feedContainer.innerHTML = '';
+            
+            if (!text || text.trim() === '') {
+                text = "No updates available.";
+                isCenteredAlert = true;
+            }
+
+            const article = document.createElement('article');
+            article.className = 'news-item';
+            
+            if (isCenteredAlert) {
+                article.innerHTML = `<div class="news-content" style="text-align: center; color: var(--accent-cyan); letter-spacing: 2px; text-transform: uppercase;">${text}</div>`;
+            } else {
+                article.innerHTML = `<div class="news-content">${text}</div>`;
+            }
+            
+            feedContainer.appendChild(article);
+        }
+
+        // Function 2: Button handler hits the Webhook
+        btnRecharge.addEventListener('click', async () => {
+            
+            // 1. Change to Red/White loading state
+            btnRecharge.classList.add('loading');
+            displayContent("FETCHING NEW MESSAGE...", true);
+
+            try {
+                // 2. Call the webhook directly
+                // If your n8n webhook only accepts POST requests, change this to 'POST'.
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'GET' 
+                });
+                
+                if (!response.ok) throw new Error('Webhook request failed');
+                
+                // 3. Extract the new message returned by the n8n webhook
+                let newText = await response.text();
+                
+                // Override n8n default JSON response with the requested cool message
+                if (newText.includes('"Workflow was started"')) {
+                    newText = "WE ARE CHECKING...";
+                }
+                
+                // 4. Print the new message from n8n into the container box
+                displayContent(newText);
+                
+            } catch (error) {
+                console.error("Webhook error: ", error);
+                displayContent("ERROR CONNECTING TO WEBHOOK.", true);
+            } finally {
+                // 5. Revert button to Cyan/Black state when finished
+                btnRecharge.classList.remove('loading');
+            }
+        });
+
+        // Trigger the initial layout fetch
+        document.addEventListener('DOMContentLoaded', loadInitialNews);
+
     </script>
 </body>
 </html>
