@@ -12,7 +12,7 @@ const raceConfig = {
     "can": { country: "Canada" },
     "cat": { country: "Spain" },
     "atr": { country: "Austria" },
-    "eng": { country: "Great Britain" },
+    "eng": { country: "United Kingdom" },
     "hun": { country: "Hungary" },
     "bel": { country: "Belgium" },
     "nel": { country: "Netherlands" },
@@ -41,6 +41,8 @@ async function fetchOpenF1Data(raceId) {
         const config = raceConfig[raceId];
         let meeting = null;
         for (const m of meetings) {
+            if (m.meeting_name && m.meeting_name.toLowerCase().includes('testing')) continue;
+
             if (config.country && m.country_name && m.country_name.toLowerCase().includes(config.country.toLowerCase())) {
                 meeting = m;
                 break;
