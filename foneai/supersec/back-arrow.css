@@ -1,0 +1,33 @@
+.back-arrow-btn {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0 20px 20px;
+}
+
+.back-arrow-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--accent-cyan);
+    opacity: 0.95;
+    transition: all 0.3s ease;
+}
+
+.back-arrow-btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    border-color: var(--accent-cyan);
+}
+
+.back-arrow-btn:hover svg {
+    filter: drop-shadow(0 0 5px var(--accent-cyan));
+}

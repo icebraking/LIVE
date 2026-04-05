@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER SECTORS - 2026 Season</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .schedule-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px 80px 20px;
+            width: 100%;
+        }
+
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .schedule-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 18px 28px;
+            background: rgba(0, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+            user-select: none;
+            overflow: hidden;
+            justify-content: space-between;
+        }
+
+        .schedule-item:hover,
+        .schedule-item:focus-within {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: var(--accent-cyan);
+            transform: scale(1.02);
+        }
+
+        .schedule-item a.anchor {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            text-indent: -9999px;
+            background: transparent;
+            border: 0;
+        }
+
+        .race-name {
+            font-weight: 800;
+            font-size: clamp(0.85rem, 2.5vw, 1.2rem);
+            letter-spacing: 2px;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 5px var(--primary-glow);
+            pointer-events: none;
+        }
+
+        .race-round {
+            font-weight: 600;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            letter-spacing: 1px;
+            color: rgba(0, 255, 255, 0.5);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="schedule-container">
+        <div class="schedule-list">
+            <div class="schedule-item">
+                <a class="anchor" href="australia.html" aria-label="Australian Grand Prix"></a>
+                <span class="race-name">AUSTRALIAN GRAND PRIX</span>
+                <span class="race-round">R01</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="china.html" aria-label="Chinese Grand Prix"></a>
+                <span class="race-name">CHINESE GRAND PRIX</span>
+                <span class="race-round">R02</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="japan.html" aria-label="Japanese Grand Prix"></a>
+                <span class="race-name">JAPANESE GRAND PRIX</span>
+                <span class="race-round">R03</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="bahrain.html" aria-label="Bahrain Grand Prix"></a>
+                <span class="race-name">BAHRAIN GRAND PRIX</span>
+                <span class="race-round">R04</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="saudi.html" aria-label="Saudi Arabian Grand Prix"></a>
+                <span class="race-name">SAUDI ARABIAN GRAND PRIX</span>
+                <span class="race-round">R05</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="miami.html" aria-label="Miami Grand Prix"></a>
+                <span class="race-name">MIAMI GRAND PRIX</span>
+                <span class="race-round">R06</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="canada.html" aria-label="Canadian Grand Prix"></a>
+                <span class="race-name">CANADIAN GRAND PRIX</span>
+                <span class="race-round">R07</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="monaco.html" aria-label="Monaco Grand Prix"></a>
+                <span class="race-name">MONACO GRAND PRIX</span>
+                <span class="race-round">R08</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="spain.html" aria-label="Spanish Grand Prix (Barcelona)"></a>
+                <span class="race-name">SPANISH GRAND PRIX (BARCELONA)</span>
+                <span class="race-round">R09</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="austria.html" aria-label="Austrian Grand Prix"></a>
+                <span class="race-name">AUSTRIAN GRAND PRIX</span>
+                <span class="race-round">R10</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="uk.html" aria-label="British Grand Prix"></a>
+                <span class="race-name">BRITISH GRAND PRIX</span>
+                <span class="race-round">R11</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="belgium.html" aria-label="Belgian Grand Prix"></a>
+                <span class="race-name">BELGIAN GRAND PRIX</span>
+                <span class="race-round">R12</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="hungary.html" aria-label="Hungarian Grand Prix"></a>
+                <span class="race-name">HUNGARIAN GRAND PRIX</span>
+                <span class="race-round">R13</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="netherlands.html" aria-label="Dutch Grand Prix"></a>
+                <span class="race-name">DUTCH GRAND PRIX</span>
+                <span class="race-round">R14</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="italy.html" aria-label="Italian Grand Prix"></a>
+                <span class="race-name">ITALIAN GRAND PRIX</span>
+                <span class="race-round">R15</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="madrid.html" aria-label="Spanish Grand Prix (Madrid)"></a>
+                <span class="race-name">SPANISH GRAND PRIX (MADRID)</span>
+                <span class="race-round">R16</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="azerbaijan.html" aria-label="Azerbaijan Grand Prix"></a>
+                <span class="race-name">AZERBAIJAN GRAND PRIX</span>
+                <span class="race-round">R17</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="singapore.html" aria-label="Singapore Grand Prix"></a>
+                <span class="race-name">SINGAPORE GRAND PRIX</span>
+                <span class="race-round">R18</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="usa.html" aria-label="United States Grand Prix"></a>
+                <span class="race-name">UNITED STATES GRAND PRIX</span>
+                <span class="race-round">R19</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="mexico.html" aria-label="Mexico City Grand Prix"></a>
+                <span class="race-name">MEXICO CITY GRAND PRIX</span>
+                <span class="race-round">R20</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="brazil.html" aria-label="São Paulo Grand Prix"></a>
+                <span class="race-name">SÃO PAULO GRAND PRIX</span>
+                <span class="race-round">R21</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="lasvegas.html" aria-label="Las Vegas Grand Prix"></a>
+                <span class="race-name">LAS VEGAS GRAND PRIX</span>
+                <span class="race-round">R22</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="qatar.html" aria-label="Qatar Grand Prix"></a>
+                <span class="race-name">QATAR GRAND PRIX</span>
+                <span class="race-round">R23</span>
+            </div>
+            <div class="schedule-item">
+                <a class="anchor" href="abudhabi.html" aria-label="Abu Dhabi Grand Prix"></a>
+                <span class="race-name">ABU DHABI GRAND PRIX</span>
+                <span class="race-round">R24</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back arrow -->
+    <div style="width: 100%; display: flex; justify-content: flex-start; padding: 20px; box-sizing: border-box; margin-top: auto; clear: both;">
+        <a class="home-button" href="../../index.html" aria-label="Back" title="Back" style="position: relative !important; left: 0 !important; bottom: 0 !important; margin: 0 !important;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+        </svg>
+        </a>
+    </div>
+</body>
+
+</html>

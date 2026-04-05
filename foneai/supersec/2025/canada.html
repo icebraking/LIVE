@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE SUPER PITSTOP 4 F1 I-C-E BRAKING - SUPER LAP</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        .dashboard-container {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            padding: 180px 1cm 80px 1cm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .race-header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid var(--accent-cyan);
+            background: rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--primary-glow);
+            border-radius: 4px;
+        }
+
+        .race-header div {
+            margin: 5px 0;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--accent-cyan);
+            font-weight: 800;
+            letter-spacing: 1px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            color: var(--accent-cyan);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        tr:hover td {
+            background: rgba(0, 255, 255, 0.05);
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 15px rgba(0, 255, 255, 0.4);
+            transform: scale(1.01);
+        }
+
+        .super-lap {
+            color: var(--accent-cyan);
+            font-weight: 800;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .loading {
+            padding: 40px !important;
+            color: var(--accent-cyan);
+            animation: pulse 1.5s infinite;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="race-header" id="race-info">
+            <div>LOADING CIRCUIT INFO...</div>
+            <div>LOADING SESSION...</div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th style="text-align: left;">DRIVER NAME</th>
+                        <th>DRIVER NUMBER</th>
+                        <th style="text-align: left;">TEAM</th>
+                        <th>QUALIFYING POSITION</th>
+                        <th>SEC 1</th>
+                        <th>SEC 2</th>
+                        <th>SEC 3</th>
+                        <th>SUPER LAP</th>
+                    </tr>
+                </thead>
+                <tbody id="driver-table-body">
+                    <!-- Data written by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="race-data.js"></script>
+    <script>
+        // THIS WILL BE REPLACED IN EACH RACE FILE
+        const currentRace = "can";
+        fetchOpenF1Data("can");
+    </script>
+
+    <!-- Back arrow -->
+    <div style="width: 100%; display: flex; justify-content: flex-start; padding: 20px; box-sizing: border-box; margin-top: auto; clear: both;">
+        <a class="home-button" href="../../index.html" aria-label="Back" title="Back" style="position: relative !important; left: 0 !important; bottom: 0 !important; margin: 0 !important;">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+        </svg>
+        </a>
+    </div>
+</body>
+
+</html>
