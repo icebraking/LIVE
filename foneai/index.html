@@ -31,6 +31,10 @@
       @media (max-width:900px){
         .app{ grid-template-columns:1fr; }
         .sidebar{ border-right:0 !important; border-bottom:1px solid var(--line); height:auto; }
+        /* Higher specificity beats theme.css !important rules at mobile */
+        .page-home .app{ position:relative!important; top:auto!important; bottom:auto!important; overflow:visible!important; height:auto!important; margin-top:var(--banner-h)!important; }
+        .page-home .main{ height:auto!important; overflow:visible!important; display:block!important; }
+        .page-home .home-list{ margin-left:0!important; padding-left:12px!important; max-width:100%!important; }
       }
     </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>

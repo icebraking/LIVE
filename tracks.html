@@ -427,7 +427,11 @@
     .app{top:var(--header-h);}
     @media (max-width:969px){
       .ad-leaderboard{display:none;}
-      .app{top:0;margin-top:0;}
+      /* Higher specificity (.page-icons .app) beats theme.css (.app) at same !important level */
+      .page-icons .app{position:relative!important;top:0!important;bottom:auto!important;height:auto!important;min-height:100vh!important;overflow:visible!important;}
+      .page-icons .main{height:auto!important;overflow:visible!important;}
+      .home-button{top:10px!important;}
+      .menu{flex-wrap:wrap!important;}
     }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
