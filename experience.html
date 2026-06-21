@@ -365,7 +365,14 @@
     .app{top:var(--header-h);}
     @media (max-width:969px){
       .ad-leaderboard{display:none;}
-      .app{top:0;margin-top:0;}
+      html,body{overflow:auto!important;-webkit-overflow-scrolling:touch!important;}
+      .page-icons .app{position:relative!important;top:0!important;bottom:auto!important;display:flex!important;flex-direction:column!important;height:auto!important;overflow:visible!important;padding:12px!important;gap:12px!important;}
+      .page-icons .sidebar{position:relative!important;width:100%!important;height:auto!important;transform:none!important;border-right:none!important;border-bottom:1px solid var(--border-color)!important;padding:0 0 12px 0!important;}
+      .page-icons .menu{flex-direction:column!important;flex-wrap:nowrap!important;padding:8px 12px!important;gap:4px!important;}
+      .page-icons .main{display:block!important;height:auto!important;overflow:visible!important;width:100%!important;padding-bottom:60px!important;}
+      .page-icons .table{height:auto!important;overflow:visible!important;}
+      .page-icons .row{height:auto!important;overflow:visible!important;}
+      .icons-grid{grid-template-columns:1fr!important;width:100%!important;}
     }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
