@@ -29,7 +29,7 @@
             display: flex;
             align-items: center;
             padding: 18px 28px;
-            background: rgba(0, 255, 255, 0.02);
+            background: rgba(15, 118, 110, 0.04);
             border: 1px solid var(--border-color);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             cursor: pointer;
@@ -40,9 +40,9 @@
 
         .schedule-item:hover,
         .schedule-item:focus-within {
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
-            border-color: var(--accent-cyan);
+            background: rgba(15, 118, 110, 0.08);
+            box-shadow: 0 0 20px rgba(15, 118, 110, 0.18), inset 0 0 10px rgba(20, 24, 33, 0.12);
+            border-color: #0e3b37;
             transform: scale(1.02);
         }
 
@@ -59,7 +59,7 @@
             font-weight: 800;
             font-size: clamp(0.85rem, 2.5vw, 1.2rem);
             letter-spacing: 2px;
-            color: var(--accent-cyan);
+            color: #0e3b37;
             text-shadow: 0 0 5px var(--primary-glow);
             pointer-events: none;
         }
@@ -68,11 +68,15 @@
             font-weight: 600;
             font-size: clamp(0.7rem, 2vw, 0.9rem);
             letter-spacing: 1px;
-            color: rgba(0, 255, 255, 0.5);
+            color: rgba(15, 118, 110, 0.0);
             pointer-events: none;
             white-space: nowrap;
         }
     </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../../theme.css">
 </head>
 
 <body>

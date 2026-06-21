@@ -3,12 +3,12 @@
     width: 46px;
     height: 46px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(20, 24, 33, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(20, 24, 33, 0.45);
+    border: 1px solid rgba(20, 24, 33, 0.12);
     cursor: pointer;
     transition: all 0.3s ease;
     margin: 20px 0 20px 20px;
@@ -23,9 +23,9 @@
 }
 
 .back-arrow-btn:hover {
-    background: rgba(0, 255, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    border-color: var(--accent-cyan);
+    background: rgba(15, 118, 110, 0.08);
+    box-shadow: 0 0 15px rgba(15, 118, 110, 0.18);
+    border-color: #0e3b37;
 }
 
 .back-arrow-btn:hover svg {

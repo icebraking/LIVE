@@ -3,25 +3,23 @@
 
 <head>
   <meta charset="utf-8" />
-<meta name="description" content="Deep dive into everything Formula 1, Formula 1 breaking news, F1 rumors, Formula 1 points table, Formula 1 schedule, F1 standings historical and current, Formula 1 terminolgies and Formula 1 driver histories with some cool F1 stuff">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>THE SUPER PITSTOP 4 F1 I-C-E BRAKING</title>
+  <title>Formula 1 News, Standings, Schedule & Results | ICE Braking</title>
 
-  <!-- Favicon: primary (relative) and fallback (local file path) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
-  <link rel="icon" type="image/png" href="file:///C:/Users/anoop/Documents/GitHub/LIVE/favicon.png">
 
   <style>
     :root {
-      --black: #000000;
-      --accent-cyan: #00FFFF;
-      --primary-glow: rgba(0, 255, 255, 0.5);
-      --border-color: rgba(0, 255, 255, 0.2);
+      --black: #fbfbfa;
+      --accent-cyan: #0f766e;
+      --primary-glow: rgba(15, 118, 110, 0.0);
+      --border-color: rgba(20, 24, 33, 0.12);
       --sidebar-w: 220px;
       --gap: 22px;
       --main-label-size: clamp(1.6rem, 5vw, 3.8rem);
-      --header-h: 160px;
+      --header-h: 110px;
       --headline-top-offset: 12px;
       --mobile-break: 900px;
     }
@@ -42,7 +40,7 @@
       /* desktop: keep no page scrolling; mobile override below */
       font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: var(--accent-cyan);
+      color: #0e3b37;
     }
 
     /* Hide scrollbars (most browsers) */
@@ -80,7 +78,7 @@
       pointer-events: none;
       /* header text not interactive */
       font-weight: 800;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       font-size: var(--main-label-size);
       white-space: nowrap;
       overflow: hidden;
@@ -102,28 +100,28 @@
       width: 40px;
       height: 40px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(20, 24, 33, 0.04);
       display: none;
       /* shown on mobile via media query */
       align-items: center;
       justify-content: center;
       border: 0;
-      color: #fff;
+      color: #0e3b37;
       cursor: pointer;
       pointer-events: auto;
       /* ensure it's clickable */
     }
 
     .hamburger:focus {
-      outline: 3px solid rgba(0, 255, 255, 0.18);
+      outline: 3px solid rgba(15, 118, 110, 0.14);
       outline-offset: 3px
     }
 
     .hamburger .bar {
       width: 18px;
       height: 2px;
-      background: #fff;
-      box-shadow: 0 5px 0 0 #fff, 0 -5px 0 0 #fff;
+      background: #0e3b37;
+      box-shadow: 0 5px 0 0 #0e3b37, 0 -5px 0 0 #0e3b37;
       display: block;
     }
 
@@ -149,7 +147,7 @@
       border-radius: 12px;
       padding: 16px;
       height: 100%;
-      /* box-shadow: 0 14px 40px rgba(0,0,0,0.85); */
+      /* box-shadow: 0 14px 40px rgba(20, 24, 33, 0.12); */
       border-right: 1px solid var(--border-color);
       overflow: hidden;
       /* desktop: no scroll */
@@ -173,11 +171,11 @@
       align-items: center;
       padding: 10px;
       border-radius: 8px;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       font-weight: 700;
       font-size: 0.98rem;
       transition: all 0.3s ease;
-      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+      text-shadow: 0 0 2px rgba(15, 118, 110, 0.16);
     }
 
     .menu a svg {
@@ -229,7 +227,7 @@
       align-items: center;
       padding: 28px 32px;
       border-radius: 0;
-      background: rgba(0, 255, 255, 0.02);
+      background: rgba(15, 118, 110, 0.04);
       border: 2px solid var(--accent-cyan);
       box-shadow: none;
       transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -237,7 +235,7 @@
       user-select: none;
       overflow: hidden;
       justify-content: center;
-      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+      -webkit-tap-highlight-color: rgba(20, 24, 33, 0.03);
     }
 
     .row:active {
@@ -246,8 +244,8 @@
 
     .row:hover,
     .row:focus-within {
-      background: rgba(0, 255, 255, 0.1);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      background: rgba(15, 118, 110, 0.08);
+      box-shadow: 0 0 20px rgba(15, 118, 110, 0.18), inset 0 0 10px rgba(20, 24, 33, 0.12);
       transform: scale(1.02);
     }
 
@@ -259,7 +257,7 @@
       font-weight: 800;
       font-size: var(--main-label-size);
       letter-spacing: 2px;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       text-shadow: 0 0 5px var(--primary-glow);
       z-index: 2;
       pointer-events: none;
@@ -277,7 +275,7 @@
     }
 
     .row a.anchor:focus {
-      outline: 3px solid rgba(0, 255, 255, 0.18);
+      outline: 3px solid rgba(15, 118, 110, 0.14);
       outline-offset: 4px;
       border-radius: 12px;
     }
@@ -318,7 +316,7 @@
         overflow: auto;
         /* allow sidebar scrolling if many links */
         -webkit-overflow-scrolling: touch;
-        background: #000;
+        background: #fbfbfa;
         /* ensure background on mobile */
         border-right: 1px solid var(--border-color);
       }
@@ -332,7 +330,7 @@
         display: block;
         position: fixed;
         inset: var(--header-h) 0 0 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(20, 24, 33, 0.4);
         z-index: 130;
         opacity: 0;
         pointer-events: none;
@@ -367,7 +365,7 @@
 
       /* shrink header sizing on small screens */
       :root {
-        --header-h: 96px;
+        --header-h: 110px;
         --headline-top-offset: 8px;
       }
 
@@ -423,8 +421,8 @@
         display: block !important;
         padding: 10px 12px;
         border-radius: 10px;
-        background: rgba(10, 10, 10, 0.96);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 10px 30px rgba(20, 24, 33, 0.45);
         overflow: visible;
         border: 1px solid var(--border-color);
       }
@@ -483,7 +481,7 @@
 
       /* small-screen header tweaks */
       :root {
-        --header-h: 84px;
+        --header-h: 110px;
         --headline-top-offset: 6px;
       }
 
@@ -510,22 +508,62 @@
 
     /* Futuristic Styling for BMC Widget Message */
     .bmc-futuristic-bubble {
-      background: rgba(10, 10, 10, 0.95) !important;
-      color: var(--accent-cyan) !important;
+      background: rgba(255, 255, 255, 0.97) !important;
+      color: #0e3b37 !important;
       border: 1px solid var(--accent-cyan) !important;
       font-family: inherit !important;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1) !important;
+      box-shadow: 0 0 15px rgba(15, 118, 110, 0.18), inset 0 0 10px rgba(15, 118, 110, 0.08) !important;
       border-radius: 8px !important;
       text-transform: uppercase !important;
       letter-spacing: 1px !important;
       backdrop-filter: blur(5px);
     }
   </style>
+  <!-- ===== Leaderboard ad: AdSense loader + reserved-slot styles. Replace ca-pub-9338992881682876 with your publisher ID. ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>
+  <style>
+    :root{--header-h:110px;}
+    .ad-leaderboard{position:absolute;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;justify-content:center;background:var(--black);border-bottom:1px solid var(--border-color);z-index:150;box-sizing:border-box;padding:8px 12px;overflow:hidden;}
+    .ad-leaderboard .ad-slot-frame{flex:0 0 auto;width:970px;height:90px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px dashed var(--accent-cyan);background:rgba(15,118,110,0.04);}
+    .ad-leaderboard .adsbygoogle{display:inline-block;width:970px;height:90px;}
+    .app{top:var(--header-h);}
+    @media (max-width:969px){
+      .ad-leaderboard{display:none;}
+      .app{top:0;margin-top:0;}
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <meta name="description" content="One hub for Formula 1 — breaking F1 news, live driver and constructor standings, the 2026 race schedule, results and more.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Formula 1 News, Standings, Schedule & Results | ICE Braking">
+  <meta property="og:description" content="One hub for Formula 1 — breaking F1 news, live driver and constructor standings, the 2026 race schedule, results and more.">
+  <meta property="og:url" content="https://www.icebraking.com/index.html">
+  <meta property="og:image" content="https://www.icebraking.com/favicon.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"ICE Braking","url":"https://www.icebraking.com/","logo":"https://www.icebraking.com/favicon.png"},{"@type":"WebSite","name":"ICE Braking","url":"https://www.icebraking.com/"}]}</script>
 </head>
 
-<body>
+<body class="page-home">
   <!-- Header text (bold, same size as main labels) -->
-  <div class="floating-title" aria-hidden="true">THE SUPER PITSTOP 4 F1 I-C-E BRAKING</div>
+    <!-- ===== Leaderboard ad (970x90) — Google AdSense. Replace ca-pub-9338992881682876 and data-ad-slot="8888706979". ===== -->
+  <div class="ad-leaderboard" role="complementary" aria-label="Advertisement">
+    <div class="ad-slot-frame">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:90px"
+           data-ad-client="ca-pub-9338992881682876"
+           data-ad-slot="8888706979"
+           data-full-width-responsive="false"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
+  <!-- Site banner (below the ad) — doubles as the page H1 -->
+  <h1 class="banner">F1 GRAND I-C-E BRAKING PRIX</h1>
 
   <!-- Hamburger toggle (mobile) -->
   <button class="hamburger" id="sidebarToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
@@ -563,7 +601,7 @@
 
     <!-- Main three rows (these will be placed below the sidebar on small phones) -->
     <main class="main" role="main" aria-label="Primary actions">
-      <section class="table" role="region" aria-label="Actions table">
+      <section class="table home-list" role="region" aria-label="Actions table">
         <div class="row" role="group" aria-labelledby="lbl-standings" tabindex="-1">
           <a class="anchor" href="https://www.icebraking.com/standings.html" aria-label="Open Standings"
             tabindex="0"></a>
@@ -697,7 +735,7 @@
   </script>
   <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
     data-id="icebraking" data-description="Support me on Buy me a coffee!" data-message="Thank you for ICE Braking :)"
-    data-color="#00FFFF" data-position="left" data-x_margin="18" data-y_margin="18"></script>
+    data-color="#0f766e" data-position="left" data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>

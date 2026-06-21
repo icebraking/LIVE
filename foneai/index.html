@@ -4,43 +4,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FONEAI - Formula 1 Dashboard</title>
+    <title>FoneAI — F1 AI Dashboard, Ratings & Super Sectors | ICE Braking</title>
+    <meta name="description" content="FoneAI: AI-powered Formula 1 dashboard with latest F1 news, super sectors analysis, the ICE Braking table and driver ratings.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://www.icebraking.com/foneai/index.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FoneAI — F1 AI Dashboard | ICE Braking">
+    <meta property="og:description" content="AI-powered Formula 1 dashboard: news, super sectors, ICE Braking table and ratings.">
+    <meta property="og:url" content="https://www.icebraking.com/foneai/index.html">
+    <meta property="og:image" content="https://www.icebraking.com/favicon.png">
+    <meta name="twitter:card" content="summary">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.icebraking.com/"},{"@type":"ListItem","position":2,"name":"FoneAI","item":"https://www.icebraking.com/foneai/index.html"}]}</script>
+    <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="stylesheet" href="style.css">
+    <style>
+      /* Left-nav layout (mirrors the main site pages) */
+      :root{ --sidebar-w:220px; --gap:22px; }
+      .app{ position:absolute; left:0; right:0; bottom:0; display:grid;
+            grid-template-columns:var(--sidebar-w) 1fr; gap:var(--gap); padding:var(--gap);
+            box-sizing:border-box; align-items:stretch; overflow:hidden; }
+      .sidebar{ height:100%; display:flex; flex-direction:column; gap:10px; }
+      .menu{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+      .menu a{ display:flex; gap:12px; align-items:center; }
+      .menu a svg{ width:18px; height:18px; flex:0 0 18px; }
+      .main{ height:100%; display:flex; overflow:hidden; }
+      @media (max-width:900px){
+        .app{ grid-template-columns:1fr; }
+        .sidebar{ border-right:0 !important; border-bottom:1px solid var(--line); height:auto; }
+      }
+    </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../theme.css">
 </head>
 
-<body>
-    <main class="main-content">
-        <section class="tabs" role="region" aria-label="Tabs">
-            <div class="row" role="group" aria-labelledby="lbl-latestnews">
-                <a class="anchor" href="https://www.icebraking.com/foneai/f1_news/index.html" aria-label="Open Latest F1 News"></a>
-                <div class="label" id="lbl-latestnews">LATEST F1 NEWS</div>
-            </div>
+<body class="page-home">
+  <!-- ===== Leaderboard ad (970x90) — Google AdSense. ===== -->
+  <div class="ad-leaderboard" role="complementary" aria-label="Advertisement">
+    <div class="ad-slot-frame">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:90px"
+           data-ad-client="ca-pub-9338992881682876"
+           data-ad-slot="8888706979"
+           data-full-width-responsive="false"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
 
-            <div class="row" role="group" aria-labelledby="lbl-supersec">
-                <a class="anchor" href="https://www.icebraking.com/foneai/supersec/index.html" aria-label="Open Super Sectors"></a>
-                <div class="label" id="lbl-supersec">SUPER SECTORS</div>
-            </div>
+  <!-- Banner — doubles as the page H1 -->
+  <h1 class="banner">FONEAI</h1>
 
-            <div class="row" role="group" aria-labelledby="lbl-icebrakingtable">
-                <a class="anchor" href="https://www.icebraking.com/foneai/table/index.html" aria-label="Open Icebraking Table"></a>
-                <div class="label" id="lbl-icebrakingtable">ICEBRAKING TABLE</div>
-            </div>
+  <div class="app" role="application" aria-label="FONEAI">
+    <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar">
+      <ul class="menu" role="list" aria-label="Sidebar links">
+        <li><a href="../news.html" role="link" aria-label="News"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 5h18v2H3zM3 9h12v2H3zM3 13h18v6H3z" /></svg><span>NEWS</span></a></li>
+        <li><a href="../blogs.html" role="link" aria-label="Blogs & Opinions"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 8h10v2H4zM4 12h16v8H4z" /></svg><span>OPINIONS &amp; BLOGS</span></a></li>
+        <li><a href="../experience.html" role="link" aria-label="F1 Experience"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2l3 7h7l-5.7 4.1L20 22l-8-5-8 5 1.7-8.9L0 9h7z" /></svg><span>EXPERIENCE</span></a></li>
+        <li><a href="../tracks.html" role="link" aria-label="Tracks & Tickets"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6h18v2H3zM3 11h12v2H3zM3 16h18v2H3z" /></svg><span>TRACKS</span></a></li>
+        <li><a href="../info.html" role="link" aria-label="F1 Info"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M11 17h2v-6h-2v6zm0-10h2V5h-2v2zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" /></svg><span>INFO</span></a></li>
+        <li><a href="../news-ol.html" role="link" aria-label="News OL"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 4h16v2H4zM4 9h8v2H4zM4 14h16v6H4z" /></svg><span>NEWS - OL</span></a></li>
+      </ul>
+    </nav>
 
-            <div class="row" role="group" aria-labelledby="lbl-icebrakingratings">
-                <a class="anchor" href="https://www.icebraking.com/foneai/ratings/index.html" aria-label="Open Icebraking Ratings"></a>
-                <div class="label" id="lbl-icebrakingratings">ICEBRAKING RATINGS</div>
-            </div>
-        </section>
+    <main class="main" role="main" aria-label="FoneAI sections">
+      <section class="tabs home-list" role="region" aria-label="FoneAI sections">
+        <div class="row" role="group" aria-labelledby="lbl-latestnews">
+          <a class="anchor" href="https://www.icebraking.com/foneai/f1_news/index.html" aria-label="Open Latest F1 News"></a>
+          <div class="label" id="lbl-latestnews">LATEST F1 NEWS</div>
+        </div>
+        <div class="row" role="group" aria-labelledby="lbl-supersec">
+          <a class="anchor" href="https://www.icebraking.com/foneai/supersec/index.html" aria-label="Open Super Sectors"></a>
+          <div class="label" id="lbl-supersec">SUPER SECTORS</div>
+        </div>
+        <div class="row" role="group" aria-labelledby="lbl-icebrakingtable">
+          <a class="anchor" href="https://www.icebraking.com/foneai/table/index.html" aria-label="Open Icebraking Table"></a>
+          <div class="label" id="lbl-icebrakingtable">ICEBRAKING TABLE</div>
+        </div>
+        <div class="row" role="group" aria-labelledby="lbl-icebrakingratings">
+          <a class="anchor" href="https://www.icebraking.com/foneai/ratings/index.html" aria-label="Open Icebraking Ratings"></a>
+          <div class="label" id="lbl-icebrakingratings">ICEBRAKING RATINGS</div>
+        </div>
+      </section>
     </main>
+  </div>
 
-    <!-- Home icon -->
-    <a class="home-button" href="https://www.icebraking.com" aria-label="Home" title="Home">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
-        </svg>
-    </a>
-
-    <!-- Retaining the script for particles if desired, or can remove it. For now, leaving the script empty or minimal, removing particle style constraints. -->
+  <!-- Home icon -->
+  <a class="home-button" href="../index.html" aria-label="Home" title="Home">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3l9 8h-3v7a1 1 0 0 1-1 1h-4v-5H11v5H7a1 1 0 0 1-1-1v-7H3l9-8z" />
+    </svg>
+  </a>
 </body>
 
 </html>

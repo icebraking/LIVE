@@ -4,17 +4,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>STANDINGS — THE F1 HUB</title>
+  <title>F1 Standings 2026 — Drivers & Constructors | ICE Braking</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
     :root {
-      --black: #000000;
-      --accent-cyan: #00FFFF;
-      --primary-glow: rgba(0, 255, 255, 0.5);
-      --border-color: rgba(0, 255, 255, 0.2);
-      --card-bg: rgba(0, 255, 255, 0.02);
+      --black: #fbfbfa;
+      --accent-cyan: #0f766e;
+      --primary-glow: rgba(15, 118, 110, 0.0);
+      --border-color: rgba(20, 24, 33, 0.12);
+      --card-bg: rgba(15, 118, 110, 0.04);
       --gap: 22px;
       --mobile-break: 900px;
     }
@@ -31,7 +31,7 @@
       overflow: hidden;
       font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: var(--accent-cyan);
+      color: #0e3b37;
     }
 
     /* Hide scrollbars */
@@ -99,11 +99,11 @@
       align-items: center;
       padding: 10px;
       border-radius: 8px;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       font-weight: 700;
       font-size: 0.98rem;
       transition: all 0.3s ease;
-      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+      text-shadow: 0 0 2px rgba(15, 118, 110, 0.16);
     }
 
     .menu a svg {
@@ -128,9 +128,9 @@
     }
 
     .menu a.active {
-      background: rgba(0, 255, 255, 0.1);
+      background: rgba(15, 118, 110, 0.08);
       text-shadow: 0 0 10px var(--accent-cyan);
-      border: 1px solid rgba(0, 255, 255, 0.2);
+      border: 1px solid rgba(20, 24, 33, 0.12);
     }
 
     /* Main Area */
@@ -158,19 +158,19 @@
     .year-display {
       background: var(--black);
       border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
+      color: #0e3b37;
       padding: 10px;
       text-align: center;
       font-weight: bold;
       cursor: pointer;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(20, 24, 33, 0.12);
       transition: all 0.3s ease;
     }
 
     .year-display:hover {
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-      background: rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(15, 118, 110, 0.18);
+      background: rgba(15, 118, 110, 0.08);
     }
 
     .year-list {
@@ -196,7 +196,7 @@
       padding: 8px;
       text-align: center;
       cursor: pointer;
-      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(15, 118, 110, 0.08);
     }
 
     .year-item:hover,
@@ -216,7 +216,7 @@
     .tab-btn {
       background: transparent;
       border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
+      color: #0e3b37;
       padding: 8px 20px;
       cursor: pointer;
       font-family: inherit;
@@ -230,7 +230,7 @@
     .tab-btn:hover {
       background: var(--accent-cyan);
       color: var(--black);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+      box-shadow: 0 0 15px rgba(15, 118, 110, 0.18);
     }
 
     /* Content Area */
@@ -246,29 +246,29 @@
       width: 100%;
       border-collapse: collapse;
       background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
       border: 1px solid var(--border-color);
+      border-radius: 12px;
     }
 
     .standings-table th {
       position: sticky;
       top: 0;
-      background: rgba(0, 255, 255, 0.1);
+      z-index: 3;
+      background: #eaf3f1;
       padding: 12px;
       text-align: left;
       font-size: 0.9rem;
       border-bottom: 2px solid var(--accent-cyan);
-      color: var(--accent-cyan);
+      color: #0e3b37;
     }
 
     .standings-table td {
       padding: 12px;
-      border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(15, 118, 110, 0.08);
     }
 
     .standings-table tr:hover {
-      background: rgba(0, 255, 255, 0.05);
+      background: rgba(15, 118, 110, 0.06);
     }
 
     .loading,
@@ -276,15 +276,15 @@
       padding: 20px;
       text-align: center;
       font-size: 1rem;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       border: 1px solid var(--border-color);
       border-radius: 12px;
       background: var(--card-bg);
     }
 
     .error {
-      color: #ff5555;
-      border-color: rgba(255, 60, 60, 0.3);
+      color: #c0392b;
+      border-color: rgba(192, 57, 43, 0.18);
     }
 
     /* Home Button */
@@ -295,12 +295,12 @@
       width: 46px;
       height: 46px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(20, 24, 33, 0.04);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(20, 24, 33, 0.45);
+      border: 1px solid rgba(20, 24, 33, 0.12);
       z-index: 200;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -315,9 +315,9 @@
     }
 
     .home-button:hover {
-      background: rgba(0, 255, 255, 0.1);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-      border-color: var(--accent-cyan);
+      background: rgba(15, 118, 110, 0.08);
+      box-shadow: 0 0 15px rgba(15, 118, 110, 0.18);
+      border-color: #0e3b37;
     }
 
     .home-button:hover svg {
@@ -358,7 +358,7 @@
         transition: transform .28s cubic-bezier(.2, .9, .2, 1);
         z-index: 140;
         overflow: auto;
-        background: #000;
+        background: #fbfbfa;
         border-right: 1px solid var(--border-color);
       }
 
@@ -389,9 +389,49 @@
       }
     }
   </style>
+  <!-- ===== Leaderboard ad: AdSense loader + reserved-slot styles. Replace ca-pub-9338992881682876 with your publisher ID. ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>
+  <style>
+    :root{--header-h:110px;}
+    .ad-leaderboard{position:absolute;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;justify-content:center;background:var(--black);border-bottom:1px solid var(--border-color);z-index:150;box-sizing:border-box;padding:8px 12px;overflow:hidden;}
+    .ad-leaderboard .ad-slot-frame{flex:0 0 auto;width:970px;height:90px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px dashed var(--accent-cyan);background:rgba(15,118,110,0.04);}
+    .ad-leaderboard .adsbygoogle{display:inline-block;width:970px;height:90px;}
+    .app{top:var(--header-h);}
+    @media (max-width:969px){
+      .ad-leaderboard{display:none;}
+      .app{top:0;margin-top:0;}
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <meta name="description" content="Live Formula 1 driver and constructor championship standings for 2026 and previous seasons.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/standings.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="F1 Standings 2026 — Drivers & Constructors | ICE Braking">
+  <meta property="og:description" content="Live Formula 1 driver and constructor championship standings for 2026 and previous seasons.">
+  <meta property="og:url" content="https://www.icebraking.com/standings.html">
+  <meta property="og:image" content="https://www.icebraking.com/favicon.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.icebraking.com/"},{"@type":"ListItem","position":2,"name":"Standings","item":"https://www.icebraking.com/standings.html"}]}</script>
 </head>
 
-<body>
+<body class="page-data">
+  <h1 class="visually-hidden">Formula 1 Driver and Constructor Standings</h1>
+    <!-- ===== Leaderboard ad (970x90) — Google AdSense. Replace ca-pub-9338992881682876 and data-ad-slot="8888706979". ===== -->
+  <div class="ad-leaderboard" role="complementary" aria-label="Advertisement">
+    <div class="ad-slot-frame">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:90px"
+           data-ad-client="ca-pub-9338992881682876"
+           data-ad-slot="8888706979"
+           data-full-width-responsive="false"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
   <div class="app" role="application" aria-label="Standings page with left navigation">
     <!-- Sidebar navigation -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">

@@ -8,7 +8,7 @@
     <style>
         .page-wrapper {
             position: absolute;
-            top: 0;
+            top: var(--header-h);
             left: 0;
             right: 0;
             bottom: 0;
@@ -30,7 +30,7 @@
 
         .page-title {
             font-weight: 800;
-            color: var(--accent-cyan);
+            color: #0e3b37;
             font-size: var(--main-label-size);
             text-shadow: 0 0 10px var(--primary-glow);
             letter-spacing: 3px;
@@ -60,7 +60,7 @@
 
         .recharge-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 25px rgba(15, 118, 110, 0.22);
         }
 
         /* Glowing Cyan Thunder Bolt SVG inside button */
@@ -77,15 +77,15 @@
         /* Active/Loading State -> Red background, White Font */
         .recharge-btn.loading {
             background-color: #ff0000;
-            color: #ffffff;
+            color: #0e3b37;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
             pointer-events: none; /* Prevent double clicks while loading */
         }
 
         .recharge-btn.loading svg {
-            fill: #ffffff;
+            fill: #0e3b37;
             stroke: none;
-            filter: drop-shadow(0 0 5px #ffffff);
+            filter: drop-shadow(0 0 5px #0e3b37);
         }
 
         /* Layout for the exact 2cm margins */
@@ -99,7 +99,7 @@
         }
 
         .news-item {
-            background: rgba(0, 255, 255, 0.02);
+            background: rgba(15, 118, 110, 0.04);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
@@ -107,14 +107,14 @@
         }
 
         .news-item:hover {
-            background: rgba(0, 255, 255, 0.05);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            background: rgba(15, 118, 110, 0.06);
+            border-color: #0e3b37;
+            box-shadow: 0 0 20px rgba(20, 24, 33, 0.12);
         }
 
         .news-content {
             font-family: system-ui, -apple-system, sans-serif;
-            color: #e0e0e0;
+            color: #134e46;
             line-height: 1.6;
             font-size: 1.1rem;
             white-space: pre-wrap;
@@ -135,8 +135,8 @@
             justify-content: center;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(15, 118, 110, 0.16);
+            box-shadow: 0 8px 20px rgba(20, 24, 33, 0.45);
             z-index: 100;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -151,9 +151,9 @@
         }
 
         .fixed-back-btn:hover {
-            background: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-            border-color: var(--accent-cyan);
+            background: rgba(20, 24, 33, 0.12);
+            box-shadow: 0 0 20px rgba(15, 118, 110, 0.22);
+            border-color: #0e3b37;
             transform: scale(1.1);
         }
 
@@ -162,8 +162,25 @@
         }
         
     </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../theme.css">
 </head>
 <body>
+  <!-- ===== Leaderboard ad (970x90) — Google AdSense. Replace ca-pub-9338992881682876 and data-ad-slot="8888706979". ===== -->
+  <div class="ad-leaderboard" role="complementary" aria-label="Advertisement">
+    <div class="ad-slot-frame">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:90px"
+           data-ad-client="ca-pub-9338992881682876"
+           data-ad-slot="8888706979"
+           data-full-width-responsive="false"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
 
     <!-- Fixed Back Arrow strictly in Left Margin (0.5cm) -->
     <a class="fixed-back-btn" href="../index.html" aria-label="Back to Dashboard" title="Back to Dashboard">
@@ -186,7 +203,7 @@
 
         <main class="content-area" id="news-feed">
             <div class="news-item">
-                <div class="news-content" style="text-align: center; color: var(--accent-cyan); text-transform: uppercase;">
+                <div class="news-content" style="text-align: center; color: #0e3b37; text-transform: uppercase;">
                     LOADING LATEST NEWS...
                 </div>
             </div>
@@ -245,7 +262,7 @@
             article.className = 'news-item';
             
             if (isCenteredAlert) {
-                article.innerHTML = `<div class="news-content" style="text-align: center; color: var(--accent-cyan); letter-spacing: 2px; text-transform: uppercase;">${text}</div>`;
+                article.innerHTML = `<div class="news-content" style="text-align: center; color: #0e3b37; letter-spacing: 2px; text-transform: uppercase;">${text}</div>`;
             } else {
                 article.innerHTML = `<div class="news-content">${text}</div>`;
             }

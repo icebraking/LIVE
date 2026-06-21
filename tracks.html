@@ -4,16 +4,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TRACKS — THE F1 HUB</title>
+  <title>F1 Tracks & Circuits — Tickets & Info | ICE Braking</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" type="image/png" href="favicon.png">
 
   <style>
     :root {
-      --black: #000000;
-      --accent-cyan: #00FFFF;
-      --primary-glow: rgba(0, 255, 255, 0.5);
-      --border-color: rgba(0, 255, 255, 0.2);
+      --black: #fbfbfa;
+      --accent-cyan: #0f766e;
+      --primary-glow: rgba(15, 118, 110, 0.0);
+      --border-color: rgba(20, 24, 33, 0.12);
       --sidebar-w: 220px;
       --gap: 22px;
       --mobile-break: 900px;
@@ -31,7 +31,7 @@
       overflow: hidden;
       font-family: "Copperplate Gothic", "Copperplate", "Copperplate Gothic Light", "Copperplate Gothic Bold", "Copperplate", serif;
       text-transform: uppercase;
-      color: var(--accent-cyan);
+      color: #0e3b37;
     }
 
     /* Hide scrollbars */
@@ -99,11 +99,11 @@
       align-items: center;
       padding: 10px;
       border-radius: 8px;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       font-weight: 700;
       font-size: 0.98rem;
       transition: all 0.3s ease;
-      text-shadow: 0 0 2px rgba(0, 255, 255, 0.3);
+      text-shadow: 0 0 2px rgba(15, 118, 110, 0.16);
     }
 
     .menu a svg {
@@ -167,7 +167,7 @@
       align-items: center;
       padding: 18px 20px;
       border-radius: 12px;
-      background: rgba(0, 255, 255, 0.02);
+      background: rgba(15, 118, 110, 0.04);
       border: 1px solid var(--border-color);
       box-shadow: none;
       transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -175,12 +175,12 @@
       user-select: none;
       overflow: visible;
       justify-content: center;
-      -webkit-tap-highlight-color: rgba(255, 255, 255, 0.02);
+      -webkit-tap-highlight-color: rgba(20, 24, 33, 0.03);
     }
 
     .row:hover {
-      background: rgba(0, 255, 255, 0.1);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+      background: rgba(15, 118, 110, 0.08);
+      box-shadow: 0 0 20px rgba(15, 118, 110, 0.18), inset 0 0 10px rgba(20, 24, 33, 0.12);
       transform: scale(1.02);
     }
 
@@ -227,15 +227,15 @@
       display: inline-block;
       border-radius: 8px;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(20, 24, 33, 0.4);
       padding: 6px;
       transition: all 0.3s ease;
       will-change: transform, box-shadow;
       text-align: center;
 
       /* Faint cyan glow by default */
-      border: 1px solid rgba(0, 255, 255, 0.2);
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+      border: 1px solid rgba(20, 24, 33, 0.12);
+      box-shadow: 0 0 10px rgba(15, 118, 110, 0.12);
     }
 
     .track-item img {
@@ -255,8 +255,8 @@
     .track-item:hover,
     .track-item:focus-within {
       transform: translateY(-8px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3);
+      border-color: #0e3b37;
+      box-shadow: 0 0 20px rgba(15, 118, 110, 0.22), 0 0 40px rgba(15, 118, 110, 0.16);
       z-index: 10;
     }
 
@@ -273,12 +273,12 @@
       width: 46px;
       height: 46px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(20, 24, 33, 0.04);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(20, 24, 33, 0.45);
+      border: 1px solid rgba(20, 24, 33, 0.12);
       z-index: 200;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -293,9 +293,9 @@
     }
 
     .home-button:hover {
-      background: rgba(0, 255, 255, 0.1);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-      border-color: var(--accent-cyan);
+      background: rgba(15, 118, 110, 0.08);
+      box-shadow: 0 0 15px rgba(15, 118, 110, 0.18);
+      border-color: #0e3b37;
     }
 
     .home-button:hover svg {
@@ -306,7 +306,7 @@
       margin-top: 20px;
       font-family: Cambria, serif;
       font-size: 10px;
-      color: var(--accent-cyan);
+      color: #0e3b37;
       text-transform: none;
       text-align: center;
       width: 100%;
@@ -361,7 +361,7 @@
       .menu a {
         font-size: 0.8rem;
         padding: 8px;
-        background: rgba(0, 255, 255, 0.05);
+        background: rgba(15, 118, 110, 0.06);
       }
 
       .sidebar.open {
@@ -417,9 +417,49 @@
       }
     }
   </style>
+  <!-- ===== Leaderboard ad: AdSense loader + reserved-slot styles. Replace ca-pub-9338992881682876 with your publisher ID. ===== -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9338992881682876" crossorigin="anonymous"></script>
+  <style>
+    :root{--header-h:110px;}
+    .ad-leaderboard{position:absolute;top:0;left:0;right:0;height:var(--header-h);display:flex;align-items:center;justify-content:center;background:var(--black);border-bottom:1px solid var(--border-color);z-index:150;box-sizing:border-box;padding:8px 12px;overflow:hidden;}
+    .ad-leaderboard .ad-slot-frame{flex:0 0 auto;width:970px;height:90px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px dashed var(--accent-cyan);background:rgba(15,118,110,0.04);}
+    .ad-leaderboard .adsbygoogle{display:inline-block;width:970px;height:90px;}
+    .app{top:var(--header-h);}
+    @media (max-width:969px){
+      .ad-leaderboard{display:none;}
+      .app{top:0;margin-top:0;}
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <meta name="description" content="Explore every Formula 1 circuit on the 2026 calendar with tickets and track information.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/tracks.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="F1 Tracks & Circuits — Tickets & Info | ICE Braking">
+  <meta property="og:description" content="Explore every Formula 1 circuit on the 2026 calendar with tickets and track information.">
+  <meta property="og:url" content="https://www.icebraking.com/tracks.html">
+  <meta property="og:image" content="https://www.icebraking.com/favicon.png">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.icebraking.com/"},{"@type":"ListItem","position":2,"name":"Tracks","item":"https://www.icebraking.com/tracks.html"}]}</script>
 </head>
 
-<body>
+<body class="page-icons">
+  <h1 class="visually-hidden">Formula 1 Tracks and Circuits</h1>
+    <!-- ===== Leaderboard ad (970x90) — Google AdSense. Replace ca-pub-9338992881682876 and data-ad-slot="8888706979". ===== -->
+  <div class="ad-leaderboard" role="complementary" aria-label="Advertisement">
+    <div class="ad-slot-frame">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:970px;height:90px"
+           data-ad-client="ca-pub-9338992881682876"
+           data-ad-slot="8888706979"
+           data-full-width-responsive="false"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
   <div class="app" role="application" aria-label="Tracks page with left navigation">
     <!-- Sidebar navigation -->
     <nav id="sidebar" class="sidebar" role="navigation" aria-label="Primary sidebar" aria-hidden="false">

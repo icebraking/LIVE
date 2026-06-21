@@ -1,0 +1,257 @@
+/* =======================================================================
+   ICE BRAKING — SHARED ELEGANT THEME (single source of truth)
+   Fonts: Sora (display/headings/labels/nav) + Inter (body/UI/data)
+   Palette: canvas #fbfbfa, teal text scale (#0e3b37 / #0f5f57 / #1f6b62 / #2f7d74),
+            accent petrol-teal #0f766e.
+
+   HOW TO THEME A NEW PAGE (auto, no per-page styling):
+   1) In <head>, AFTER any page <style>, add:
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="theme.css">   (use ../theme.css by folder depth)
+   2) Put a page-family class on <body>:
+        page-home  -> landing pages with the big vertical link list (index, foneai)
+        page-icons -> grids of logo/flag icons (news, blogs, experience, info, tracks, news-ol)
+        page-data  -> year-select + scrollable data tables (standings, schedule, results)
+   3) Use the standard .sidebar/.menu nav markup.
+   ======================================================================= */
+
+:root{
+  --font-head:'Cinzel', 'Playfair Display', Georgia, serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ink:#0e3b37;        /* primary text + table data (deep teal) */
+  --head:#0f5f57;       /* headings / labels / banner / nav-strong */
+  --ink-soft:#1f6b62;   /* nav, secondary */
+  --ink-mute:#2f7d74;   /* hints */
+  --teal:#0f766e;       /* accent: borders, active fills, hovers */
+  --line:rgba(20,24,33,0.12);
+  --surface:#ffffff;
+  --canvas:#fbfbfa;
+  --banner-h:56px;      /* banner height = uniform nav offset on all left-nav pages */
+}
+
+/* ---------- Base typography (UNIVERSAL teal fonts) ---------- */
+html, body{
+  font-family:var(--font-body) !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+  color:var(--ink);
+  background:var(--canvas);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,h5,.page-title,.main-header,.modal-title,.banner,.schedule-header{
+  font-family:var(--font-head) !important;
+  font-weight:600;
+  color:var(--head);
+  text-shadow:none !important;
+}
+
+.visually-hidden{
+  position:absolute !important; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---------- Banner (sits below the 970x90 ad) — only on index & foneai ---------- */
+.banner{
+  position:absolute; top:var(--header-h, 110px); left:0; right:0; height:var(--banner-h);
+  display:flex; align-items:center; justify-content:center;
+  margin:0; padding:0 16px; box-sizing:border-box; text-align:center;
+  font-family:'Cinzel', 'Playfair Display', serif !important; font-weight:600; letter-spacing:2px;
+  font-size:clamp(1.2rem, 2.8vw, 1.9rem); color:var(--head);
+  background:var(--canvas); border-bottom:1px solid var(--line); z-index:140;
+}
+
+/* ---------- Uniform content offset: nav/content start below ad + banner ---------- */
+.app{ top:calc(var(--header-h, 110px) + var(--banner-h)) !important; }
+
+/* ---------- Left navigation — elegant + identical position on every page ---------- */
+.sidebar{
+  padding:0 !important;
+  border-right:1px solid var(--line) !important;
+  justify-content:flex-start !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.menu{ padding:56px 14px 22px !important; gap:2px !important; }   /* 56px top zone = Home-icon row */
+.menu a{
+  font-family:var(--font-head) !important;
+  text-transform:uppercase; letter-spacing:1.4px;
+  font-size:0.82rem !important; font-weight:500 !important;
+  color:var(--ink-soft) !important;
+  padding:11px 14px !important; border-radius:9px;
+  text-shadow:none !important;
+  transition:color .18s ease, background-color .18s ease !important;
+}
+.menu a:hover, .menu a:focus{
+  transform:none !important; text-shadow:none !important;
+  background:rgba(15,118,110,0.07) !important; color:var(--teal) !important;
+}
+.menu a svg{ fill:#7fb3ab !important; transition:fill .18s ease !important; }
+.menu a:hover svg, .menu a:focus svg{ fill:var(--teal) !important; filter:none !important; transform:none !important; }
+
+/* ---------- Home / back icon — refined, just below the banner, top-left ---------- */
+.home-button, .fixed-back-btn{
+  position:fixed !important;
+  top:calc(var(--header-h, 110px) + var(--banner-h) + 12px) !important;
+  left:26px !important; right:auto !important; bottom:auto !important;
+  width:42px !important; height:42px !important; border-radius:11px !important;
+  background:var(--surface) !important; border:1px solid var(--line) !important;
+  box-shadow:0 1px 3px rgba(20,24,33,0.08) !important; z-index:160 !important;
+  display:flex !important; align-items:center; justify-content:center;
+  transition:background-color .18s ease, border-color .18s ease !important;
+}
+.home-button svg, .fixed-back-btn svg{
+  width:20px !important; height:20px !important; fill:var(--teal) !important; opacity:1 !important; filter:none !important;
+}
+.home-button:hover, .fixed-back-btn:hover{
+  background:rgba(15,118,110,0.07) !important; border-color:var(--teal) !important; box-shadow:none !important; transform:none !important;
+}
+.home-button:hover svg, .fixed-back-btn:hover svg{ filter:none !important; }
+
+/* =======================================================================
+   PAGE FAMILY: HOME  (index, foneai) — big vertical link list, left-shifted
+   ======================================================================= */
+.page-home .main, .page-home .main-content{
+  height:100% !important; display:flex !important;
+  align-items:flex-start !important; justify-content:flex-start !important;
+  padding:0 !important; overflow:hidden !important;
+}
+.page-home .home-list{
+  display:flex !important; flex-direction:column !important; gap:0 !important;
+  margin-left:2cm !important; max-width:560px !important; width:100% !important;
+  height:auto !important; min-height:0 !important;
+  padding-top:56px !important;   /* aligns first item with first nav item */
+}
+.page-home .home-list .row{
+  border:0 !important; border-left:3px solid transparent !important;
+  border-bottom:1px solid var(--line) !important; border-radius:0 !important;
+  background:transparent !important; box-shadow:none !important; padding:0 !important;
+  justify-content:flex-start !important; cursor:pointer; overflow:visible !important;
+  transition:border-color .18s ease, background-color .18s ease !important;
+}
+.page-home .home-list .row:hover, .page-home .home-list .row:focus-within{
+  background:rgba(15,118,110,0.04) !important; border-left-color:var(--teal) !important;
+  box-shadow:none !important; transform:none !important;
+}
+.page-home .home-list .label{
+  font-family:var(--font-head) !important; font-weight:600 !important; letter-spacing:1.5px;
+  font-size:clamp(1.9rem, 3.4vw, 2.6rem) !important; color:var(--head) !important;
+  text-shadow:none !important; padding:22px 20px !important; text-align:left !important;
+  transition:color .18s ease !important;
+}
+.page-home .home-list .row:hover .label, .page-home .home-list .row:focus-within .label{ color:var(--teal) !important; }
+
+/* =======================================================================
+   PAGE FAMILY: ICONS  (news, blogs, experience, info, tracks, news-ol)
+   One container box that encloses the icon grid with ~1cm padding + scroll.
+   ======================================================================= */
+.page-icons .main{
+  height:100% !important; display:block !important;
+  overflow-y:auto !important; overflow-x:hidden !important;
+  padding:18px 18px 40px !important;
+  /* show a slim teal scrollbar here (global rule hides scrollbars) */
+  scrollbar-width:thin !important; scrollbar-color:rgba(15,118,110,0.5) transparent !important;
+}
+.page-icons .main::-webkit-scrollbar{ display:block !important; width:10px !important; height:10px !important; }
+.page-icons .main::-webkit-scrollbar-thumb{ background:rgba(15,118,110,0.4) !important; border-radius:6px !important; }
+.page-icons .main::-webkit-scrollbar-track{ background:transparent !important; }
+.page-icons .table{ height:auto !important; display:block !important; max-width:none !important; overflow:visible !important; }
+.page-icons .row{
+  display:block !important; width:100% !important; box-sizing:border-box !important;
+  padding:1cm !important;                              /* >=1cm breathing room all sides */
+  border:1px solid var(--line) !important; border-left:3px solid transparent !important;
+  border-radius:14px !important; background:rgba(15,118,110,0.03) !important;
+  box-shadow:none !important; overflow:visible !important;
+  transition:background-color .18s ease, border-color .18s ease !important;
+}
+.page-icons .row:hover{
+  background:rgba(15,118,110,0.07) !important;          /* teal box encloses icons */
+  border-left-color:var(--teal) !important;             /* teal accent line, 1cm left of icons */
+  box-shadow:none !important; transform:none !important;
+}
+/* Responsive icon grid: wrap to fill the box width (no fixed 7-col overflow) */
+.page-icons .icons-wrapper{ display:block !important; width:100% !important; transform:none !important; max-width:none !important; }
+.page-icons .top-slot{ display:flex !important; justify-content:center; margin-bottom:14px; }
+.page-icons .top-slot .icon{ width:160px; }
+.page-icons .grid35{
+  display:grid !important; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)) !important;
+  gap:14px !important; width:100% !important;
+}
+/* Lighten icon cards to white + remove neon glow / jump */
+.page-icons .icon{
+  display:block !important; background:var(--surface) !important; border:1px solid var(--line) !important;
+  border-radius:10px !important; box-shadow:none !important; padding:8px !important;
+  transition:border-color .18s ease, box-shadow .18s ease !important;
+}
+.page-icons .icon img{ width:100% !important; height:62px !important; object-fit:contain !important; }
+.page-icons .icon:hover, .page-icons .icon:focus-within{
+  transform:none !important; border-color:var(--teal) !important;
+  box-shadow:0 2px 8px rgba(15,118,110,0.16) !important;
+}
+.page-icons .icon:hover img, .page-icons .icon:focus-within img{ transform:none !important; }
+
+/* =======================================================================
+   PAGE FAMILY: DATA  (standings, schedule, results) — keep inline layout,
+   theme only fonts/colours; sticky-header fixes live in each page's <style>.
+   ======================================================================= */
+.standings-table, .results-table{ font-family:var(--font-body) !important; text-transform:none !important; color:var(--ink); }
+.standings-table th, .results-table th{ font-family:var(--font-head) !important; letter-spacing:0.3px; color:var(--head) !important; }
+.schedule-list .round{ font-family:var(--font-head) !important; color:var(--head) !important; }
+.sprint-badge{ background:var(--teal) !important; color:#fff !important; border-radius:6px !important; text-transform:uppercase; letter-spacing:0.5px; }
+
+/* ---------- Year-selector dropdowns ---------- */
+.year-display{
+  font-family:var(--font-head) !important; background:var(--surface) !important;
+  border:1px solid var(--line) !important; border-radius:10px !important; box-shadow:none !important; color:var(--ink) !important;
+}
+.year-list{
+  background:var(--surface) !important; border:1px solid var(--line) !important; border-radius:10px !important;
+  box-shadow:0 8px 24px rgba(20,24,33,0.10) !important;
+  overflow-y:auto !important; overflow-x:hidden !important; overscroll-behavior:contain !important;
+}
+.year-item{ color:var(--ink-soft) !important; }
+.year-item:hover, .year-item.active, .year-item[aria-selected="true"]{ background:rgba(15,118,110,0.08) !important; color:var(--teal) !important; }
+
+/* ---------- Tabs / pill buttons ---------- */
+.tab-btn{
+  font-family:var(--font-head) !important; text-transform:uppercase; letter-spacing:1px; font-weight:500 !important;
+  background:var(--surface) !important; border:1px solid var(--line) !important; border-radius:10px !important;
+  color:var(--ink-soft) !important; box-shadow:none !important;
+  transition:background-color .18s ease, color .18s ease, border-color .18s ease !important;
+}
+.tab-btn.active, .tab-btn:hover{ background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important; box-shadow:none !important; transform:none !important; }
+
+/* ---------- Results modal ---------- */
+.modal-overlay{ background:rgba(20,24,33,0.45) !important; }
+.modal{ background:var(--surface) !important; border:1px solid var(--line) !important; border-radius:14px !important; box-shadow:0 18px 50px rgba(20,24,33,0.18) !important; }
+.modal-title{ font-family:var(--font-head) !important; color:var(--head) !important; }
+.modal-close{ background:transparent !important; border:1px solid var(--line) !important; border-radius:9px !important; color:var(--ink-soft) !important; box-shadow:none !important; }
+.modal-close:hover{ background:rgba(15,118,110,0.08) !important; color:var(--teal) !important; border-color:var(--teal) !important; }
+
+/* ---------- FoneAI bits ---------- */
+.matrix-item{ background:var(--surface) !important; border:1px solid var(--line) !important; box-shadow:none !important; }
+.matrix-item:hover{ transform:none !important; border-color:var(--teal) !important; box-shadow:0 2px 8px rgba(15,118,110,0.16) !important; }
+.matrix-item:hover img{ transform:none !important; }
+.recharge-btn{ font-family:var(--font-head) !important; border-radius:10px !important; text-transform:uppercase; letter-spacing:1px; box-shadow:none !important; }
+.recharge-btn:hover{ transform:none !important; box-shadow:none !important; filter:brightness(0.96); }
+.news-item{ border-radius:12px !important; box-shadow:none !important; }
+.news-item:hover{ box-shadow:0 6px 18px rgba(20,24,33,0.08) !important; transform:none !important; }
+.page-title{ text-shadow:none !important; }
+
+/* ---------- Buy-Me-A-Coffee widget — fit the light/teal theme ---------- */
+.bmc-futuristic-bubble{
+  background:var(--surface) !important; color:var(--ink) !important; border:1px solid var(--line) !important;
+  box-shadow:0 8px 24px rgba(20,24,33,0.12) !important; font-family:var(--font-body) !important;
+  text-transform:none !important; letter-spacing:0 !important; border-radius:12px !important; backdrop-filter:none !important;
+}
+#bmc-wbtn{ box-shadow:0 6px 18px rgba(15,118,110,0.28) !important; }
+
+/* ---------- Tablet / mobile: ad hidden (<970) -> banner to top, content below banner ---------- */
+@media (max-width:969px){
+  .banner{ top:0 !important; }
+  .app{ top:var(--banner-h) !important; margin-top:0 !important; }
+  .page-home .main-content{ top:var(--banner-h) !important; }
+}
+@media (max-width:900px){
+  .home-button{ top:calc(var(--banner-h) + 10px) !important; left:auto !important; right:14px !important; }
+}
