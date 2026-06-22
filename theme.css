@@ -255,3 +255,11 @@ h1,h2,h3,h4,h5,.page-title,.main-header,.modal-title,.banner,.schedule-header{
 @media (max-width:900px){
   .home-button{ top:calc(var(--banner-h) + 10px) !important; left:auto !important; right:14px !important; }
 }
+
+/* ---------- SuperSec race pages: keep the floating back-arrow clear of the table ---------- */
+/* (.dashboard-container only exists on the super-lap race pages; loaded after their inline CSS) */
+.dashboard-container{ padding-left:84px !important; padding-right:40px !important; }
+@media (max-width:640px){
+  .dashboard-container{ padding-left:64px !important; padding-right:14px !important; }
+  a.back-fixed{ left:12px !important; bottom:12px !important; }
+}
