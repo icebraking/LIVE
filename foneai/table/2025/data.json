@@ -1,0 +1,217 @@
+{
+  "year": 2025,
+  "generatedAt": "2026-06-22T10:06:39.326Z",
+  "lastRound": 24,
+  "lastRaceName": "Abu Dhabi Grand Prix",
+  "drivers": [
+    {
+      "pos": 1,
+      "name": "Lando Norris",
+      "team": "McLaren",
+      "points": 1052.2,
+      "offPos": 1
+    },
+    {
+      "pos": 2,
+      "name": "Max Verstappen",
+      "team": "Red Bull Racing",
+      "points": 1048.03,
+      "offPos": 2
+    },
+    {
+      "pos": 3,
+      "name": "Oscar Piastri",
+      "team": "McLaren",
+      "points": 1024.09,
+      "offPos": 3
+    },
+    {
+      "pos": 4,
+      "name": "George Russell",
+      "team": "Mercedes",
+      "points": 848.61,
+      "offPos": 4
+    },
+    {
+      "pos": 5,
+      "name": "Charles Leclerc",
+      "team": "Ferrari",
+      "points": 676.38,
+      "offPos": 5
+    },
+    {
+      "pos": 6,
+      "name": "Lewis Hamilton",
+      "team": "Ferrari",
+      "points": 469.26,
+      "offPos": 6
+    },
+    {
+      "pos": 7,
+      "name": "Andrea Kimi Antonelli",
+      "team": "Mercedes",
+      "points": 439.74,
+      "offPos": 7
+    },
+    {
+      "pos": 8,
+      "name": "Alexander Albon",
+      "team": "Williams",
+      "points": 274.6,
+      "offPos": 8
+    },
+    {
+      "pos": 9,
+      "name": "Carlos Sainz",
+      "team": "Williams",
+      "points": 238.74,
+      "offPos": 9
+    },
+    {
+      "pos": 10,
+      "name": "Isack Hadjar",
+      "team": "Racing Bulls",
+      "points": 232.36,
+      "offPos": 12
+    },
+    {
+      "pos": 11,
+      "name": "Fernando Alonso",
+      "team": "Aston Martin",
+      "points": 224.98,
+      "offPos": 10
+    },
+    {
+      "pos": 12,
+      "name": "Oliver Bearman",
+      "team": "Haas",
+      "points": 211.79,
+      "offPos": 13
+    },
+    {
+      "pos": 13,
+      "name": "Nico Hülkenberg",
+      "team": "Kick Sauber",
+      "points": 203.01,
+      "offPos": 11
+    },
+    {
+      "pos": 14,
+      "name": "Esteban Ocon",
+      "team": "Haas",
+      "points": 176.84,
+      "offPos": 15
+    },
+    {
+      "pos": 15,
+      "name": "Liam Lawson",
+      "team": "Racing Bulls",
+      "points": 175.73,
+      "offPos": 14
+    },
+    {
+      "pos": 16,
+      "name": "Yuki Tsunoda",
+      "team": "Red Bull Racing",
+      "points": 167.75,
+      "offPos": 17
+    },
+    {
+      "pos": 17,
+      "name": "Lance Stroll",
+      "team": "Aston Martin",
+      "points": 138.15,
+      "offPos": 16
+    },
+    {
+      "pos": 18,
+      "name": "Pierre Gasly",
+      "team": "Alpine",
+      "points": 116.98,
+      "offPos": 18
+    },
+    {
+      "pos": 19,
+      "name": "Gabriel Bortoleto",
+      "team": "Kick Sauber",
+      "points": 114.33,
+      "offPos": 19
+    },
+    {
+      "pos": 20,
+      "name": "Franco Colapinto",
+      "team": "Alpine",
+      "points": 26.85,
+      "offPos": 20
+    },
+    {
+      "pos": 21,
+      "name": "Jack Doohan",
+      "team": "Alpine",
+      "points": 8.1,
+      "offPos": 21
+    }
+  ],
+  "constructors": [
+    {
+      "pos": 1,
+      "team": "McLaren",
+      "points": 2076.28,
+      "offPos": 1
+    },
+    {
+      "pos": 2,
+      "team": "Mercedes",
+      "points": 1288.35,
+      "offPos": 2
+    },
+    {
+      "pos": 3,
+      "team": "Red Bull Racing",
+      "points": 1210.37,
+      "offPos": 3
+    },
+    {
+      "pos": 4,
+      "team": "Ferrari",
+      "points": 1145.64,
+      "offPos": 4
+    },
+    {
+      "pos": 5,
+      "team": "Williams",
+      "points": 513.34,
+      "offPos": 5
+    },
+    {
+      "pos": 6,
+      "team": "Racing Bulls",
+      "points": 413.5,
+      "offPos": 6
+    },
+    {
+      "pos": 7,
+      "team": "Haas",
+      "points": 388.64,
+      "offPos": 8
+    },
+    {
+      "pos": 8,
+      "team": "Aston Martin",
+      "points": 363.13,
+      "offPos": 7
+    },
+    {
+      "pos": 9,
+      "team": "Kick Sauber",
+      "points": 317.33,
+      "offPos": 9
+    },
+    {
+      "pos": 10,
+      "team": "Alpine",
+      "points": 151.94,
+      "offPos": 10
+    }
+  ]
+}

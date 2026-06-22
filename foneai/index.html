@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoneAI — F1 AI Dashboard, Ratings & Super Sectors | ICE Braking</title>
-    <meta name="description" content="FoneAI: AI-powered Formula 1 dashboard with latest F1 news, super sectors analysis, the ICE Braking table and driver ratings.">
+    <title>FoneAI — F1 AI Dashboard, Icebraking Sectors & Probabilities | ICE Braking</title>
+    <meta name="description" content="FoneAI: AI-powered Formula 1 dashboard with Icebraking Sectors, the ICE Braking Table and Icebraking Probabilities.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://www.icebraking.com/foneai/index.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="FoneAI — F1 AI Dashboard | ICE Braking">
-    <meta property="og:description" content="AI-powered Formula 1 dashboard: news, super sectors, ICE Braking table and ratings.">
+    <meta property="og:description" content="AI-powered Formula 1 dashboard: Icebraking Sectors, ICE Braking Table and Icebraking Probabilities.">
     <meta property="og:url" content="https://www.icebraking.com/foneai/index.html">
     <meta property="og:image" content="https://www.icebraking.com/favicon.png">
     <meta name="twitter:card" content="summary">
@@ -28,6 +28,9 @@
       .menu a{ display:flex; gap:12px; align-items:center; }
       .menu a svg{ width:18px; height:18px; flex:0 0 18px; }
       .main{ height:100%; display:flex; overflow:hidden; }
+      /* Make the FONEAI banner clearly more prominent than the list items */
+      .banner{ font-size:clamp(2.6rem, 5.2vw, 3.6rem) !important; }
+      body.page-home .home-list .label{ font-size:clamp(1.3rem, 2.4vw, 1.8rem) !important; }
       @media (max-width:900px){
         .app{ grid-template-columns:1fr; }
         .sidebar{ border-right:0 !important; border-bottom:1px solid var(--line); height:auto; }
@@ -80,21 +83,17 @@
 
     <main class="main" role="main" aria-label="FoneAI sections">
       <section class="tabs home-list" role="region" aria-label="FoneAI sections">
-        <div class="row" role="group" aria-labelledby="lbl-latestnews">
-          <a class="anchor" href="https://www.icebraking.com/foneai/f1_news/index.html" aria-label="Open Latest F1 News"></a>
-          <div class="label" id="lbl-latestnews">LATEST F1 NEWS</div>
-        </div>
-        <div class="row" role="group" aria-labelledby="lbl-supersec">
-          <a class="anchor" href="https://www.icebraking.com/foneai/supersec/index.html" aria-label="Open Super Sectors"></a>
-          <div class="label" id="lbl-supersec">SUPER SECTORS</div>
+        <div class="row" role="group" aria-labelledby="lbl-icebreakingsectors">
+          <a class="anchor" href="https://www.icebraking.com/foneai/supersec/index.html" aria-label="Open Icebraking Sectors"></a>
+          <div class="label" id="lbl-icebreakingsectors">ICEBRAKING SECTORS</div>
         </div>
         <div class="row" role="group" aria-labelledby="lbl-icebrakingtable">
           <a class="anchor" href="https://www.icebraking.com/foneai/table/index.html" aria-label="Open Icebraking Table"></a>
           <div class="label" id="lbl-icebrakingtable">ICEBRAKING TABLE</div>
         </div>
-        <div class="row" role="group" aria-labelledby="lbl-icebrakingratings">
-          <a class="anchor" href="https://www.icebraking.com/foneai/ratings/index.html" aria-label="Open Icebraking Ratings"></a>
-          <div class="label" id="lbl-icebrakingratings">ICEBRAKING RATINGS</div>
+        <div class="row" role="group" aria-labelledby="lbl-icebrakingprobabilities">
+          <a class="anchor" href="https://www.icebraking.com/foneai/probabilities/index.html" aria-label="Open Icebraking Probs"></a>
+          <div class="label" id="lbl-icebrakingprobabilities">ICEBRAKING PROBS</div>
         </div>
       </section>
     </main>

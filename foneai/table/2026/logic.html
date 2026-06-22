@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icebraking Points — 2026 Scoring Logic | ICE Braking</title>
+  <meta name="description" content="How the Icebraking F1 points are calculated for the 2026 season: the cubic decay formula extended to 22 drivers, pole and fastest-lap bonuses, sprint scoring, classification rules and constructor totals.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/foneai/table/2026/logic.html">
+  <link rel="icon" type="image/png" href="../../../favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../../theme.css">
+  <style>
+    :root { --header-h: 0px; }
+    .banner { font-size:clamp(1.44rem, 3.36vw, 2.28rem) !important; }
+    body { background:var(--canvas); color:var(--ink); font-family:var(--font-body); margin:0; }
+    .logic-wrap { position:absolute; top:var(--banner-h); left:0; right:0; bottom:0; overflow-y:auto; padding:24px clamp(64px,6vw,84px) 80px; box-sizing:border-box; }
+    .logic-inner { max-width:880px; margin:0 auto; }
+    .logic-inner h2 { font-family:var(--font-head); font-size:1rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--teal); margin:30px 0 8px; }
+    .logic-inner p, .logic-inner li { font-size:0.93rem; line-height:1.7; color:var(--ink); margin:0 0 10px; }
+    .logic-inner ul { padding-left:20px; }
+    .formula { font-family:var(--font-head); font-size:1.12rem; color:var(--head); background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:10px; padding:14px 18px; margin:6px 0 4px; overflow-x:auto; }
+    .formula small { font-family:var(--font-body); font-size:0.8rem; color:var(--ink-mute); }
+    .tables-2col { display:flex; gap:22px; flex-wrap:wrap; }
+    .tables-2col > div { flex:1 1 280px; min-width:240px; }
+    .tables-2col h3 { font-family:var(--font-head); color:var(--head); font-size:0.9rem; letter-spacing:0.04em; text-transform:uppercase; margin:14px 0 6px; }
+    .ib-table { width:100%; border-collapse:collapse; font-family:var(--font-body); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+    .ib-table th, .ib-table td { padding:7px 14px; text-align:center; border-bottom:1px solid var(--line); }
+    .ib-table th { background:#eaf3f1; color:#0e3b37 !important; font-family:var(--font-head) !important; font-weight:600; }
+    .ib-table .ib-pts { font-weight:600; color:var(--head); }
+    .bonus-table { width:100%; border-collapse:collapse; margin:6px 0; }
+    .bonus-table td, .bonus-table th { border:1px solid var(--line); padding:9px 14px; font-size:0.9rem; text-align:left; }
+    .bonus-table th { background:#eaf3f1; font-family:var(--font-head); color:#0e3b37; }
+    @media (max-width:640px){ .logic-wrap{ padding:16px 14px 90px; } a.home-button{ left:14px !important; bottom:14px !important; top:auto !important; right:auto !important; } }
+    a.home-button { position:fixed !important; left:18px !important; bottom:18px !important; top:auto !important; right:auto !important; }
+  </style>
+</head>
+
+<body class="page-data">
+  <h1 class="banner">2026 SCORING LOGIC</h1>
+
+  <div class="logic-wrap">
+    <div class="logic-inner">
+      <p>The <strong>Icebraking Points System</strong> rewards every classified finisher on a smoothly decaying curve. For 2026 the grid expands to <strong>22 drivers across 11 teams</strong> (Cadillac joins), so the same cubic architecture is extended to 22 positions. All bonuses and classification rules are identical to 2025.</p>
+
+      <h2>Main Race — Formula</h2>
+      <div class="formula">P(n) = 76 × [ (23 − n)³ − 1 ] ⁄ 10647<br><small>n = finishing position (1–22) · P(1) = 76.00 · P(22) = 0.00 · denominator = 22³ − 1</small></div>
+
+      <h2>Points Tables</h2>
+      <div class="tables-2col">
+        <div><h3>Main Race (max 76)</h3><div id="main-table"></div></div>
+        <div><h3>Sprint Race (max 12)</h3><div id="sprint-table"></div></div>
+      </div>
+      <p style="margin-top:10px;"><small>The sprint uses the identical curve scaled to a 12-point maximum: P(n) = 12 × [ (23 − n)³ − 1 ] ⁄ 10647.</small></p>
+
+      <h2>Bonus Points</h2>
+      <table class="bonus-table">
+        <tr><th>Bonus</th><th>Points</th><th>Rule</th></tr>
+        <tr><td>Qualifying pole</td><td>+2.00</td><td>To the fastest driver in qualifying — kept even if they start elsewhere due to a grid penalty.</td></tr>
+        <tr><td>Fastest lap (main race)</td><td>+1.00</td><td>To the driver with the single fastest lap, regardless of finishing position — awarded even to a DNF.</td></tr>
+        <tr><td>Sprint pole</td><td>+0.50</td><td>To the driver who starts the sprint from P1 (sprint-qualifying pole).</td></tr>
+        <tr><td>Fastest lap (sprint)</td><td>0</td><td>No bonus in the sprint.</td></tr>
+      </table>
+
+      <h2>Classification Rules</h2>
+      <ul>
+        <li>Only <strong>classified finishers</strong> score race points; a non-classified driver scores 0 for that event.</li>
+        <li><strong>DNF / DNS / DSQ = 0</strong> race points, regardless of track position at retirement.</li>
+        <li>Classified finishers are ranked <strong>1…k</strong> in order, so the last classified driver earns the points for their actual classified position.</li>
+        <li>The main race and sprint are <strong>fully independent</strong> events.</li>
+        <li>Bonuses are event-specific and awarded independently; the main-race fastest-lap bonus is independent of classification.</li>
+      </ul>
+
+      <h2>Constructor Points</h2>
+      <p>A constructor's total is the <strong>sum of both its drivers' points</strong> across every session and bonus. There were no mid-season driver changes in 2026, so each of the 11 teams' total is simply the combined score of its two drivers.</p>
+
+      <h2>What Changed from 2025</h2>
+      <ul>
+        <li>Drivers: 20 → <strong>22</strong>; constructors: 10 → <strong>11</strong> (Cadillac added).</li>
+        <li>Main-race maximum: 56 → <strong>76</strong>; denominator 7999 → <strong>10647</strong> (22³ − 1).</li>
+        <li>Sprint maximum stays <strong>12</strong>, on the same extended curve.</li>
+        <li>Maximum possible single-weekend haul: 71.50 → <strong>91.50</strong> points.</li>
+      </ul>
+    </div>
+  </div>
+
+  <a class="home-button" href="index.html" aria-label="Back to table" title="Back to table">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+    </svg>
+  </a>
+
+  <script src="../ib-points.js"></script>
+  <script>
+    document.getElementById('main-table').innerHTML = IB.pointsTableHTML(2026, 'main');
+    document.getElementById('sprint-table').innerHTML = IB.pointsTableHTML(2026, 'sprint');
+  </script>
+</body>
+
+</html>

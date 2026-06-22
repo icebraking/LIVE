@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icebraking F1 Points Table 2025 — Drivers & Constructors | ICE Braking</title>
+  <meta name="description" content="The Icebraking F1 points table for the 2025 season — drivers and constructors standings under the Icebraking cubic points system.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/foneai/table/2025/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Icebraking F1 Points Table 2025 | ICE Braking">
+  <meta property="og:description" content="2025 F1 drivers and constructors standings under the Icebraking points system.">
+  <meta property="og:url" content="https://www.icebraking.com/foneai/table/2025/index.html">
+  <meta property="og:image" content="https://www.icebraking.com/favicon.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/png" href="../../../favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../../theme.css">
+  <style>
+    :root { --header-h: 0px; }   /* no AdSense band on this page — banner sits at top */
+    .banner { font-size:clamp(1.44rem, 3.36vw, 2.28rem) !important; }   /* +20% */
+
+    .ib-wrap { position:absolute; top:var(--banner-h); left:0; right:0; bottom:0; display:flex; flex-direction:column; padding:16px clamp(64px,6vw,84px) 22px; box-sizing:border-box; }
+    .ib-tabs { position:relative; display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:10px; flex:0 0 auto; }
+    .ib-logic { position:absolute; right:0; left:auto; top:50%; transform:translateY(-50%); text-decoration:none; }
+    .ib-table .ib-off { color:var(--ink-mute); }
+    a.home-button { position:fixed !important; left:18px !important; bottom:18px !important; top:auto !important; right:auto !important; }
+    @media (max-width:640px){
+      .ib-wrap { padding:12px 14px 80px; }
+      a.home-button { left:14px !important; bottom:14px !important; top:auto !important; right:auto !important; }
+    }
+    .ib-note { font-family:var(--font-body); font-size:0.82rem; color:var(--ink-mute); margin:0 0 12px; flex:0 0 auto; }
+    .ib-paneltitle { display:none; }
+    .ib-scroll { flex:1 1 auto; overflow-y:auto; overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); scrollbar-width:thin; scrollbar-color:rgba(15,118,110,0.5) transparent; }
+    .ib-scroll::-webkit-scrollbar { width:10px; height:10px; }
+    .ib-scroll::-webkit-scrollbar-thumb { background:rgba(15,118,110,0.4); border-radius:6px; }
+
+    .ib-table { width:100%; border-collapse:collapse; font-family:var(--font-body); }
+    .ib-table th, .ib-table td { padding:11px 16px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap; }
+    .ib-table th { position:sticky; top:0; z-index:3; background:#eaf3f1; color:#0e3b37 !important; font-family:var(--font-head) !important; letter-spacing:0.4px; font-weight:600; }
+    .ib-table td { color:var(--ink); }
+    .ib-table .ib-left { text-align:left; }
+    .ib-table .ib-pts { font-weight:600; color:var(--head); }
+    .ib-table tbody tr:hover { background:rgba(15,118,110,0.05); }
+    .ib-loading { padding:40px; text-align:center; color:var(--ink-mute); font-family:var(--font-body); }
+
+    .hidden { display:none !important; }
+  </style>
+</head>
+
+<body class="page-data">
+  <h1 class="banner">ICEBRAKING POINTS 2025</h1>
+
+  <div class="ib-wrap">
+    <div class="ib-tabs">
+      <a class="tab-btn ib-logic" href="logic.html" title="How the points are calculated">LOGIC</a>
+      <button class="tab-btn active" data-tab="drivers" type="button">DRIVERS</button>
+      <button class="tab-btn" data-tab="constructors" type="button">CONSTRUCTORS</button>
+    </div>
+    <p class="ib-note" id="ib-note"></p>
+    <div class="ib-scroll">
+      <div id="ib-drivers"><div class="ib-loading">Loading…</div></div>
+      <div id="ib-constructors" class="hidden"></div>
+    </div>
+  </div>
+
+  <!-- Back -->
+  <a class="home-button" href="../index.html" aria-label="Back" title="Back">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+    </svg>
+  </a>
+
+  <script src="../ib-points.js"></script>
+  <script>
+    (function () {
+      var driversEl = document.getElementById('ib-drivers');
+      var constructorsEl = document.getElementById('ib-constructors');
+      var noteEl = document.getElementById('ib-note');
+
+      fetch('./data.json').then(function (r) {
+        if (!r.ok) throw new Error('data.json missing');
+        return r.json();
+      }).then(function (data) {
+        IB.renderInto(data, { driversEl: driversEl, constructorsEl: constructorsEl, noteEl: noteEl });
+      }).catch(function (e) {
+        driversEl.innerHTML = '<div class="ib-loading">Points table not generated yet. Run: node build.js 2025</div>';
+        console.error(e);
+      });
+
+      // tab switching
+      var btns = document.querySelectorAll('.ib-tabs .tab-btn');
+      btns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          btns.forEach(function (x) { x.classList.remove('active'); });
+          b.classList.add('active');
+          var tab = b.getAttribute('data-tab');
+          driversEl.classList.toggle('hidden', tab !== 'drivers');
+          constructorsEl.classList.toggle('hidden', tab !== 'constructors');
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>
