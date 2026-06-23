@@ -9,7 +9,7 @@
    Per-race update rules (only when the MAIN race has classified results;
    if the main race is abandoned, a completed sprint is used as fallback):
      1 starts +1 (participants)        2 wins +1 (main P1)
-     3 poles +1 (qualifying P1)        4 podium +1 (main P1-P3)
+     3 poles +1 (qualifying P1)        4 non-win podium +1 (main P2-P3 only)
      5 H2H recomputed from race finish vs team-mate
      6 remaining pool = 2438 - sum(points)   7 weekend points captured
      8 momentum = last-5 round points  9 DNF +1 (main only; sprint DNF ignored)
@@ -149,8 +149,8 @@
 
       if (!sprintOnly && mr) {
         if (isCls(mr)) {
-          if (mr.position === '1') d.w += 1;          // 2. win
-          if (+mr.position <= 3) d.pod += 1;          // 4. podium
+          if (mr.position === '1') d.w += 1;                       // 2. win (P1)
+          else if (+mr.position <= 3) d.pod += 1;                  // 4. non-win podium (P2-P3 only; winner is not also counted here)
         } else {
           d.dnf += 1;                                  // 9. DNF (main only)
         }
@@ -206,7 +206,7 @@
     var win = {}, pole = {}, pod = {};
     keys.forEach(function (k) {
       var d = D[k];
-      win[k] = d.w / d.starts; pole[k] = d.p / d.starts; pod[k] = (d.pod - d.w) / d.starts;
+      win[k] = d.w / d.starts; pole[k] = d.p / d.starts; pod[k] = d.pod / d.starts;  // pod = non-win podiums
     });
     var mWin = maxv(win), mPol = maxv(pole), mPod = maxv(pod);
 
@@ -224,10 +224,12 @@
 
     // Team Strength + Car Weight (floored sigmoid)
     var tot = sum(vals(TP)); var TS = {}; Object.keys(TP).forEach(function (t) { TS[t] = TP[t] / tot; });
-    var top = maxv(TP); var RTS = {}; Object.keys(TP).forEach(function (t) { RTS[t] = TP[t] / top; });
-    var a = L.cw.a, c = L.cw.c, raw = function (x) { return 1 / (1 + Math.exp(-a * (x - c))); };
-    var r0 = raw(0), r1 = raw(1), CW = {};
-    Object.keys(TP).forEach(function (t) { CW[t] = (raw(RTS[t]) - r0) / (r1 - r0); });
+    // Car Weight: linear in the constructors' standings — proportional to the
+    // points gap to the leader, so the gap between adjacent teams reduces CW in
+    // direct proportion to their points difference (10 pts -> 1/10th the effect
+    // of a 100-pt gap). Leader = 1; a team on zero points = 0.
+    var top = maxv(TP); var RTS = {}, CW = {};
+    Object.keys(TP).forEach(function (t) { RTS[t] = top > 0 ? TP[t] / top : 0; CW[t] = RTS[t]; });
 
     // Momentum (last-5 window)
     var last5 = {};
