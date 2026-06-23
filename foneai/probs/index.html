@@ -81,7 +81,6 @@
     </svg>
   </a>
 
-  <script src="../table/ib-points.js"></script>
   <script src="predict-seed.js"></script>
   <script src="ib-predict.js"></script>
   <script>
@@ -151,18 +150,23 @@
           var rn = data.lastRaceName ? (' — ' + esc(data.lastRaceName)) : '';
           base = 'Projection after Round ' + data.lastRound + rn + '. ' + base;
         }
-        if (!data.live) base += ' (Live results unavailable — showing the latest stored snapshot.)';
         return base;
       }
 
-      IBP.build().then(function (data) {
+      function render(data) {
         driversEl.innerHTML = driversHTML(data);
         constructorsEl.innerHTML = constructorsHTML(data);
         noteEl.innerHTML = noteHTML(data);
-      }).catch(function (e) {
-        console.error(e);
-        driversEl.innerHTML = '<div class="ib-loading">Could not build the prediction. Please retry later.</div>';
-        noteEl.textContent = '';
+      }
+
+      // build() always resolves (it falls back to the stored snapshot internally),
+      // so the page only ever shows the table — never an error message.
+      IBP.build().then(render).catch(function () {
+        try {
+          var d = IBP.projectSeed();
+          d.lastRound = (window.IB_SEED && IB_SEED.STATE.racesDone) || 7;
+          render(d);
+        } catch (e) {}
       });
     })();
   </script>

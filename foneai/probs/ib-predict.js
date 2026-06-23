@@ -20,12 +20,55 @@
    the page always renders.
    ======================================================================= */
 (function (root, factory) {
-  root.IBP = factory(root.IB, root.IB_SEED);
-}(typeof self !== 'undefined' ? self : this, function (IB, SEED) {
+  root.IBP = factory(root.IB_SEED);
+}(typeof self !== 'undefined' ? self : this, function (SEED) {
   'use strict';
 
   var YEAR = 2026, TOTAL = SEED.STATE.seasonTotal, CAP = SEED.LOCKED.perDriverCap;
   var L = SEED.LOCKED;
+
+  // --- Jolpica/Ergast fetch (self-contained; this folder needs no other JS) ---
+  var ERG = 'https://api.jolpi.ca/ergast/f1/';
+  var GAP = 300, _last = 0;
+  function throttle() {
+    var now = Date.now(), wait = Math.max(0, _last + GAP - now);
+    _last = now + wait;
+    return new Promise(function (r) { setTimeout(r, wait); });
+  }
+  function fetchJSON(url, tries) {
+    tries = tries || 5;
+    return throttle().then(function () { return fetch(url); }).then(function (r) {
+      if (r.status === 429) {
+        var ra = parseInt(r.headers && r.headers.get && r.headers.get('retry-after'), 10);
+        var e = new Error('HTTP 429 ' + url); e.rate = true; e.retryAfter = (ra > 0 ? ra * 1000 : 0); throw e;
+      }
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url);
+      return r.json();
+    }).catch(function (e) {
+      if (tries > 1) {
+        var back = e && e.rate ? (e.retryAfter || 2000 * (6 - tries)) : 500;
+        return new Promise(function (res) { setTimeout(res, back); }).then(function () { return fetchJSON(url, tries - 1); });
+      }
+      throw e;
+    });
+  }
+  function fetchSeasonRows(year, kind, innerKey) {
+    var byRound = {}, offset = 0, limit = 100;
+    function page() {
+      return fetchJSON(ERG + year + '/' + kind + '/?limit=' + limit + '&offset=' + offset).then(function (j) {
+        var mr = j.MRData, total = +mr.total, races = mr.RaceTable.Races || [];
+        races.forEach(function (r) {
+          var rd = +r.round;
+          if (!byRound[rd]) byRound[rd] = { round: rd, raceName: r.raceName, rows: [] };
+          (r[innerKey] || []).forEach(function (x) { byRound[rd].rows.push(x); });
+        });
+        offset += limit;
+        if (offset < total && races.length) return page();
+        return byRound;
+      });
+    }
+    return page();
+  }
 
   // ---- helpers --------------------------------------------------------
   function fold(s) {
@@ -250,21 +293,21 @@
 
   // ---- public: build live (fetch -> evolve -> project) ----------------
   function build() {
-    if (!IB || !IB.fetchSeasonRows) {
+    if (typeof fetch === 'undefined') {
       var s = project(freshState()); s.lastRound = SEED.STATE.racesDone; s.lastRaceName = null; s.live = false;
       return Promise.resolve(s);
     }
     return Promise.all([
-      IB.fetchSeasonRows(YEAR, 'results', 'Results'),
-      IB.fetchSeasonRows(YEAR, 'qualifying', 'QualifyingResults'),
-      IB.fetchSeasonRows(YEAR, 'sprint', 'SprintResults')
+      fetchSeasonRows(YEAR, 'results', 'Results'),
+      fetchSeasonRows(YEAR, 'qualifying', 'QualifyingResults'),
+      fetchSeasonRows(YEAR, 'sprint', 'SprintResults')
     ]).then(function (sets) {
       var st = applyRounds(sets[0], sets[1], sets[2]);
       var out = project(st);
       out.lastRound = st.lastRound; out.lastRaceName = st.lastRaceName; out.live = true;
       return out;
-    }).catch(function (e) {
-      if (typeof console !== 'undefined') console.error('IBP live build failed, using seed snapshot:', e);
+    }).catch(function () {
+      // Network/API hiccup — silently project the stored snapshot (no page-visible error).
       var st2 = freshState(); var out2 = project(st2);
       out2.lastRound = SEED.STATE.racesDone; out2.lastRaceName = null; out2.live = false;
       return out2;
