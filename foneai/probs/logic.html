@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icebraking 2026 — Prediction Model Methodology | ICE Braking</title>
+  <meta name="description" content="The complete mathematics of the Icebraking deterministic model that projects the 2026 F1 drivers' and constructors' standings to the end of the season: Race Factor, Driver Quality Index, Team Strength, Car Weight, Momentum and the projection engine.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.icebraking.com/foneai/probs/logic.html">
+  <link rel="icon" type="image/png" href="../../favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../../theme.css">
+  <style>
+    :root { --header-h: 0px; }
+    .banner { font-size:clamp(1.36rem, 3.1vw, 2.16rem) !important; }
+    body { background:var(--canvas); color:var(--ink); font-family:var(--font-body); margin:0; }
+
+    .logic-wrap { position:absolute; top:var(--banner-h); left:0; right:0; bottom:0; overflow-y:auto; padding:24px clamp(64px,6vw,84px) 80px; box-sizing:border-box; }
+    .logic-inner { max-width:920px; margin:0 auto; }
+    .logic-inner > p.lead { font-size:0.97rem; line-height:1.75; }
+    .logic-inner h2 { font-family:var(--font-head); font-size:1rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--teal); margin:34px 0 8px; }
+    .logic-inner h3 { font-family:var(--font-head); color:var(--head); font-size:0.9rem; letter-spacing:0.04em; text-transform:uppercase; margin:18px 0 6px; }
+    .logic-inner p, .logic-inner li { font-size:0.93rem; line-height:1.7; color:var(--ink); margin:0 0 10px; }
+    .logic-inner ul, .logic-inner ol { padding-left:20px; margin:0 0 10px; }
+    .logic-inner code { font-family:'Inter', monospace; background:rgba(15,118,110,0.07); padding:1px 5px; border-radius:5px; font-size:0.86rem; }
+
+    .formula { font-family:var(--font-head); font-size:1.08rem; color:var(--head); background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:10px; padding:14px 18px; margin:8px 0 6px; overflow-x:auto; line-height:1.55; }
+    .formula small { font-family:var(--font-body); font-size:0.8rem; color:var(--ink-mute); }
+
+    .tbl-scroll { overflow-x:auto; margin:6px 0 4px; scrollbar-width:thin; scrollbar-color:rgba(15,118,110,0.5) transparent; }
+    .ib-table { width:100%; border-collapse:collapse; font-family:var(--font-body); border:1px solid var(--line); border-radius:10px; overflow:hidden; font-size:0.86rem; }
+    .ib-table th, .ib-table td { padding:7px 12px; text-align:center; border-bottom:1px solid var(--line); white-space:nowrap; }
+    .ib-table th { background:#eaf3f1; color:#0e3b37 !important; font-family:var(--font-head) !important; font-weight:600; letter-spacing:0.3px; }
+    .ib-table .ib-left { text-align:left; }
+    .ib-table .ib-pts { font-weight:600; color:var(--head); }
+    .ib-table tbody tr:hover { background:rgba(15,118,110,0.04); }
+    .caption { font-size:0.8rem; color:var(--ink-mute); margin:2px 0 14px; }
+
+    @media (max-width:640px){
+      .logic-wrap{ padding:16px 14px 90px; }
+      a.home-button{ left:14px !important; bottom:14px !important; top:auto !important; right:auto !important; }
+    }
+    a.home-button { position:fixed !important; left:18px !important; bottom:18px !important; top:auto !important; right:auto !important; }
+  </style>
+</head>
+
+<body class="page-data">
+  <h1 class="banner">PREDICTION MODEL — METHODOLOGY</h1>
+
+  <div class="logic-wrap">
+    <div class="logic-inner">
+
+      <p class="lead">The <strong>Icebraking projection model</strong> estimates each driver's points at the conclusion of the 2026 Formula 1 season. The model is <strong>deterministic and reproducible</strong>: it contains no random component, and an identical input set always yields an identical standings table. Every quantity below is recomputed after each race weekend; only the <em>Race Factor</em> is held constant for the entire season. The complete predicted table sums to the season's total available points, <strong>2438</strong>.</p>
+
+      <h2>1. Season Basis</h2>
+      <p>The 2026 calendar comprises 24 scheduled weekends, of which 2 are cancelled, leaving <strong>22 weekends that are run</strong>. Six of these are sprint weekends. The field point allocations per event are:</p>
+      <ul>
+        <li>Grand Prix: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 — total <strong>101</strong> points.</li>
+        <li>Sprint weekend: the Grand Prix allocation plus the sprint allocation (8, 7, 6, 5, 4, 3, 2, 1 = 36) — total <strong>137</strong> points.</li>
+      </ul>
+      <div class="formula">Season total = 16&nbsp;GP&nbsp;×&nbsp;101 + 6&nbsp;sprint&nbsp;×&nbsp;137 = <strong>2438</strong><br><small>Remaining pool = season total − points already scored. Maximum a single driver can still score = (remaining GPs × 25) + (remaining sprints × 8) — the per-driver cap.</small></div>
+      <p>At the snapshot (after Round 7, 15 weekends remaining, 3 of them sprints): scored so far = 815, <strong>remaining pool = 1623</strong>, per-driver remaining cap = 15×25 + 3×8 = <strong>399</strong>.</p>
+
+      <h2>2. Rate Statistics</h2>
+      <p>Career achievement is converted to a per-start rate using each driver's current number of starts:</p>
+      <div class="formula">Win% = Wins / Starts&nbsp;&nbsp;·&nbsp;&nbsp;Pole% = Poles / Starts&nbsp;&nbsp;·&nbsp;&nbsp;Podium% = (Podiums − Wins) / Starts</div>
+      <p>The podium rate excludes wins so that the win, pole and podium terms describe non-overlapping levels of achievement.</p>
+
+      <h2>3. Race Factor (locked for the season)</h2>
+      <p>The Race Factor combines an age profile with an experience term. The age profile is unity across the prime band 25–37 years and decays as a Gaussian on either side; the experience term scales gently with 2025 race starts.</p>
+      <div class="formula">
+        AgeFactor =
+        1, for 25 ≤ age ≤ 37<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exp(−(25 − age)² / 128), for age &lt; 25<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exp(−(age − 37)² / 145), for age &gt; 37<br>
+        Experience = 0.9 + 0.1 × (2025 starts / 425)<br>
+        <strong>Race Factor = AgeFactor × Experience</strong>
+        <small>The Race Factor is fixed at the season's start and is not updated mid-season.</small>
+      </div>
+
+      <h2>4. Driver Quality Index (DQI)</h2>
+      <p>The Driver Quality Index is a weighted blend of head-to-head qualifying record, normalised rate statistics, and the Race Factor. Each rate term is normalised by the field maximum of that rate (denoted <code>n</code>), placing all components on a comparable scale.</p>
+      <div class="formula">DQI = 75 × (H2H / 100) + 8 × nWin% + 4 × nPole% + 6 × nPodium% + 7 × RaceFactor<br><small>n = driver rate ÷ field-maximum rate. The DQI governs only the split of points between the two team-mates within a constructor.</small></div>
+
+      <h2>5. Team Strength and Car Weight</h2>
+      <p>Team Strength is each constructor's share of total points scored. Relative Team Strength (RTS) normalises this against the leading constructor. The Car Weight maps RTS through a floored logistic function (sigmoid steepness <code>a = 6</code>, centre = 0.35), which keeps the strongest cars close together and drives weak cars toward zero without the instability of a direct ratio.</p>
+      <div class="formula">
+        TS = TeamPoints / TotalPoints&nbsp;&nbsp;·&nbsp;&nbsp;RTS = TeamPoints / TopTeamPoints<br>
+        raw(x) = 1 / (1 + exp(−6 × (x − 0.35)))<br>
+        <strong>CarWeight = (raw(RTS) − raw(0)) / (raw(1) − raw(0))</strong>
+        <small>The floor-and-ceiling normalisation forces CarWeight(RTS = 0) = 0 and CarWeight(RTS = 1) = 1.</small>
+      </div>
+
+      <h2>6. Momentum</h2>
+      <p>Momentum captures recent, car-neutral form. The recent term <code>R</code> is the driver's share of the team's points over the last five rounds; the season anchor <code>DRF</code> is the driver's share of the team's points across the whole season. The two are blended (0.8 / 0.2) and scaled by Car Weight, which prevents a strong relative share inside a weak car from inflating the result. The blended momentum is then centred on its field mean.</p>
+      <div class="formula">
+        R = driver last-5 points / team last-5 points&nbsp;&nbsp;·&nbsp;&nbsp;DRF = driver season points / team season points<br>
+        M = CarWeight × (0.8 R + 0.2 DRF)<br>
+        <strong>MM = 1 + β × (M / M̄ − 1)</strong>, with β = 1
+        <small>With β = 1 this reduces to MM = M / M̄, so a driver in zero recent form maps to MM = 0. M̄ is the field mean of M.</small>
+      </div>
+
+      <h2>7. Projection Engine</h2>
+      <p>The remaining-points pool is distributed by a weight that combines Team Strength, the intra-team DQI share, and momentum. A did-not-finish deduction is then applied, the result is renormalised to the pool, and a per-driver cap is enforced.</p>
+      <ol>
+        <li>Weight: <code>weight = TS × (DQI / (DQI + DQI<sub>team-mate</sub>)) × MM</code>.</li>
+        <li>Base allocation: <code>base = 1623 × weight / Σ weight</code>.</li>
+        <li>DNF deduction: <code>ded = 0.30 × min(DNF, 4) × (current points / races done)</code>; then <code>net = max(base − ded, 0)</code>.</li>
+        <li>Renormalise <code>net</code> back to the 1623 pool, so the DNF effect redistributes among the field.</li>
+        <li>Cap any driver's remaining points at 399; redistribute the overflow across the uncapped drivers, iterating until stable.</li>
+        <li><strong>Predicted final = current points + projected remaining.</strong> The complete table sums to 2438; any rounding residual is absorbed by the leader.</li>
+      </ol>
+
+      <h2>8. Constructors' Standings</h2>
+      <p>A constructor's predicted total is the sum of the predicted final points of its two drivers. No mid-season driver changes occur, so each of the 11 teams' total is simply the combined predicted score of its driver pairing. The constructors' table therefore also sums to 2438.</p>
+
+      <h2>9. Locked Constants</h2>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Parameter</th><th class="ib-left">Value</th></tr></thead>
+          <tbody>
+            <tr><td class="ib-left">DQI weights — H2H / Win / Pole / Podium / RaceFactor</td><td class="ib-left">75 / 8 / 4 / 6 / 7</td></tr>
+            <tr><td class="ib-left">Race Factor age divisors (young / old)</td><td class="ib-left">128 / 145; plateau 25–37</td></tr>
+            <tr><td class="ib-left">Experience</td><td class="ib-left">0.9 + 0.1 × starts2025 / 425 (locked)</td></tr>
+            <tr><td class="ib-left">Momentum weights (recent / season)</td><td class="ib-left">0.8 / 0.2</td></tr>
+            <tr><td class="ib-left">Momentum strength β</td><td class="ib-left">1.0</td></tr>
+            <tr><td class="ib-left">Car Weight sigmoid (a, centre)</td><td class="ib-left">6, 0.35</td></tr>
+            <tr><td class="ib-left">DNF deduction</td><td class="ib-left">0.30 × min(DNF, 4) × (current / races done)</td></tr>
+            <tr><td class="ib-left">Season total / remaining pool / per-driver cap</td><td class="ib-left">2438 / 1623 / 399</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>10. Model Tables (snapshot after Round 7)</h2>
+
+      <h3>10.1 Driver Inputs</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Driver</th><th class="ib-left">Team</th><th>Age</th><th>H2H%</th><th>2025 St.</th><th>Cur St.</th><th>W</th><th>P</th><th>Pod</th><th>DNF</th><th>Last-5</th></tr></thead>
+          <tbody id="t-inputs"></tbody>
+        </table>
+      </div>
+
+      <h3>10.2 Rate Statistics</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Driver</th><th>Win%</th><th>Pole%</th><th>(Pod−Win)%</th></tr></thead>
+          <tbody id="t-rates"></tbody>
+        </table>
+      </div>
+
+      <h3>10.3 Race Factor</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Driver</th><th>Age</th><th>Race Factor</th></tr></thead>
+          <tbody id="t-rf"></tbody>
+        </table>
+      </div>
+
+      <h3>10.4 Driver Quality Index</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th>#</th><th class="ib-left">Driver</th><th>DQI</th></tr></thead>
+          <tbody id="t-dqi"></tbody>
+        </table>
+      </div>
+
+      <h3>10.5 Team Strength and Car Weight</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Team</th><th>Points</th><th>TS%</th><th>RTS (% top)</th><th>Car Weight</th></tr></thead>
+          <tbody id="t-ts"></tbody>
+        </table>
+      </div>
+
+      <h3>10.6 Momentum</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th class="ib-left">Driver</th><th>Last-5 share R</th><th>Driver Factor</th><th>M</th><th>MM</th></tr></thead>
+          <tbody id="t-mom"></tbody>
+        </table>
+      </div>
+      <p class="caption">M̄ = 0.1623.</p>
+
+      <h3>10.7 Predicted Final Standings</h3>
+      <div class="tbl-scroll">
+        <table class="ib-table">
+          <thead><tr><th>Pos</th><th class="ib-left">Driver</th><th>Current</th><th>Proj. Remaining</th><th>Predicted Final</th></tr></thead>
+          <tbody id="t-final"></tbody>
+        </table>
+      </div>
+      <p class="caption">Sum of predicted points = 2438.</p>
+
+      <h2>11. Live Auto-Update</h2>
+      <p>The standings page recomputes itself on every load by fetching the
+      season's results from the <strong>Jolpica / Ergast API</strong>
+      (<code>api.jolpi.ca/ergast/f1/</code>). The §10 tables above are the
+      fixed Round-7 baseline; from Round 8 onward the model evolves
+      automatically and no manual data entry is required.</p>
+      <p><strong>Update trigger.</strong> A race weekend is incorporated only
+      once its <strong>main race has classified results</strong>. If the main
+      race is abandoned but a sprint was run and points were awarded, the sprint
+      result is used as the fallback for that weekend; otherwise the weekend is
+      ignored until the main race is complete.</p>
+      <p><strong>Per-race update rules.</strong> When a new weekend is
+      incorporated, the following are applied from that weekend's results:</p>
+      <table class="bonus-table">
+        <tr><th>#</th><th>Quantity</th><th>Update</th></tr>
+        <tr><td>1</td><td>Race starts</td><td>+1 for every participant.</td></tr>
+        <tr><td>2</td><td>Wins</td><td>+1 for the main-race winner (P1).</td></tr>
+        <tr><td>3</td><td>Poles</td><td>+1 for the qualifying P1.</td></tr>
+        <tr><td>4</td><td>Podiums</td><td>+1 for main-race P1–P3.</td></tr>
+        <tr><td>5</td><td>H2H %</td><td>For each team pair, the implied win count <code>round(H2H% × starts)</code> is extrapolated to current starts; +1 for the driver who finished ahead of the team-mate; both starts increase by 1; the percentage is recomputed over the new starts.</td></tr>
+        <tr><td>6</td><td>Remaining pool</td><td>Recomputed as <code>2438 − Σ(current points)</code> — equivalent to deducting 101 for a Grand Prix weekend or 137 for a sprint weekend.</td></tr>
+        <tr><td>7</td><td>Points</td><td>All points scored that weekend (main race plus sprint, where applicable) are added to each driver's total.</td></tr>
+        <tr><td>8</td><td>Momentum</td><td>Each driver's points for the latest round are appended; the momentum window uses the last five rounds.</td></tr>
+        <tr><td>9</td><td>DNF count</td><td>+1 for a main-race DNF/DNS/DSQ. <strong>A sprint-race DNF is ignored.</strong></td></tr>
+        <tr><td>10</td><td>Constructor points</td><td>Recomputed as the sum of each constructor's two drivers' points.</td></tr>
+      </table>
+      <p><strong>Recomputed each round:</strong> the per-driver rate statistics,
+      Driver Quality Index, Team Strength, Car Weight, Momentum, the remaining
+      pool, the projection and the final standings.
+      <strong>Seeded once (pre-2026 baseline, then evolved by the rules above):</strong>
+      race starts, wins, poles, podiums and H2H %.
+      <strong>Fixed for the whole season:</strong> the Race Factor, the DQI
+      weight coefficients (75 / 8 / 4 / 6 / 7), the momentum weights and β, the
+      Car-Weight sigmoid parameters, the DNF coefficients, and the 2438 / 399
+      constants.</p>
+
+    </div>
+  </div>
+
+  <a class="home-button" href="index.html" aria-label="Back to table" title="Back to table">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+    </svg>
+  </a>
+
+  <script>
+    (function () {
+      function row(cells, firstLeft) {
+        var h = '<tr>';
+        cells.forEach(function (c, i) {
+          var cls = (i === 0 && firstLeft) ? ' class="ib-left"' : (typeof c === 'object' ? ' class="' + c.cls + '"' : '');
+          var val = (typeof c === 'object') ? c.v : c;
+          h += '<td' + cls + '>' + val + '</td>';
+        });
+        return h + '</tr>';
+      }
+      function fill(id, rows, firstLeft) {
+        document.getElementById(id).innerHTML = rows.map(function (r) { return row(r, firstLeft); }).join('');
+      }
+
+      // 11.1 Driver inputs: name, team, age, h2h, st25, curSt, W, P, Pod, DNF, last5
+      var inputs = [
+        ['Kimi Antonelli','Mercedes',19.8,'28.00',24,31,5,4,9,1,109],
+        ['Lewis Hamilton','Ferrari',41.5,'58.44',380,387,106,104,206,0,82],
+        ['George Russell','Mercedes',28.3,'67.21',152,159,6,10,27,1,55],
+        ['Lando Norris','McLaren',26.6,'64.57',152,158,11,16,46,3,58],
+        ['Charles Leclerc','Ferrari',28.7,'65.44',171,178,8,27,52,2,41],
+        ['Oscar Piastri','McLaren',25.2,'31.25',70,75,9,6,28,2,65],
+        ['Max Verstappen','Red Bull',28.7,'84.52',233,240,71,48,128,2,47],
+        ['Pierre Gasly','Alpine',30.4,'56.00',177,184,1,0,5,1,32],
+        ['Isack Hadjar','Red Bull',21.7,'57.14',23,30,0,0,1,2,30],
+        ['Liam Lawson','Racing Bulls',24.4,'43.33',35,42,0,0,0,1,20],
+        ['Franco Colapinto','Alpine',23.1,'32.00',26,33,0,0,0,0,15],
+        ['Oliver Bearman','Haas',21.1,'61.54',27,34,0,0,0,3,1],
+        ['Arvid Lindblad','Racing Bulls',18.9,'20.00',0,6,0,0,0,1,9],
+        ['Carlos Sainz','Williams',31.8,'47.40',229,236,4,6,29,1,4],
+        ['Alexander Albon','Williams',30.2,'61.63',128,134,0,0,2,3,5],
+        ['Esteban Ocon','Haas',29.8,'47.10',180,187,1,0,4,0,3],
+        ['Gabriel Bortoleto','Audi',21.7,'44.44',24,30,0,0,0,1,0],
+        ['Fernando Alonso','Aston Martin',44.9,'77.74',425,432,32,22,106,4,1],
+        ['Nico Hulkenberg','Audi',38.8,'56.50',250,256,0,1,1,3,0],
+        ['Valtteri Bottas','Cadillac',36.8,'41.92',246,253,10,20,67,3,0],
+        ['Sergio Perez','Cadillac',36.4,'36.49',281,288,6,3,39,1,0],
+        ['Lance Stroll','Aston Martin',27.6,'34.31',189,196,0,1,3,5,0]
+      ];
+      fill('t-inputs', inputs, true);
+
+      // 11.2 rates: name, win%, pole%, (pod-win)%
+      var rates = [
+        ['Kimi Antonelli','16.13','12.90','12.90'],['Lewis Hamilton','27.39','26.87','25.84'],
+        ['George Russell','3.77','6.29','13.21'],['Lando Norris','6.96','10.13','22.15'],
+        ['Charles Leclerc','4.49','15.17','24.72'],['Oscar Piastri','12.00','8.00','25.33'],
+        ['Max Verstappen','29.58','20.00','23.75'],['Pierre Gasly','0.54','0.00','2.17'],
+        ['Isack Hadjar','0.00','0.00','3.33'],['Liam Lawson','0.00','0.00','0.00'],
+        ['Franco Colapinto','0.00','0.00','0.00'],['Oliver Bearman','0.00','0.00','0.00'],
+        ['Arvid Lindblad','0.00','0.00','0.00'],['Carlos Sainz','1.69','2.54','10.59'],
+        ['Alexander Albon','0.00','0.00','1.49'],['Esteban Ocon','0.53','0.00','1.60'],
+        ['Gabriel Bortoleto','0.00','0.00','0.00'],['Fernando Alonso','7.41','5.09','17.13'],
+        ['Nico Hulkenberg','0.00','0.39','0.39'],['Valtteri Bottas','3.95','7.91','22.53'],
+        ['Sergio Perez','2.08','1.04','11.46'],['Lance Stroll','0.00','0.51','1.53']
+      ];
+      fill('t-rates', rates, true);
+
+      // 11.3 race factor: name, age, rf
+      var rf = [
+        ['Kimi Antonelli',19.8,'0.735'],['Lewis Hamilton',41.5,'0.863'],['George Russell',28.3,'0.936'],
+        ['Lando Norris',26.6,'0.936'],['Charles Leclerc',28.7,'0.940'],['Oscar Piastri',25.2,'0.916'],
+        ['Max Verstappen',28.7,'0.955'],['Pierre Gasly',30.4,'0.942'],['Isack Hadjar',21.7,'0.833'],
+        ['Liam Lawson',24.4,'0.905'],['Franco Colapinto',23.1,'0.880'],['Oliver Bearman',21.1,'0.806'],
+        ['Arvid Lindblad',18.9,'0.671'],['Carlos Sainz',31.8,'0.954'],['Alexander Albon',30.2,'0.930'],
+        ['Esteban Ocon',29.8,'0.942'],['Gabriel Bortoleto',21.7,'0.831'],['Fernando Alonso',44.9,'0.650'],
+        ['Nico Hulkenberg',38.8,'0.937'],['Valtteri Bottas',36.8,'0.958'],['Sergio Perez',36.4,'0.966'],
+        ['Lance Stroll',27.6,'0.944']
+      ];
+      fill('t-rf', rf, true);
+
+      // 11.4 DQI: #, name, dqi  (already ranked)
+      var dqi = [
+        [1,'Max Verstappen','86.565'],[2,'Fernando Alonso','69.596'],[3,'Lewis Hamilton','67.277'],
+        [4,'Charles Leclerc','64.875'],[5,'Lando Norris','63.512'],[6,'George Russell','61.981'],
+        [7,'Alexander Albon','53.080'],[8,'Oliver Bearman','51.796'],[9,'Isack Hadjar','49.459'],
+        [10,'Pierre Gasly','49.243'],[11,'Nico Hulkenberg','49.080'],[12,'Valtteri Bottas','45.622'],
+        [13,'Carlos Sainz','45.524'],[14,'Esteban Ocon','42.439'],[15,'Oscar Piastri','40.171'],
+        [16,'Gabriel Bortoleto','39.148'],[17,'Liam Lawson','38.835'],[18,'Sergio Perez','37.509'],
+        [19,'Kimi Antonelli','35.421'],[20,'Lance Stroll','32.775'],[21,'Franco Colapinto','30.161'],
+        [22,'Arvid Lindblad','19.698']
+      ].map(function (r) { return [r[0], { cls: 'ib-left', v: r[1] }, { cls: 'ib-pts', v: r[2] }]; });
+      fill('t-dqi', dqi, false);
+
+      // 11.5 TS/CW: team, pts, ts%, rts, cw
+      var ts = [
+        ['Mercedes',262,'32.147','100.00','1.000'],['Ferrari',190,'23.313','72.52','0.913'],
+        ['McLaren',141,'17.301','53.82','0.742'],['Red Bull',89,'10.920','33.97','0.431'],
+        ['Alpine',57,'6.994','21.76','0.232'],['Racing Bulls',41,'5.031','15.65','0.149'],
+        ['Haas',21,'2.577','8.02','0.065'],['Williams',11,'1.350','4.20','0.031'],
+        ['Audi',2,'0.245','0.76','0.005'],['Aston Martin',1,'0.123','0.38','0.003'],
+        ['Cadillac',0,'0.000','0.00','0.000']
+      ];
+      fill('t-ts', ts, true);
+
+      // 11.6 momentum: name, R, driverFactor, M, MM
+      var mom = [
+        ['Kimi Antonelli','0.665','59.54','0.651','4.010'],['Lewis Hamilton','0.667','60.53','0.598','3.683'],
+        ['Oscar Piastri','0.528','48.23','0.385','2.375'],['Lando Norris','0.472','51.77','0.357','2.199'],
+        ['George Russell','0.335','40.46','0.349','2.152'],['Charles Leclerc','0.333','39.47','0.316','1.945'],
+        ['Max Verstappen','0.610','61.80','0.264','1.625'],['Isack Hadjar','0.390','38.20','0.167','1.031'],
+        ['Pierre Gasly','0.681','71.93','0.160','0.984'],['Liam Lawson','0.690','68.29','0.102','0.630'],
+        ['Franco Colapinto','0.319','28.07','0.072','0.445'],['Arvid Lindblad','0.310','31.71','0.046','0.285'],
+        ['Esteban Ocon','0.750','14.29','0.041','0.250'],['Oliver Bearman','0.250','85.71','0.024','0.148'],
+        ['Alexander Albon','0.556','45.45','0.017','0.102'],['Carlos Sainz','0.444','54.55','0.014','0.089'],
+        ['Gabriel Bortoleto','0.500','100.00','0.003','0.019'],['Fernando Alonso','1.000','100.00','0.003','0.016'],
+        ['Nico Hulkenberg','0.500','0.00','0.002','0.013'],['Valtteri Bottas','0.500','0.00','0.000','0.000'],
+        ['Sergio Perez','0.500','0.00','0.000','0.000'],['Lance Stroll','0.000','0.00','0.000','0.000']
+      ];
+      fill('t-mom', mom, true);
+
+      // 11.7 final: pos, name, current, proj, final
+      var fin = [
+        [1,'Kimi Antonelli',156,'348.9',505],[2,'Lewis Hamilton',115,'331.7',447],[3,'George Russell',106,'329.4',435],
+        [4,'Lando Norris',73,'167.2',240],[5,'Charles Leclerc',75,'162.3',237],[6,'Oscar Piastri',68,'114.8',183],
+        [7,'Max Verstappen',55,'80.9',136],[8,'Pierre Gasly',41,'30.6',72],[9,'Isack Hadjar',34,'28.1',62],
+        [10,'Liam Lawson',28,'14.7',43],[11,'Franco Colapinto',16,'9.0',25],[12,'Oliver Bearman',18,'0.0',18],
+        [13,'Arvid Lindblad',13,'3.1',16],[14,'Carlos Sainz',6,'0.2',6],[15,'Alexander Albon',5,'0.0',5],
+        [16,'Esteban Ocon',3,'2.2',5],[17,'Gabriel Bortoleto',2,'0.0',2],[18,'Fernando Alonso',1,'0.0',1],
+        [19,'Nico Hulkenberg',0,'0.0',0],[20,'Valtteri Bottas',0,'0.0',0],[21,'Sergio Perez',0,'0.0',0],
+        [22,'Lance Stroll',0,'0.0',0]
+      ].map(function (r) { return [r[0], { cls: 'ib-left', v: r[1] }, r[2], r[3], { cls: 'ib-pts', v: r[4] }]; });
+      fill('t-final', fin, false);
+    })();
+  </script>
+</body>
+
+</html>
